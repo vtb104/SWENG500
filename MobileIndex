@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.2/jquery.mobile-1.4.2.min.css">
+<script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+<script src="http://code.jquery.com/mobile/1.4.2/jquery.mobile-1.4.2.min.js"></script>
+</head>
+<body>
+
+<div data-role="page" id="map">
+        <div data-role="header">
+            <a href="#" data-icon="back" class="back ui-btn-left">Back</a>
+            <a href="#mapHelp" class="ui-btn ui-btn-inline ui-corner-all ui-shadow">Help</a>
+            <h1>Map</h1>
+        </div>
+
+        <div data-role="panel" id="mapHelp"> 
+            <h2>Map Help</h2>
+            <p>You can close the help panel by clicking outside the panel, pressing the Esc key or by swiping.</p>
+            <p>insert help text here</p>
+        </div>
+
+        <div data-role="content">
+            <h3>Display Google Map based on GPS location</h3>
+        </div>
+
+        <div data-role="footer" data-position="fixed">
+            <div data-role="navbar">
+                <ul>
+                    <li><a href="#map">Map</a></li>
+                    <li><a href="#message">Messages</a></li>
+                    <li><a href="#configure">Configure</a></li>
+                </ul>
+            </div>
+        </div>
+</div> 
+
+<div data-role="page" id="message">
+        <div data-role="header">
+            <a href="#" data-icon="back" class="back ui-btn-left">Back</a>
+            <a href="#msgHelp" class="ui-btn ui-btn-inline ui-corner-all ui-shadow">Help</a>
+            <h1>Messages</h1>
+        </div>
+
+        <div data-role="panel" id="msgHelp"> 
+            <h2>Message Help</h2>
+            <p>You can close the help panel by clicking outside the panel, pressing the Esc key or by swiping.</p>
+            <p>insert help text here</p>
+        </div> 
+
+        <div data-role="content">
+            <h3>Send and Get Messages</h3>
+        </div>
+
+        <div data-role="footer" data-position="fixed">
+            <div data-role="navbar">
+                <ul>
+                    <li><a href="#map">Map</a></li>
+                    <li><a href="#message">Messages</a></li>
+                    <li><a href="#configure">Configure</a></li>
+                </ul>
+            </div>
+        </div>
+</div> 
+
+<div data-role="page" id="configure">
+        <div data-role="header">
+            <a href="#" data-icon="back" class="back ui-btn-left">Back</a>
+            <a href="#confHelp" class="ui-btn ui-btn-inline ui-corner-all ui-shadow">Help</a>
+            <h1>Configure</h1>
+        </div>
+
+        <div data-role="panel" id="confHelp"> 
+            <h2>Configuration Help</h2>
+            <p>You can close the help panel by clicking outside the panel, pressing the Esc key or by swiping.</p>
+            <p>insert help text here</p>
+        </div> 
+
+        <div data-role="content">
+            <h3>Configure the SAR Mobile App</h3>
+        </div>
+
+        <div data-role="footer" data-position="fixed">
+            <div data-role="navbar">
+                <ul>
+                    <li><a href="#map">Map</a></li>
+                    <li><a href="#message">Messages</a></li>
+                    <li><a href="#configure">Configure</a></li>
+                </ul>
+            </div>
+        </div>
+</div> 
+
+</body>
+</html>
