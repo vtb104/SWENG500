@@ -2,31 +2,22 @@
 //Database object and interface
 
 //Database variables
-
-//define("_DB_NAME", 'sar');
-//define("_DB_USERNAME", 'team6');
-//define("_DB_PASSWORD", 'SWENG500');
+define("_DB_NAME", 'sar');
+define("_DB_USERNAME", 'team6');
+define("_DB_PASSWORD", 'SWENG500');
 
 //creates the object in order to open the database
-//$db = new Database;
-
+$db = new Database;
 
 //Instantiate the object to access the database
 class Database
 {
 	//Database object
-
-        private $db_name = 'sar';
-        private $db_user = 'team6';
-        private $db_pwd = 'SWENG500';
-
 	private $db_obj;
 
 	//Constructor that opens database
 	function __construct(){
-
-		$this->db_obj = new MySQLi('localhost', $this->db_user, $this->db_pwd, $this->db_name) or die (mysqli_error() . "Database Error 1");
-
+		$this->db_obj = new MySQLi('localhost', _DB_USERNAME, _DB_PASSWORD, _DB_NAME) or die (mysqli_error() . "Database Error 1");
 	}
 	
 	/**Inputs user data into User database
@@ -61,15 +52,12 @@ class Database
 	 */
 	
 	public function create_point($userID, $lat, $lng, $alt, $dateCreated, $pointNotes){
-
-
-            $query = 'INSERT INTO Points (userID, lat, lng, alt, dateCreated, pointNotes) VALUES ("' . $userID .'", "' . $lat . '", "' . $lng . '", "' . $alt . '", "' . $dateCreated . '", "' . $pointNotes . '")';
-		$result = $this->db_obj->query($query) or trigger_error($this->db_obj->error);
+		$query = 'INSERT INTO Points (userID, lat, lng, alt, dateCreated, pointNotes) VALUES ("' . $userID .'", "' . $lat . '", "' . $lng . '", "' . $alt . '", "' . $dateCreated . '", "' . $pointNotes . '")';
+		$result = $this->db_obj->query($query);
 		if($result){
 			return $this->get_last_id();
 		}else{
-			return 'failed to create point in db';
-
+			return FALSE;
 		}
 	}
 	
