@@ -63,11 +63,16 @@ class Database
 	
 	/**Returns Points
 	 *
-	 *@param int $start = time, defaults to return all points.  If Start is passed, function will return all points newer than the time passed.
+	 * @param OPTIONAL int $start = time, defaults to return all points.  If Start is passed, function will return all points newer than the time passed.
+	 * @param OPTIONAL int $userID = the user ID for the points to return.
 	 *@return json array of all points 
 	 */
-	public function get_points($start = 0){
-		$query = "SELECT * FROM Points WHERE dateCreated > " . $start;
+	public function get_points($start = 0, $userID = 0){
+		if($userID){
+			$query = "SELECT * FROM Points WHERE dateCreated > " . $start . " AND userID = " . $userID . " ORDER BY Points.dateCreated DESC";	
+		}else{
+			$query = "SELECT * FROM Points WHERE dateCreated > " . $start  . " ORDER BY Points.dateCreated DESC";
+		}
 		$result = $this->db_obj->query($query);
 		return $this->return_json($result);
 	}
@@ -84,6 +89,158 @@ class Database
 		$result2 = $result->fetch_row();
 		return json_encode($result2);
 	}
+	
+	
+	 /** List teams
+	 *
+	 */
+	 public function list_teams($lat = 0, $lng = 0, $dist = 0){
+
+		 return 'Fail';
+	 }
+	 
+	 /** List searches
+	 *
+	 */
+	 public function list_searches($lat = 0, $lng = 0, $dist = 0){
+
+		 return 'Fail';
+	 }
+	 
+	 /** List users
+	 *
+	 */
+	 public function list_users($lat = 0, $lng = 0, $dist = 0){
+
+		 return 'Fail';
+	 }
+
+	 /** Returns a user's password
+	 *
+	 */
+	 public function get_user_password($name){
+		$query = $this->db_obj->prepare('SELECT password FROM Users WHERE username=? OR email=?');
+		$query->bind_param('ss', $name, $name);
+		$query->execute();
+		$query->bind_result($password);
+		$query->fetch();
+		return $password;
+	 }
+	 
+	 /** Returns a user's username from their 
+	 *
+	 */
+	 public function get_user_id($usernameoremail){
+		//Needs to use either username or e-mail to log someone in
+		 return 'Fail';
+	 }
+	
+	/**Deletes a user
+	 *
+	 */
+	 public function delete_user($userID){
+		
+		return 'Fail'; 
+	 }
+	 
+	 /**Modifies a user's data
+	  *
+	  */
+	  
+	  public function update_user_info($userID, $dataname, $datavalue){
+		
+		return 'Fail';  
+	  }
+	  
+	/** User joins search
+	 *
+	 */
+	 public function user_join_search($userID, $searchID){
+		 
+		 return 'Fail';
+	 }
+	 
+	 /** User joins a team
+	 *
+	 */
+	 public function user_join_team($userID, $teamID){
+		 
+		 return 'Fail';
+	 }
+	 
+	 /** Team joins a search
+	 *
+	 */
+	 public function team_join_search($teamID, $searchID){
+		 
+		 return 'Fail';
+	 }
+	 
+	/** User leaves search
+	 *
+	 */
+	 public function user_leave_search($userID, $searchID){
+		 
+		 return 'Fail';
+	 }
+	 
+	 /** User leaves a team
+	 *
+	 */
+	 public function user_leave_team($userID, $teamID){
+		 
+		 return 'Fail';
+	 }
+	 
+	 /** Team leaves a search
+	 *
+	 */
+	 public function team_leave_search($teamID, $searchID){
+		 
+		 return 'Fail';
+	 }
+	 
+	 /** Team owner disbands the team
+	  *
+	  */
+	public function team_disband($userID, $teamID){
+		
+		return 'Fail';
+	}
+	 
+	 /** Create message
+	 *
+	 */
+	 public function create_message($from, $to, $title, $message, $pointID = 0){
+		 
+		 return 'Fail';
+	 }
+	 
+	 /** Fetch messages for a user, team, or search
+	 *
+	 */
+	 public function fetch_messages($userID = 0, $teamID = 0, $searchID = 0){
+		 
+		 return 'Fail';
+	 }
+	 
+	 
+	 /** Update team notes
+	 *
+	 */
+	 public function update_team_info($teamID, $notes){
+		 
+		 return 'Fail';
+	 }
+
+	 /** View team notes
+	 *
+	 */
+	 public function fetch_team_info($teamID){
+		 
+		 return 'Fail';
+	 }
+	
 	
 	/***********************************************************************/
 	/*Below this line are private functions that work on the public methods*/
