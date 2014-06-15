@@ -2,7 +2,9 @@
 //Database test page
 require_once("phpcommon.php");
 
-authenticate();
+if(!$auth->authenticate()){
+	header("location: login.php");	
+}
 
 //$key = md5(_HASH1 . "hash" . _HASH2);
 //$userID = $db->create_user('ryan' . time(), 'Ryan', 'Young', 'ryanessonyoung@gmail.com', 'admin', 'hello', $key);
@@ -11,9 +13,6 @@ authenticate();
 
 //$pointID = $db->create_point($userID, '36.22','128.35','400', time(), 'New point');
 //echo "New Point ID: " . $pointID . "<br/>";
-
-
-
 
 ?>
 <html>

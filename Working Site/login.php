@@ -10,8 +10,7 @@ if(isset($_GET['return'])){
 	$return = "index.php";
 }
 
-//Check for the cookie. If it is good, then return.
-if($ch->check_cookie()){
+if($auth->authenticate()){
 	header("location: " . $return);
 };
 
@@ -54,7 +53,7 @@ var onLoad = function(){
                     </select>
                 </div>
                 <div class="ui-block-b">
-                    <button id="submitbutton" type="submit">Submit</button>
+                    <button id="submitbutton">Submit</button>
                 </div>
 			</div>
 			<br/><br/>

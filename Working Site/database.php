@@ -6,9 +6,6 @@ define("_DB_NAME", 'sar');
 define("_DB_USERNAME", 'team6');
 define("_DB_PASSWORD", 'SWENG500');
 
-//creates the object in order to open the database
-$db = new Database;
-
 //Instantiate the object to access the database
 class Database
 {
@@ -27,19 +24,115 @@ class Database
 	 * @param CHAR role
 	 * @return INT -> User's ID that was just created
 	 */
-	public function create_user($username, $fname, $lname, $email, $role, $password, $userKey){
-		//Check for the username
-		$check = $this->db_obj->query("SELECT * FROM Users WHERE username = '" . $username . "'");
-		if($check->num_rows){
-			return "Duplicate Entry";
-		}
-		$result = $this->db_obj->query("INSERT INTO Users (username, fname, lname, email, role, password, userKey) VALUES ('$username', '$fname', 'lname', '$email', '$role', '$password', '$userKey')");
+	public function create_user($username, $fname, $lname, $email, $password, $userKey, $role = 'searcher'){
+		
+		//Below is working...but there is a binding failure that I can't figure out right now...
+		
+/*		$query = $this->db_obj->prepare('INSERT INTO Users (username, fname, lname, email, password, userKey, role) VALUES (?, ?, ?, ?, ?, ?, ?)');
+		$query->bind_param('sssssss', $username, $fname, $lname, $email, $password, $userKey, $role);
+		$query->execute();
+		$query->bind_result($result);
+		$query->fetch();*/
+		
+		//This is the insecure code:
+		$query = "INSERT INTO Users (username, fname, lname, email, password, userKey, role) VALUES ('$username', '$fname', '$lname', '$email', '$password', '$userKey', '$role')";
+		$result = $this->db_obj->query($query);
+
 		if($result){
 			return $this->get_last_id();
 		}else{
 			return FALSE;
 		}
 	}
+	
+	//Checks for the existence of a username for the registration page
+	public function check_username($username){
+		$query = $this->db_obj->prepare('SELECT userId FROM Users WHERE username = ?');
+		$query->bind_param('s', $username);
+		$query->execute();
+		$query->bind_result($userID);
+		$query->fetch();
+		
+		if($userID){
+			return true;
+		}else{
+			return false;	
+		}
+		
+	}
+	
+	//Returns the userID for an e-mail address, used for checking if one exists, and for forgotten e-mails.
+	public function check_email($email){
+
+		$query = $this->db_obj->prepare('SELECT userId FROM Users WHERE email = ?');
+		$query->bind_param('s', $email);
+		$query->execute();
+		$query->bind_result($userID);
+		$query->fetch();
+	
+		return $userID;
+	}
+	
+	//Returns the user's key for checking
+	public function check_userKey($userId){
+
+		$query = $this->db_obj->prepare('SELECT userKey FROM Users WHERE userId = ?');
+		$query->bind_param('s', $userId);
+		$query->execute();
+		$query->bind_result($userKey);
+		$query->fetch();
+	
+		return $userKey;
+	}
+
+
+	public function update_userKey($userID, $userKey){
+		$query = $this->db_obj->prepare('INSERT INTO Users (userKey) VALUES (?) WHERE userId = ?');
+		$query->bind_param('ss', $userID, $userKey);
+		$query->execute();
+		$query->bind_result($result);
+		$query->fetch();
+		
+		if($result){
+			return true;
+		}else{
+			return false;	
+		}
+		
+	}
+	
+	//Changes a user's password
+	public function change_password($userID, $password){
+/*		$query = $this->db_obj->prepare('UPDATE Users SET password=? WHERE userID = ?)');
+		$query->bind_param('ss', $userID, $password);
+		$query->execute();
+		$query->bind_result($result);
+		$query->fetch();*/
+		
+		$query = "UPDATE Users SET password='$password' WHERE userID = '$userID'";
+		$result = $this->db_obj->query($query);
+		
+		if($result){
+			return true;
+		}else{
+			return false;	
+		}
+		
+	}
+
+	//This function runs to set a user's verify variable to either true or false for the first time authentication
+	//$verity = boolean
+	public function user_verify($userID, $verify){
+		$query = "UPDATE Users SET verify=1 WHERE userId = '$userID'";
+		$result = $this->db_obj->query($query);
+		
+		if($result){
+			return true;
+		}else{
+			return false;	
+		}
+	}
+
 
 	/**Creates Points
 	 *
