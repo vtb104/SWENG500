@@ -8,6 +8,8 @@ require_once('phpcommon.php');
 <html>
 <head>
 <title>Contact Page</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/png" href="favicon.ico"/>
 <?php echo _jQuery;?>
 </head>
 

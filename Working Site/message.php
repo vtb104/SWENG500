@@ -10,8 +10,7 @@
  * @author Shane
  */
 
-include_once('includes.php');
-require_once('database.php');
+include_once('phpcommon.php');
 
 class message {
     //functions that will be used in both message types

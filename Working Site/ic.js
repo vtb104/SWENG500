@@ -1,91 +1,3 @@
-<!doctype html>
-<html>
-<head>
-<meta charset="utf-8">
-<title>Command Center</title>
-
-<script type="text/javascript" src="https://maps.google.com/maps/api/js?sensor=true"></script>
-<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=weather"></script>
-<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
-<script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
-<script type="text/javascript" src="StyledMarker.js"></script>
-<script type="text/javascript" src="../lib/jQueryRotate.js"></script>
-<style>
-
-ul
-{
-	list-style-type: none;
-	margin: 2;
-	padding: 2;
-	overflow: hidden;
-	text-align: right;
-}
-li
-{
-	float: inherit;
-	text-align: left;
-}
-a:link,a:visited
-{
-display:inline;
-width:180px;
-font-weight:bold;
-color:#FFFFFF;
-background-color:#232323;
-text-align:center;
-padding:4px;
-text-decoration:none;
-text-transform:uppercase;
-}
-a:hover,a:active
-{
-	background-color: #232323;
-	color: #4C507E;
-	font-size: 14px;
-}
-body {
-	font-family: Gotham, 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 12; color: #ECEDF3;
-	
-}
-
-#main{
-	position: absolute;
-	right: 0px;
-	top: 0px;
-	bottom: 0px;
-	width: 40%;
-	min-width: 300px;
-	padding: 5px;
-	z-index: 11;
-	background-color: #232323;
-}
-
-#map_canvas{
-	position: absolute;
-	left: 0px;
-	bottom: 0px;
-	height: 100%;
-	width: 60%;
-	min-width: 700px;
-	z-index: 10;
-}
-
-#floatNote{
-	position: fixed;
-	right: 0px;
-	bottom: 0px;
-	color: red;	
-	z-Index: 50;
-	Padding: 3px;
-}
-
-#searchform{
-	float: right;
-}
-
-</style>
-
-<script>
 var startLat = 36.53170884914869;
 var startLng = 127.869873046875;
 var mapZoom = 4;
@@ -99,6 +11,8 @@ var scriptMarker;
 var scriptPolyLine;
 var doOnce = true;
 var delayCnt = 0;
+var updateInterval = 5000;
+var timer = 0;
 
 //First to run
 var initialize = function(){
@@ -109,27 +23,45 @@ var initialize = function(){
 	//Creates the map
 	map = new google.maps.Map(document.getElementById('map_canvas'), myOptions);
 	
+	//Add a listener that only updates the weather when the map moves
+	google.maps.event.addListener(map, 'idle', function() {updateWeather('weather_box','radar_box');} );
+	
+	//Draw an initial weather box
+	updateWeather('weather_box','radar_box');
+	
 	//Creates the marker for the input data
 	//var markerOptions = {map: map,  position: markerPosition};
 	//positionMarker = new google.maps.Marker(markerOptions);
 	
+	//Updates the timer value with the default
+	$("#updateInt").val(updateInterval);
+	
 	//This is the timer that runs the getNewPoint function
-	var timer = setInterval(function(){getNewPoints()}, 5000);
+	$("#floatNote").html("Connecting...");
+	connectionStart = new Date();
+	getNewPoints();
 };
 
 
 
 //This is the function that runs every 5s from the timer
 var getNewPoints = function(){
-	$("#floatNote").html("Sending...");
+	
+	if(timer){
+		window.clearTimeout(timer);
+	}
+	updateInterval = $("#updateInt").val();
+	timer = setTimeout(function(){getNewPoints()}, updateInterval);
 	requestData = "1";
+	$("#floatNote").html("Sending...");
 	$.ajax({
         type: "POST",
         url: "messageSend.php",
         data: { update_ic_req:requestData },
 		dataType: "json",
-        success: function(msg){  
-			$("#floatNote").html(msg);        
+        success: function(msg){ 
+			var connectionNow = new Date();
+			$("#floatNote").html("Connected to server for " + (Math.round((connectionNow.getTime() - connectionStart.getTime())/1000)) + "s");        
 			$("#info").html("");
 			for(var user_num = 0; user_num < msg.length; user_num++)
 			{
@@ -149,17 +81,8 @@ var getNewPoints = function(){
 			}
 			
 			//temp call delete or move later -shane
-			google.maps.event.addListener(map, 'dragend', function() { delayCnt = 0; } );
+			
 			updateUserTrack(0);
-			if(delayCnt > 100 || delayCnt == 0)
-			{
-				updateWeather('weather_box','radar_box');
-				delayCnt = 1;
-			}
-			else
-			{
-				delayCnt++;
-			}
          }
      })
 };
@@ -270,56 +193,9 @@ function update_compass_arrow(weather_div, inWindDir)
 	$("#compass_arrow").rotate(inWindDir+180);				
 }
 
-
-</script>
-
-</head>
-<body onLoad="initialize()">
-
-<div id="main">
-	<div id="searchform" action="#"><input type="text" id="searchbox"/><button id="searchnow">Map Search</button></div>
-
-  <img src="images/med_logo.png" />
-  <div id="content">
-  <h1 style="text-align: center;">Search and Rescue</h1>
-  <h2 style="text-align: center;">Command Central</h2>
-
-  <ul>
-    <li><a href="Messages.html">Messages</a></li>
-    <br>
-    <li><a href="Activate GPS.html">Activate GPS</a></li>
-    <br>
-    <li><a href="Locator.html">Locate Personel</a></li>
-  </ul>
-  <div id="info">Info Here</div> 	
-		<div id="outer_weather_box">
-			<div id="weather_box" style="width:200px; height:400px; background-color:#232323; border:1px solid black; float: left;">
-				Weather Box
-				<br />
-			</div>	
-			<div id="radar_box" style="float:right;"></div>
-			<script>
-
-			</script>				
-			</div>
-		</div>
-</div>
-
-<div id="map_canvas"></div>
-<div id="floatNote">Test</div>
-
-
-
-</body>
-<script>
-
 $(function(){
 	$("#searchnow").click(function(){
 		searchNow();
 	});
 
 });
-
-</script>
-
-</html>

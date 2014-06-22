@@ -9,6 +9,8 @@ require_once("phpcommon.php");
 <head>
 <meta charset="utf-8">
 <title>Search and Rescue Register</title>
+<link rel="icon" type="image/png" href="favicon.ico"/>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <?php echo _jQuery;?>
 
 <script>

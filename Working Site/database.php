@@ -177,10 +177,19 @@ class Database
 	 */
 	
 	public function latest_team_location($team){
-		$query = "SELECT Points.* FROM Points JOIN Users ON Points.userID=Users.userID JOIN TeamMembers ON Users.userID=TeamMembers.userID WHERE teamID = '" . $team . "' ORDER BY Points.dateCreated DESC";
+		$query = "SELECT Points.* FROM Points JOIN Users ON Points.userID=Users.userID JOIN TeamMembers ON Users.userID=TeamMembers.userID WHERE teamID = '" . $team . "' ORDER BY Points.dateCreated DESC LIMIT 1";
 		$result = $this->db_obj->query($query);
 		$result2 = $result->fetch_row();
 		return json_encode($result2);
+	}
+	
+		/** Get latest location for a user
+	*/
+	public function latest_user_location($userID){
+		$query = "SELECT Points.* FROM Points WHERE userID = '".$userID."' ORDER BY dateCreated DESC LIMIT 1";
+		$result = $this->db_obj->query($query);
+		$result2 = $result->fetch_row();
+		return $result2;
 	}
 	
 	
@@ -189,7 +198,7 @@ class Database
 	 */
 	 public function list_teams($lat = 0, $lng = 0, $dist = 0){
 
-		 return 'Fail';
+		 return '<span style="color: red">Fail ' . __LINE__ . '</span>';
 	 }
 	 
 	 /** List searches
@@ -197,15 +206,20 @@ class Database
 	 */
 	 public function list_searches($lat = 0, $lng = 0, $dist = 0){
 
-		 return 'Fail';
+		 return '<span style="color: red">Fail ' . __LINE__ . '</span>';
 	 }
 	 
 	 /** List users
 	 *
 	 */
 	 public function list_users($lat = 0, $lng = 0, $dist = 0){
-
-		 return 'Fail';
+		$query = 'SELECT userID FROM Users';
+		$result = $this->return_json($this->db_obj->query($query));
+		if($result){
+			return $result;	
+		}else{
+			return false;	
+		}
 	 }
 
 	 /** Returns a user's password
@@ -223,9 +237,14 @@ class Database
 	 /** Returns a user's username from their 
 	 *
 	 */
-	 public function get_user_id($usernameoremail){
+	public function get_user_id($usernameoremail){
 		//Needs to use either username or e-mail to log someone in
-		 return 'Fail';
+		$query = $this->db_obj->prepare('SELECT userid FROM Users WHERE username=? OR email=?');
+		$query->bind_param('ss', $usernameoremail, $usernameoremail);
+		$query->execute();
+		$query->bind_result($id);
+		$query->fetch();
+		return $id;
 	 }
 	
 	/**Deletes a user
@@ -233,7 +252,7 @@ class Database
 	 */
 	 public function delete_user($userID){
 		
-		return 'Fail'; 
+		return '<span style="color: red">Fail ' . __LINE__ . '</span>'; 
 	 }
 	 
 	 /**Modifies a user's data
@@ -242,7 +261,7 @@ class Database
 	  
 	  public function update_user_info($userID, $dataname, $datavalue){
 		
-		return 'Fail';  
+		return '<span style="color: red">Fail ' . __LINE__ . '</span>';  
 	  }
 	  
 	/** User joins search
@@ -250,7 +269,7 @@ class Database
 	 */
 	 public function user_join_search($userID, $searchID){
 		 
-		 return 'Fail';
+		 return '<span style="color: red">Fail ' . __LINE__ . '</span>';
 	 }
 	 
 	 /** User joins a team
@@ -258,7 +277,7 @@ class Database
 	 */
 	 public function user_join_team($userID, $teamID){
 		 
-		 return 'Fail';
+		 return '<span style="color: red">Fail ' . __LINE__ . '</span>';
 	 }
 	 
 	 /** Team joins a search
@@ -266,7 +285,7 @@ class Database
 	 */
 	 public function team_join_search($teamID, $searchID){
 		 
-		 return 'Fail';
+		 return '<span style="color: red">Fail ' . __LINE__ . '</span>';
 	 }
 	 
 	/** User leaves search
@@ -274,7 +293,7 @@ class Database
 	 */
 	 public function user_leave_search($userID, $searchID){
 		 
-		 return 'Fail';
+		 return '<span style="color: red">Fail ' . __LINE__ . '</span>';
 	 }
 	 
 	 /** User leaves a team
@@ -282,7 +301,7 @@ class Database
 	 */
 	 public function user_leave_team($userID, $teamID){
 		 
-		 return 'Fail';
+		 return '<span style="color: red">Fail ' . __LINE__ . '</span>';
 	 }
 	 
 	 /** Team leaves a search
@@ -290,7 +309,7 @@ class Database
 	 */
 	 public function team_leave_search($teamID, $searchID){
 		 
-		 return 'Fail';
+		 return '<span style="color: red">Fail ' . __LINE__ . '</span>';
 	 }
 	 
 	 /** Team owner disbands the team
@@ -298,7 +317,7 @@ class Database
 	  */
 	public function team_disband($userID, $teamID){
 		
-		return 'Fail';
+		return '<span style="color: red">Fail ' . __LINE__ . '</span>';
 	}
 	 
 	 /** Create message
@@ -306,7 +325,7 @@ class Database
 	 */
 	 public function create_message($from, $to, $title, $message, $pointID = 0){
 		 
-		 return 'Fail';
+		 return '<span style="color: red">Fail ' . __LINE__ . '</span>';
 	 }
 	 
 	 /** Fetch messages for a user, team, or search
@@ -314,7 +333,7 @@ class Database
 	 */
 	 public function fetch_messages($userID = 0, $teamID = 0, $searchID = 0){
 		 
-		 return 'Fail';
+		 return '<span style="color: red">Fail ' . __LINE__ . '</span>';
 	 }
 	 
 	 
@@ -323,7 +342,7 @@ class Database
 	 */
 	 public function update_team_info($teamID, $notes){
 		 
-		 return 'Fail';
+		 return '<span style="color: red">Fail ' . __LINE__ . '</span>';
 	 }
 
 	 /** View team notes
@@ -331,7 +350,7 @@ class Database
 	 */
 	 public function fetch_team_info($teamID){
 		 
-		 return 'Fail';
+		 return '<span style="color: red">Fail ' . __LINE__ . '</span>';
 	 }
 	
 	

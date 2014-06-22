@@ -41,9 +41,9 @@ if(isset($_POST['email'])){
 			</head>
 			<h3>Search and Rescue Password Reset</h3>
 			We do not save passwords in plain-text, so you'll need to make a new one.  Please either click on the link below, or cut and paste into a browser.<br/><br/>
-			<a href='https://mapwich.com/ryan/verify.php?code=$userKey&id=$userID'>Click here</a><br/><br/>
+			<a href='https://mapwich.com/verify.php?code=$userKey&id=$userID'>Click here</a><br/><br/>
 			Or paste this in a browser:<br/><br/>
-			https://mapwich.com/ryan/verify.php?code=$userKey&id=$userID
+			https://mapwich.com/verify.php?code=$userKey&id=$userID
 			<body>
 			</body>
 			</html>");
@@ -88,6 +88,8 @@ if(isset($_GET['code'])){
 <html>
 <head>
 <title>Verification Page</title>
+<link rel="icon" type="image/png" href="favicon.ico"/>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <head>
 <?php echo _jQuery;?>
 <script>

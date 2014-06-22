@@ -1,4 +1,3 @@
-h
 <?php
 
 /*
@@ -13,7 +12,8 @@ h
  */
 
 require_once('message.php');
-require_once("database.php");
+require_once("phpcommon.php");
+
 class messageReceive  extends message{
     //put your code here
     public $last_received_msg;
@@ -28,11 +28,15 @@ class messageReceive  extends message{
     }
 }
 
-$handler = new messageReceive;
-$decode = $handler->decode_json_message($_POST['dataMsg']);
+if(isset($_POST['dataMsg'])){
+	$handler = new messageReceive;
+	$decode = $handler->decode_json_message($_POST['dataMsg']);
+	echo $db->create_point($decode->user, $decode->lat, $decode->lng, '25', time(), 'From FU');
+};
 
-//echo var_dump($decode);
+if(isset($_POST['userRequest'])){
+	echo $db->list_users();
+};
 
-echo $db->create_point($decode->user, $decode->lat, $decode->lng, '25', time(), 'From FU');
 
 ?>

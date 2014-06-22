@@ -20,6 +20,8 @@ if($auth->authenticate()){
 <head>
 <meta charset="utf-8">
 <title>Search and Rescue Login</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/png" href="favicon.ico"/>
 <?php echo _jQuery;?>
 
 <script>
@@ -39,6 +41,7 @@ var onLoad = function(){
 	<div data-role="content">
     
         <p>
+        <form>
         	E-mail Address <b>or</b> Username:<br/>
             <input name="username" id="username"/><br/>
             Password:<br/>
@@ -57,6 +60,7 @@ var onLoad = function(){
                 </div>
 			</div>
 			<br/><br/>
+        </form>
        </p>
         <a href="verify.php?forgot=true" data-role="button">Forgot password?</a>
         <br/>
