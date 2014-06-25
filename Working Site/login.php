@@ -41,7 +41,6 @@ var onLoad = function(){
 	<div data-role="content">
     
         <p>
-        <form>
         	E-mail Address <b>or</b> Username:<br/>
             <input name="username" id="username"/><br/>
             Password:<br/>
@@ -60,7 +59,6 @@ var onLoad = function(){
                 </div>
 			</div>
 			<br/><br/>
-        </form>
        </p>
         <a href="verify.php?forgot=true" data-role="button">Forgot password?</a>
         <br/>

@@ -65,19 +65,24 @@ var getNewPoints = function(){
 			$("#info").html("");
 			for(var user_num = 0; user_num < msg.length; user_num++)
 			{
-				//console.log(">>>>"+msg[user_num]);
-				//var markerOptions = {map: map,  position: markerPosition};
-				//positionMarker = new google.maps.Marker(markerOptions);
-				var tempPos = new google.maps.LatLng(msg[user_num][2], msg[user_num][3]);
-				//positionMarker.setPosition(tempPos);
+				//Check for data
+				if(msg[user_num])
+				{
+					
+					//console.log(">>>>"+msg[user_num]);
+					//var markerOptions = {map: map,  position: markerPosition};
+					//positionMarker = new google.maps.Marker(markerOptions);
+					var tempPos = new google.maps.LatLng(msg[user_num][2], msg[user_num][3]);
+					//positionMarker.setPosition(tempPos);
+					
+					
+					var styleMaker1 = new StyledMarker({styleIcon:new StyledIcon(StyledIconTypes.MARKER,{color:"#99FF66",text:msg[user_num][1]}),position:tempPos,map:map});
+					//styleMaker1.setMap(map);
+	
 				
+					$("#info").html($("#info").html()+"<br />Marker showing position of mobile unit("+msg[user_num][1]+").  Location is Lat: \t" + msg[user_num][2] + " Lng: \t" + msg[user_num][3]); 
 				
-				var styleMaker1 = new StyledMarker({styleIcon:new StyledIcon(StyledIconTypes.MARKER,{color:"#99FF66",text:msg[user_num][1]}),position:tempPos,map:map});
-				//styleMaker1.setMap(map);
-
-				
-				//map.panTo(tempPos);
-				$("#info").html($("#info").html()+"<br />Marker showing position of mobile unit("+msg[user_num][1]+").  Location is Lat: \t" + msg[user_num][2] + " Lng: \t" + msg[user_num][3]); 
+				}
 			}
 			
 			//temp call delete or move later -shane

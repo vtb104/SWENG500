@@ -30,6 +30,7 @@ class Authenticate
 			
 		}else if($this->check_cookie()){
 			
+			$_SESSION['userid'] = $this->check_cookie();
 			$_SESSION['code'] = $this->code();
 			
 			return true;
@@ -79,8 +80,7 @@ class Authenticate
 			
 			//If the cookie is correctly encoded, then log the user in with their userid
 			if($array->code == $this->code(_COOKIEHASH)){
-				$_SESSION['userid'] = $array->userid;
-				return true;
+				return $array->userid;
 				
 			}else{
 				//Unset cookie if it is found, but invalid
@@ -99,6 +99,7 @@ class Authenticate
 		session_write_close();
 		session_regenerate_id(true);
 		setcookie(_LOGINCOOKIE, "", time() - 1000);	
+		return true;
 	}
 	 
 	//A hash with two salts
