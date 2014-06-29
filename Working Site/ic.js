@@ -1,5 +1,6 @@
 var startLat = 36.53170884914869;
 var startLng = 127.869873046875;
+var map;
 var mapZoom = 4;
 var mapHome = new google.maps.LatLng(39.57, -99.10);
 var markerPosition = new google.maps.LatLng(0,0);
@@ -76,7 +77,7 @@ var getNewPoints = function(){
 					//positionMarker.setPosition(tempPos);
 					
 					
-					var styleMaker1 = new StyledMarker({styleIcon:new StyledIcon(StyledIconTypes.MARKER,{color:"#99FF66",text:msg[user_num][1]}),position:tempPos,map:map});
+					//var styleMaker1 = new StyledMarker({styleIcon:new StyledIcon(StyledIconTypes.MARKER,{color:"#99FF66",text:msg[user_num][1]}),position:tempPos,map:map});
 					//styleMaker1.setMap(map);
 	
 				
@@ -87,15 +88,35 @@ var getNewPoints = function(){
 			
 			//temp call delete or move later -shane
 			
-			updateUserTrack(0);
+			updateUserTrack(3);
+                        //update all tracks for the users
+                        for(var userCnt = 0; userCnt < userList.length; userCnt++)
+                        {
+                            updateUserTrack(parseInt(userList[userCnt]));                            
+                        }
          }
      })
 };
-
+var polylineStorage = [];
+var markerStorage = [];
 //create user tracks
 function updateUserTrack(userNumber)
 {
-	tempPos = new google.maps.LatLng(scriptLat, scriptLng);
+    polylineStorage[userNumber] = new google.maps.Polyline({
+    path: usersPolyLines[userNumber],
+    geodesic: true,
+    strokeColor: '#FF0000',
+    strokeOpacity: 1.0,
+    strokeWeight: 2
+	});
+    polylineStorage[userNumber].setMap(map);
+    //alert(usersPolyLines[userNumber]);
+    tempPos = usersPolyLines[userNumber][usersPolyLines[userNumber].length-1];
+    
+    markerStorage[userNumber] = new StyledMarker({styleIcon:new StyledIcon(StyledIconTypes.MARKER,{color:"#99FF66",text:""+userNumber}),position:tempPos,map:map});
+    markerStorage[userNumber].setPosition(tempPos);
+    //alert(tempPos);
+	/*tempPos = new google.maps.LatLng(scriptLat, scriptLng);
 	scriptLocationHolderArray.push(tempPos);
 	if(doOnce)
 	{
@@ -131,7 +152,7 @@ function updateUserTrack(userNumber)
 	else
 	{
 		scriptLng -= Math.random();
-	}
+	}*/
 }
 
 //Searches using the Google search function
@@ -171,18 +192,18 @@ function updateWeather(weather_div, radar_box)
 	  url : "https://api.wunderground.com/api/ff3e23e766c6adcf/geolookup/conditions/q/"+mapCenterPoint.lat()+","+mapCenterPoint.lng()+".json",
 	  dataType : "jsonp",
 	  success : function(parsed_json) {
-	  var location = parsed_json['location']['city'];
-	  var temp_f = parsed_json['current_observation']['temp_f'];
-	  var txt=document.getElementById(weather_div);
-	  txt.innerHTML="<br>Weather Box<br> Weather for "+parsed_json['location']['city']+", "+parsed_json['location']['state']+
-	  "<br> Temperature: "+parsed_json['current_observation']['temp_f']+" &#176;F&nbsp&nbsp&nbsp Humidity: "+parsed_json['current_observation']['relative_humidity']+
-	  "<br> "+parsed_json['current_observation']['precip_today_string']+"<br>Wind Speed: "+parsed_json['current_observation']['wind_mph'] +" mph &nbsp&nbsp&nbsp Wind Direction: "+parsed_json['current_observation']['wind_dir'] +" ("+parsed_json['current_observation']['wind_degrees'] +"&#176;)"+
-	  "<br> "+parsed_json['current_observation']['observation_time'];
-	  update_compass_arrow(weather_div,parsed_json['current_observation']['wind_degrees']);
-	  //get radar should put this in it's own div
-	  var radarbx = document.getElementById(radar_box)
-	  radarbx.innerHTML = '<img src="getRadarImg.php?centerlat='+mapCenterPoint.lat()+'&centerlon='+mapCenterPoint.lng()+'"/>';
-	  }
+		  var location = parsed_json['location']['city'];
+		  var temp_f = parsed_json['current_observation']['temp_f'];
+		  var txt=document.getElementById(weather_div);
+		  txt.innerHTML="<br>Weather Box<br> Weather for "+parsed_json['location']['city']+", "+parsed_json['location']['state']+
+		  "<br> Temperature: "+parsed_json['current_observation']['temp_f']+" &#176;F&nbsp&nbsp&nbsp Humidity: "+parsed_json['current_observation']['relative_humidity']+
+		  "<br> "+parsed_json['current_observation']['precip_today_string']+"<br>Wind Speed: "+parsed_json['current_observation']['wind_mph'] +" mph &nbsp&nbsp&nbsp Wind Direction: "+parsed_json['current_observation']['wind_dir'] +" ("+parsed_json['current_observation']['wind_degrees'] +"&#176;)"+
+		  "<br> "+parsed_json['current_observation']['observation_time'];
+		  update_compass_arrow(weather_div,parsed_json['current_observation']['wind_degrees']);
+		  //get radar should put this in it's own div
+		  var radarbx = document.getElementById(radar_box)
+		  radarbx.innerHTML = '<img src="getRadarImg.php?centerlat='+mapCenterPoint.lat()+'&centerlon='+mapCenterPoint.lng()+'"/>';
+		  }
 	  });
 
 
@@ -194,7 +215,7 @@ function recieveimage()
 function update_compass_arrow(weather_div, inWindDir)
 {
 	var txt = document.getElementById(weather_div);
-	txt.innerHTML+="<br><img id=\"compass_arrow\" src=\"../images/compass_arrow.png\"></img>"
+	txt.innerHTML+="<br><img id=\"compass_arrow\" src=\"images/compass_arrow.png\"></img>"
 	$("#compass_arrow").rotate(inWindDir+180);				
 }
 

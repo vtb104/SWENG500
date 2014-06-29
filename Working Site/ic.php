@@ -17,7 +17,7 @@
 <script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
 <script src="ic.js"></script>
 <script type="text/javascript" src="StyledMarker.js"></script>
-<script type="text/javascript" src="../lib/jQueryRotate.js"></script>
+<script type="text/javascript" src="lib/jQueryRotate.js"></script>
 <style>
 
 ul
@@ -91,6 +91,27 @@ body {
 	float: right;
 }
 
+/*Weather stuff*/
+
+#outer_weather_box{
+	position: fixed;
+	z-index: 20;
+	background-color: #444;
+	height: 300px;
+	width: 500px;
+	left: 50px;
+	bottom: -275px;
+	border-radius: 5px;
+}
+
+.weathershow{
+	display: none;
+}
+
+.weathercursor:hover{
+	cursor: pointer;	
+}
+
 </style>
 </head>
 <?php
@@ -119,17 +140,67 @@ body {
   </ul>
   <div id="info">Info Here</div> 	
   Update Interval:
- 		<select id="updateInt">
-        	<option value="1000">1s</option>
+        <select id="updateInt">
+            <option value="1000">1s</option>
             <option value="5000">5s</option>
             <option value="60000">1 min</option>
         </select>
+  <br> Track History Length:
+        <select id="updateTrackLength">
+            <option value="60000">Last Minute</option>
+            <option value="1800000">30 mins</option>
+            <option value="3600000">1 hour</option>
+            <option value="86400000">1 day</option>
+            <option value="99999999999">All Data</option>
+        </select>
 		<div id="outer_weather_box">
-			<div id="weather_box" style="width:200px; height:400px; background-color:#232323; border:1px solid black; float: left;">
+        	<div align="center" id="showweather" class="weathercursor">Click to show weather</div>
+            <div align="center"	id="hideweather" style="display: none" class="weathercursor" >Click to hide weather</div>
+			<div class="weathershow" id="weather_box" style="width:200px; height:400px; background-color:#232323; border:1px solid black; float: left;">
 				Weather Box
 				<br />
 			</div>	
-			<div id="radar_box" style="float:right;"></div>
+			<div class="weathershow" id="radar_box" style="float:right;"></div>
+                        <div>   
+                            <?php
+                                require_once("phpcommon.php");
+
+                                echo "<script>";
+                                //get all the users
+                                //TODO: list users only on a search
+                                $userList = json_decode($db->list_users());
+                                $userIDArray = array();
+                                foreach ($userList as $arrVal)
+                                {
+                                    array_push($userIDArray,$arrVal->userID); 
+                                }
+                                
+                                //get points for each user for the last 4 hours
+                                //TODO: make start time time dynamic
+                                $start_time = time() - (3600 * 24 * 7);//(3 hours ago -> 3 hours * 60 minutes * 60 seconds)
+                                $userLocationHistoryArray = array();
+                                foreach ($userIDArray as $uID)
+                                {
+                                    $userLocationHistoryArray[$uID] = json_decode($db->get_points($start_time,$uID));
+                                }
+                  
+                               //createuserList array variable in javascript
+                                echo 'var userList = '.json_encode($userIDArray).';'; 
+                               //create a userHistory, includes lat lng point ids etc
+                                echo 'var userHistory = '.json_encode($userLocationHistoryArray).';';
+                                //create set of poly lines for each user in javascript
+                                echo 'var usersPolyLines = [];';
+                                echo 'for(var outerCnt = 0; outerCnt < userList.length; outerCnt++){';
+                                echo 'var tempArray = [];';
+                                echo 'for(var innerCnt = 0; innerCnt < userHistory[userList[outerCnt]].length; innerCnt++){';
+                                echo 'tempArray[innerCnt] = new google.maps.LatLng(userHistory[userList[outerCnt]][innerCnt].lat,userHistory[userList[outerCnt]][innerCnt].lng)';
+                                echo '}';
+                                echo 'usersPolyLines[userList[outerCnt]] = tempArray}';
+
+                                echo "</script>";
+                                
+                            ?>
+                        </div>
 			<script>
 
 			</script>				
@@ -140,14 +211,29 @@ body {
 <div id="map_canvas"></div>
 <div id="floatNote">Test</div>
 
-
+  
 
 </body>
 <script>
-	$(function(){
-		$("#updateInt").change(function(){
-			getNewPoints();
-		});
+//Put jQuery button listeners here, don't put too many functions here due to scope issues.
+$(function(){
+	$("#updateInt").change(function(){
+		getNewPoints();
 	});
+	
+	$("#showweather").click(function(){
+		$(this).hide();
+		$("#hideweather").show();
+		$(".weathershow").show("fast");
+		$("#outer_weather_box").animate({bottom: "0px"}, 400, function(){});
+	});
+	
+	$("#hideweather").click(function(){
+		$(this).hide();
+		$("#showweather").show();
+		$(".weathershow").hide("fast");
+		$("#outer_weather_box").animate({bottom: "-275px"}, 400, function(){});
+	});
+});
 </script>
 </html>

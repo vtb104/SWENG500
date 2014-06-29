@@ -1,4 +1,4 @@
-<?php
+ <?php
 //Database object and interface
 
 //Database variables
@@ -28,7 +28,7 @@ class Database
 		
 		//Below is working...but there is a binding failure that I can't figure out right now...
 		
-/*		$query = $this->db_obj->prepare('INSERT INTO Users (username, fname, lname, email, password, userKey, role) VALUES (?, ?, ?, ?, ?, ?, ?)');
+		/*$query = $this->db_obj->prepare('INSERT INTO Users (username, fname, lname, email, password, userKey, role) VALUES (?, ?, ?, ?, ?, ?, ?)');
 		$query->bind_param('sssssss', $username, $fname, $lname, $email, $password, $userKey, $role);
 		$query->execute();
 		$query->bind_result($result);
@@ -37,6 +37,8 @@ class Database
 		//This is the insecure code:
 		$query = "INSERT INTO Users (username, fname, lname, email, password, userKey, role) VALUES ('$username', '$fname', '$lname', '$email', '$password', '$userKey', '$role')";
 		$result = $this->db_obj->query($query);
+
+
 
 		if($result){
 			return $this->get_last_id();
@@ -103,11 +105,11 @@ class Database
 	
 	//Changes a user's password
 	public function change_password($userID, $password){
-/*		$query = $this->db_obj->prepare('UPDATE Users SET password=? WHERE userID = ?)');
-		$query->bind_param('ss', $userID, $password);
-		$query->execute();
-		$query->bind_result($result);
-		$query->fetch();*/
+		//$query = $this->db_obj->prepare('UPDATE Users SET password=? WHERE userID = ?)');
+		//$query->bind_param('ss', $userID, $password);
+		//$query->execute();
+		//$query->bind_result($result);
+		//$query->fetch();
 		
 		$query = "UPDATE Users SET password='$password' WHERE userID = '$userID'";
 		$result = $this->db_obj->query($query);
@@ -183,7 +185,8 @@ class Database
 		return json_encode($result2);
 	}
 	
-		/** Get latest location for a user
+	/** Get latest location for a user
+	 *  @return a point in json format	
 	*/
 	public function latest_user_location($userID){
 		$query = "SELECT Points.* FROM Points WHERE userID = '".$userID."' ORDER BY dateCreated DESC LIMIT 1";
@@ -195,30 +198,96 @@ class Database
 	
 	 /** List teams
 	 *
+	 *	@param $lat/$lng , default is 0, finds teams within a certain distance of the point
+	 *	@param $lat/$lng/$dist, if all are default, returns a list of all teams
+	 *	@reaturn json array of team numbers and names
 	 */
 	 public function list_teams($lat = 0, $lng = 0, $dist = 0){
 
-		 return '<span style="color: red">Fail ' . __LINE__ . '</span>';
+		if(!$lat && !$lng && !$dist)
+		{
+			$query = "SELECT teamID, teamName FROM teams";
+			$result = $this->db_obj->query($query);
+			return $this->return_json($result);
+		}
+		else
+	 	{
+			return 'Distance searching not enabled yet';
+		}
+		 
+	 }
+	 
+	  /** Create a Search
+	 *
+	 *	@param $lat/$lng/$dist, default is 0, finds searches within a certain distance of the point
+	 *	@param $lat/$lng/$dist, if all are default, returns a list of all teams
+	 *	@reaturn new search number
+	 */
+	 public function create_search($userID, $searchName, $searchStart, $searchEnd, $searchInfo){
+		$query = $this->db_obj->prepare('INSERT INTO Searches (owner, searchName, searchStart, searchEnd, searchInfo) VALUES (?, ?, ?, ?, ?)');
+		$query->bind_param('sssss', $userID, $searchName, $searchStart, $searchEnd, $searchInfo);
+		$result = $query->execute();
+		if($result)
+		{
+			return $this->get_last_id();
+		}
+		else
+		{
+			return "Error ". __LINE__ .  " " . __FILE__;
+		}
 	 }
 	 
 	 /** List searches
 	 *
+	 *	@param $lat/$lng/$dist, default is 0, finds searches within a certain distance of the point
+	 *	@param $lat/$lng/$dist, if all are default, returns a list of all teams
+	 *	@reaturn json array of search names and numbers
 	 */
 	 public function list_searches($lat = 0, $lng = 0, $dist = 0){
 
-		 return '<span style="color: red">Fail ' . __LINE__ . '</span>';
+		if(!$lat && !$lng && !$dist)
+		{
+			$query = "SELECT owner, searchID, searchName FROM searches";
+			$result = $this->db_obj->query($query);
+			return $this->return_json($result);
+		}
+		else
+	 	{
+			return 'Distance searching not enabled yet';
+		}
 	 }
+	 
+	 /** List searching - Lists all users currently involved in a search
+	 *
+	 *	@param $searchID
+	 *	@return json array
+	 */
+	 public function list_searching($searchID){
+		return $this->return_json($this->db_obj->query("SELECT userID FROM Searching WHERE searchID='$searchID'"));
+	 }
+	 
 	 
 	 /** List users
 	 *
+	 *	@param $lat/$lng/$dist, default is 0, finds users within a certain distance.
+	 *	@param $lat/$lng/$dist, if all are default, returns a list of all users
+	 *	@reaturn json array of search names and numbers
 	 */
 	 public function list_users($lat = 0, $lng = 0, $dist = 0){
-		$query = 'SELECT userID FROM Users';
-		$result = $this->return_json($this->db_obj->query($query));
-		if($result){
-			return $result;	
-		}else{
-			return false;	
+		
+		if(!$lat && !$lng && !$dist)
+		{
+			$query = 'SELECT userID FROM Users';
+			$result = $this->return_json($this->db_obj->query($query));
+			if($result){
+				return $result;	
+			}else{
+				return false;	
+			}
+		}
+		else
+	 	{
+			return 'Distance searching is not enabled yet' . __LINE__;
 		}
 	 }
 
@@ -226,8 +295,8 @@ class Database
 	 *
 	 */
 	 public function get_user_password($name){
-		$query = $this->db_obj->prepare('SELECT password FROM Users WHERE username=? OR email=?');
-		$query->bind_param('ss', $name, $name);
+		$query = $this->db_obj->prepare('SELECT password FROM Users WHERE username=? OR email=? OR userID=?');
+		$query->bind_param('sss', $name, $name, $name);
 		$query->execute();
 		$query->bind_result($password);
 		$query->fetch();
@@ -239,7 +308,7 @@ class Database
 	 */
 	public function get_user_id($usernameoremail){
 		//Needs to use either username or e-mail to log someone in
-		$query = $this->db_obj->prepare('SELECT userid FROM Users WHERE username=? OR email=?');
+		$query = $this->db_obj->prepare('SELECT userID FROM Users WHERE username=? OR email=?');
 		$query->bind_param('ss', $usernameoremail, $usernameoremail);
 		$query->execute();
 		$query->bind_result($id);
@@ -249,10 +318,22 @@ class Database
 	
 	/**Deletes a user
 	 *
+	 * 	@param $userID, must delete in certain order to ensure table rules are not violated
+	 *	@return tru or false depending on 
 	 */
 	 public function delete_user($userID){
+		$query1 = $this->db_obj->query("DELETE FROM Searching WHERE userID = '" . $userID . "'");
+		$query2 = $this->db_obj->query("DELETE FROM TeamMembers WHERE userID = '" . $userID . "'");
+		$query22 = $this->db_obj->query("DELETE FROM Teams WHERE owner = '" . $userID . "'");
+		$query3 = $this->db_obj->query("DELETE FROM Points WHERE userID = '" . $userID . "'");
+		$query4 = $this->db_obj->query("DELETE FROM Messages WHERE sentfrom = '" . $userID . "' OR sentto = '" . $userID . "'");
+		$query5 = $this->db_obj->query("DELETE FROM Searches WHERE owner = '" . $userID . "'");
+		$query6 = $this->db_obj->query("DELETE FROM Users WHERE userID = '" . $userID . "'");
 		
-		return '<span style="color: red">Fail ' . __LINE__ . '</span>'; 
+		$returnArray = array($query1,$query2,$query22,$query3,$query4,$query5,$query6);
+		
+		return json_encode($returnArray);
+		
 	 }
 	 
 	 /**Modifies a user's data
@@ -266,18 +347,51 @@ class Database
 	  
 	/** User joins search
 	 *
+	 *	@param $userID and $searchID are obvious, if they don't exists, will return false
+	 *	@return true or false if successful or not
 	 */
 	 public function user_join_search($userID, $searchID){
-		 
-		 return '<span style="color: red">Fail ' . __LINE__ . '</span>';
+		$query = $this->db_obj->prepare('INSERT INTO Searching (searchID, userID) VALUES (?, ?)');
+		$query->bind_param('ss', $userID, $searchID);
+		return $query->execute();
 	 }
+	 
+	  /** Create a Team
+	 *
+	 *	@param $userID - the owner of the team
+	 *	@return - the new teamnumber
+	 */
+	 public function create_team($userID, $teamName, $teamAssignment, $teamInfo, $searchID = ''){
+		$query = $this->db_obj->prepare('INSERT INTO Teams (teamName, teamAssignment, teamInfo, searchID, owner) VALUES (?, ?, ?, ?, ?)');
+		$query->bind_param('sssss', $teamName, $teamAssignment, $teamInfo, $searchID, $userID);
+		$result = $query->execute();
+		
+		if($result)
+		{
+			return $this->get_last_id();
+		}
+		else
+		{
+			return "Error ". __LINE__ .  " " . __FILE__;
+		}
+	 }
+	 
 	 
 	 /** User joins a team
 	 *
 	 */
 	 public function user_join_team($userID, $teamID){
 		 
-		 return '<span style="color: red">Fail ' . __LINE__ . '</span>';
+		 $result = $this->db_obj->query("INSERT INTO TeamMembers (userID, teamID) VALUES ('$userID', '$teamID')");
+		 return $result;
+		 if($result)
+		 {
+			 return true;
+		 }
+		 else
+		 {
+			 return "Fail " . __LINE__ . " " . __FILE__;
+		 }
 	 }
 	 
 	 /** Team joins a search
@@ -285,7 +399,16 @@ class Database
 	 */
 	 public function team_join_search($teamID, $searchID){
 		 
-		 return '<span style="color: red">Fail ' . __LINE__ . '</span>';
+		 $result = $this->db_obj->query("UPDATE Teams SET searchID = '$searchID' WHERE teamID = '$teamID'");
+		 return $result;
+		 if($result)
+		 {
+			 return true;
+		 }
+		 else
+		 {
+			 return "Fail " . __LINE__ . " " . __FILE__;
+		 }
 	 }
 	 
 	/** User leaves search
