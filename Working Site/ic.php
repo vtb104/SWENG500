@@ -17,6 +17,11 @@
 <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=weather"></script>
 <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
 <script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+
+<!-- jQuery UI-->
+<script src="jquery-ui-1.11.0/jquery-ui.min.js"></script>
+<link rel="stylesheet" href="jquery-ui-1.11.0/jquery-ui.min.css"/>
+
 <script type="text/javascript" src="StyledMarker.js"></script>
 <script type="text/javascript" src="lib/jQueryRotate.js"></script>
 
@@ -59,7 +64,7 @@ body {
 	
 }
 
-#logo{position: fixed; left: 0px; top: 0px; width: 100px;}
+#logo{position: fixed; right: 0px; top: 30px; width: 150px; z-index: 20}
 
 #main{
 	position: absolute;
@@ -190,13 +195,22 @@ body {
 }
 
 </style>
-</head>
+
+<script>
 <?php
 	if(isset($_SESSION['userid']))
 	{
-		echo "<script>var userID = \"".$_SESSION['userid']."\"</script>";
-	}
+		echo "var userID = " . $_SESSION['userid'];
+	}else{
+		echo "var userID = 0";
+	}	
 ?>
+
+var testFunction = function (){
+	$("#testOutput").html("test");
+};
+</script>
+</head>
 <body onLoad="initialize()">
 <div id="pagewrapper">
     <div id="main">
@@ -227,28 +241,39 @@ body {
                 </div>
                 <div class="pointoptions"><span class="optionlabel">Update Interval: </span>
                     <select id="updateInt">
-                        <option value="1000">1s</option>
                         <option value="5000">5s</option>
+                        <option value="10000">10s</option>
+                        <option value="10000">30s</option>
                         <option value="60000">1 min</option>
                     </select>
                 </div>
                <div class="pointoptions"><span class="optionlabel">Track History Length:</span>
-                    <select id="updateTrackLength">
+<!--                    <select id="updateTrackLength">
                         <option value="60">Last Minute</option>
                         <option value="1800">30 mins</option>
                         <option value="3600">1 hour</option>
                         <option value="86400">1 day</option>
                         <option value="604800">1 Week</option>
                         <option value="1209600">2 Weeks</option>
-                    </select>
+                    </select>-->
+                   <span id="updateTrackLength">60s</span>
+                   <div id="trackSlider" style="width: 400px;"></div>
                 </div>
+                <div class="pointoptions">
+                	
+                </div>
+                
+                
            	</div>
             
         <div id="searcherlist">
                        
         </div>
-            
-            
+         
+         <div style="position: absolute; bottom: 20px; left: 0px;">   
+        <div id="testOutput">Test Code Here</div>
+        <button id="testbutton">Test Button</button>
+        </div>
         </div>  <!-- Content Div-->    
 
     <!--Items below this line are absolute or fixed, and not in line with the rest of the document-->
@@ -276,14 +301,28 @@ body {
 //Put jQuery button listeners here, don't put too many functions here due to scope issues.
 $(function(){
 	
+	//Setup options
+	function refreshLabel(){
+		trackHistoryLength = $("#trackSlider").slider("value");
+		$("#updateTrackLength").html(convertSeconds(trackHistoryLength))
+	}
+	function refreshSlider(){
+		refreshLabel();	
+		updateTrackLength();
+	}
+	$("#trackSlider").slider({
+		min: 60,
+		max: 1209600,  //Two week max
+		//max: 2581200,    //1 Month max
+		step: 60,
+		value: trackHistoryLength,
+      	slide: refreshLabel,
+      	change: refreshSlider
+	});
+	
 	//Change the update interval
 	$("#updateInt").change(function(){
 		updateIntervalCaller();
-	});
-	
-	//Change the update track length
-	$("#updateTrackLength").change(function(){
-		updateTrackLength();
 	});
 	
 	//Change the team number to view
@@ -307,6 +346,10 @@ $(function(){
 	
 	$("#searchnow").click(function(){
 		searchNow();
+	});
+	
+	$("#testbutton").click(function(){
+		testFunction();
 	});
 	
 });

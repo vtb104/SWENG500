@@ -6,8 +6,9 @@ var pointsShowing = 0;
 var timer = 0;
 var cookieDuration = 24 * 30;	//30 days
 
-var startLat = 36.53170884914869;  //America
-var startLng = 127.869873046875;
+var usaCoord = new google.maps.LatLng(39.57, -99.10);
+var startLat = 39.57;  //America
+var startLng = -100;
 
 if(readCookie("sar.location.lat") && readCookie("sar.location.lng")){
 	startLat = readCookie("sar.location.lat");
@@ -44,16 +45,135 @@ if(readCookie("sar.trackLength")){
 	trackHistoryLength = readCookie("sar.trackLength");
 };
 var updateTrackLength = function(){
-	trackHistoryLength = $("#updateTrackLength").val();
 	writeCookie("sar.trackLength", trackHistoryLength, cookieDuration);
 	pointsShowing = 0;
 	users.updateTrails();
 };
 
+/*******************First to run, initializes all the points*******************************/
+var initialize = function(){
+	var overviewOptions = {opened: false};
+	var panControlOptions = {position: google.maps.ControlPosition.RIGHT_TOP};
+	var scaleControlOptions = {position: google.maps.ControlPosition.LEFT_BOTTOM};
+	var zoomControlOptions = {position: google.maps.ControlPosition.RIGHT_CENTER};
+	
+	//Sets options for the map
+	var myOptions = {zoom: mapZoom, 
+					 center: mapHome,
+					 panControlOptions: panControlOptions,
+					 zoomControlOptions: zoomControlOptions,
+					 overviewOptions: overviewOptions
+					 };
+	
+	//Creates the map
+	map = new google.maps.Map(document.getElementById('map_canvas'), myOptions);
+	
+	//Add a listener that only updates the weather when the map moves
+	google.maps.event.addListener(map, 'idle', function() {updateWeather('weather_box','radar_box');} );
+	
+	//Adds listeners for cookie creation
+	google.maps.event.addListener(map, "center_changed", function(){
+		temp = new google.maps.LatLng();
+		temp = map.getCenter();
+		writeCookie("sar.location.lat", temp.lat(), cookieDuration);
+		writeCookie("sar.location.lng", temp.lng(), cookieDuration);
+	});
+	
+	google.maps.event.addListener(map, "zoom_changed", function(event){
+		writeCookie("sar.zoom", map.getZoom(), cookieDuration);
+	});
+	
+	//Draw an initial weather box
+	updateWeather('weather_box','radar_box');
+	
+	//This is the timer that runs the getNewPoint function
+	$("#floatNote").html("Connecting...");
+	connectionStart = new Date();
+	
+	
+	//Can change these to cookie values to remember the last used data
+	
+	//Updates the timer value with the default
+	$("#updateInt").val(updateInterval);
+	
+	//Updates the default length for tracks to the user's last value
+	$("#updateTrackLength").html(convertSeconds(trackHistoryLength))
+
+	//Sets the update value to the variable listed above
+	$("#updateTrackLength").val(trackHistoryLength);
+
+	//Start the timer to get new points
+	getNewPoints();
+	
+};
+
+
+//This is the function that runs every 5s from the timer
+var getNewPoints = function(){
+	
+	//Starts the timer based on the user input
+	if(timer){
+		window.clearTimeout(timer);
+	}
+	timer = setTimeout(function(){getNewPoints()}, updateInterval);
+
+	//The request data needs to be modified to request certain teams and searches only
+	/*
+		team = teamID
+		theTime = time in SECONDS for the age of the points
+	 */
+	requestData = {team: "1", theTime: trackHistoryLength}
+	
+	//Start the AJAX call
+	$("#floatNote").html("Sending...");
+	$.ajax({
+        type: "POST",
+        url: "messageSend.php",
+        data: { update_ic_req:requestData },
+		dataType: "json",
+        success: function(msg){ 
+			var connectionNow = new Date();
+			$("#floatNote").html("Connected to server for " + (Math.round((connectionNow.getTime() - connectionStart.getTime())/1000)) + "s | Points Loaded: " + objectCount + " | Points plotted: " + pointsShowing);        
+			//$("#info").html(msg);
+			
+			/*Object format for the returned JSON string:
+				{"userID":"2",
+				 "points":
+					{"pointID":"49450",
+					 "userID":"2",
+					 "lat":"64.6790173",
+					 "lng":"-147.0894166",
+					 "alt":"25",
+					 "dateCreated":"1404170736",
+					 "pointNotes":"From FU"},
+					 ....
+				 "userData":
+				 	{"username":"ryan","fname":"Ryan","lname":"lname"}]},
+			*/
+			
+			//Send the msg object to the user singleton to update or create points.
+			users.checkUsers(msg);
+			pointsShowing = 0;
+			users.plotPoints();	
+			users.drawUserButtons();
+		}
+	});
+};
+
+//This function updates the team numbers
+var updateTeamNumbers = function(){
+	//AJAX call to pull list of teams from the database and update drop down, update on 10 second intervals
+	
+};
+
+
+/************************Object of Users****************************************
+ *  The User object contains functions that iterate through the userArray value*
+ ******************************************************************************/
+ 
 //Global user singleton (thanks for that team Shane)
 var users = new Users;
 
-//Object of Users
 function Users(user){
 	this.userArray = [];	
 }
@@ -126,14 +246,13 @@ Users.prototype.checkUsers = function(inputUsers){
 Users.prototype.drawUserButtons = function(){
 	$("#searcherlist").html("");
 	$.each(this.userArray, function(index, value){
-		$("#searcherlist").append('<div id="user' + value.userID + '" class="searcher" userID="' + value.userID + '">' + value.userID +' ' + value.username + '</div>');
+		$("#searcherlist").append('<div id="user' + value.userID + '" class="searcher" userID="' + value.userID + '" style="background-color:' + value.userColor +'">' + value.userID +' ' + value.username + '</div>');
 		$(".searcher").on("click", function(e){
 			users.panToPerson($(this).attr("userID"));
 		});
 		
 	});
 }
-
 
 //Plots the current user array
 Users.prototype.plotPoints = function(){
@@ -160,202 +279,13 @@ Users.prototype.panToPerson = function(input){
 
 
 
-//First to run
-var initialize = function(){
-	var overviewOptions = {opened: false};
-	var panControlOptions = {position: google.maps.ControlPosition.RIGHT_TOP};
-	var scaleControlOptions = {position: google.maps.ControlPosition.LEFT_BOTTOM};
-	var zoomControlOptions = {position: google.maps.ControlPosition.RIGHT_CENTER};
-	
-	//Sets options for the map
-	var myOptions = {zoom: mapZoom, 
-					 center: mapHome,
-					 panControlOptions: panControlOptions,
-					 zoomControlOptions: zoomControlOptions,
-					 overviewOptions: overviewOptions
-					 };
-	
-	//Creates the map
-	map = new google.maps.Map(document.getElementById('map_canvas'), myOptions);
-	
-	//Add a listener that only updates the weather when the map moves
-	google.maps.event.addListener(map, 'idle', function() {updateWeather('weather_box','radar_box');} );
-	
-	//Adds listeners for cookie creation
-	google.maps.event.addListener(map, "center_changed", function(){
-		temp = new google.maps.LatLng();
-		temp = map.getCenter();
-		writeCookie("sar.location.lat", temp.lat(), cookieDuration);
-		writeCookie("sar.location.lng", temp.lng(), cookieDuration);
-	});
-	
-	google.maps.event.addListener(map, "zoom_changed", function(event){
-		writeCookie("sar.zoom", map.getZoom(), cookieDuration);
-	});
-	
-	//Draw an initial weather box
-	updateWeather('weather_box','radar_box');
-	
-	//This is the timer that runs the getNewPoint function
-	$("#floatNote").html("Connecting...");
-	connectionStart = new Date();
-	
-	
-	//Can change these to cookie values to remember the last used data
-	
-	//Updates the timer value with the default
-	$("#updateInt").val(updateInterval);
-
-	//Sets the update value to the variable listed above
-	$("#updateTrackLength").val(trackHistoryLength);
-
-	//Start the timer to get new points
-	getNewPoints();
-	
-};
-
-
-
-//This is the function that runs every 5s from the timer
-var getNewPoints = function(){
-	
-	//Starts the timer based on the user input
-	if(timer){
-		window.clearTimeout(timer);
-	}
-	timer = setTimeout(function(){getNewPoints()}, updateInterval);
-
-	//The request data needs to be modified to request certain teams and searches only
-	/*
-		team = teamID
-		theTime = time in SECONDS for the age of the points
-	 */
-	requestData = {team: "1", theTime: trackHistoryLength}
-	
-	//Start the AJAX call
-	$("#floatNote").html("Sending...");
-	$.ajax({
-        type: "POST",
-        url: "messageSend.php",
-        data: { update_ic_req:requestData },
-		dataType: "json",
-        success: function(msg){ 
-			var connectionNow = new Date();
-			$("#floatNote").html("Connected to server for " + (Math.round((connectionNow.getTime() - connectionStart.getTime())/1000)) + "s | Points Loaded: " + objectCount + " | Points plotted: " + pointsShowing);        
-			//$("#info").html(msg);
-			
-			/*Object format for the returned JSON string:
-				{"userID":"2",
-				 "points":
-					{"pointID":"49450",
-					 "userID":"2",
-					 "lat":"64.6790173",
-					 "lng":"-147.0894166",
-					 "alt":"25",
-					 "dateCreated":"1404170736",
-					 "pointNotes":"From FU"},
-					 ....
-				 "userData":
-				 	{"username":"ryan","fname":"Ryan","lname":"lname"}]},
-			*/
-			
-			//Send the msg object to the user singleton to update or create points.
-			users.checkUsers(msg);
-			pointsShowing = 0;
-			users.plotPoints();	
-			users.drawUserButtons();
-		}
-	});
-};
-
-//This function updates the team numbers
-var updateTeamNumbers = function(){
-	//AJAX call to pull list of teams from the database and update drop down, update on 10 second intervals
-	
-};
-
-
-
-//Searches using the Google search function
-function searchNow(){
-	var inputstring = "San Diego";
-	if ($("#searchbox").val() != ""){
-		inputstring = $("#searchbox").val();
-	}
-	searched = true;
-	var geocoderequest = new google.maps.Geocoder();
-	var geocoderesult;
-	var geocodestatus;
-	geocoderequest.geocode({address: inputstring}, function(geocoderesult, geocodestatus){
-		if (geocodestatus == "OK"){
-			$.each(geocoderesult, function(index, value){
-				thisx = this;
-				if(index == 0){
-					map.fitBounds(value.geometry.viewport);
-				}
-				
-			})
-		}
-		else if (geocodestatus == "ZERO_RESULTS"){
-			
-		}
-		else
-		{
-			$("#info").html("Error, try again later");
-		}
-	});
-};
-
-
-function updateWeather(weather_div, radar_box)
-{
-	var mapCenterPoint = map.getCenter();
-	//get weather data
-	$.ajax({
-	  url : "https://api.wunderground.com/api/ff3e23e766c6adcf/geolookup/conditions/q/"+mapCenterPoint.lat()+","+mapCenterPoint.lng()+".json",
-	  dataType : "jsonp",
-	  success : function(parsed_json) {
-	  var location = parsed_json['location']['city'];
-	  var temp_f = parsed_json['current_observation']['temp_f'];
-	  var txt=document.getElementById(weather_div);
-	  txt.innerHTML="<br>Weather Box<br> Weather for "+parsed_json['location']['city']+", "+parsed_json['location']['state']+
-	  "<br> Temperature: "+parsed_json['current_observation']['temp_f']+" &#176;F&nbsp&nbsp&nbsp Humidity: "+parsed_json['current_observation']['relative_humidity']+
-	  "<br> "+parsed_json['current_observation']['precip_today_string']+"<br>Wind Speed: "+parsed_json['current_observation']['wind_mph'] +" mph &nbsp&nbsp&nbsp Wind Direction: "+parsed_json['current_observation']['wind_dir'] +" ("+parsed_json['current_observation']['wind_degrees'] +"&#176;)"+
-	  "<br> "+parsed_json['current_observation']['observation_time'];
-	  update_compass_arrow(weather_div,parsed_json['current_observation']['wind_degrees']);
-	  //get radar should put this in it's own div
-	  var radarbx = document.getElementById(radar_box)
-	  radarbx.innerHTML = '<img src="getRadarImg.php?centerlat='+mapCenterPoint.lat()+'&centerlon='+mapCenterPoint.lng()+'"/>';
-	  }
-	  });
-
-
-}
-function recieveimage()
-{
-	console.log("rec test");
-}
-function update_compass_arrow(weather_div, inWindDir)
-{
-	var txt = document.getElementById(weather_div);
-	txt.innerHTML+="<br><img id=\"compass_arrow\" src=\"images/compass_arrow.png\"></img>"
-	$("#compass_arrow").rotate(inWindDir+180);				
-}
-
-
-//LatLng object inheritor for pointID and pointDate
-google.maps.LatLng.prototype.PointData = function(pointID, title, pointDate){
-	this.pointID = pointID;
-	this.pointDate = pointDate;
-	
-	//Default values
-	this.plotted = false;
-}
-
-//This is the object constructor for a person, you need a userID and an array of points to create
+/*******************************************Person Object****************************************
+ *This is the object constructor for a person, you need a userID and an array of points to create
+ ***********************************************************************************************/
 function Person(input){
 	this.userID = input.userID;
-	this.styleOptions = new StyledIcon(StyledIconTypes.MARKER,{color:"#99FF66",text:input.userID});
+	this.userColor = randomColor();
+	this.styleOptions = new StyledIcon(StyledIconTypes.MARKER,{color:this.userColor,text:input.userID});
 	this.currentMarker = new StyledMarker({styleIcon:this.styleOptions,map:map});
 	this.pointArray = [];
 	this.showTrail = true;
@@ -363,7 +293,7 @@ function Person(input){
 	this.trail = new google.maps.Polyline({
 		map: null,
 		geodesic: true,
-		strokeColor: '#FF0000',
+		strokeColor: this.userColor,
 		strokeOpacity: 1.0,
 		strokeWeight: 2
 	});
@@ -411,6 +341,7 @@ Person.prototype.plotPoints = function(){
 	};
 	return true;
 };
+
 
 //Draw the trail, based on the input time
 Person.prototype.drawTrail = function(){
@@ -474,7 +405,48 @@ Person.prototype.destroy = function(){
 	this.trail.setMap(null);
 };
 
-/*Cookie code*/
+
+/****************************************************Weather Methods************************/
+function updateWeather(weather_div, radar_box)
+{
+	var mapCenterPoint = map.getCenter();
+	//get weather data
+	$.ajax({
+	  url : "https://api.wunderground.com/api/ff3e23e766c6adcf/geolookup/conditions/q/"+mapCenterPoint.lat()+","+mapCenterPoint.lng()+".json",
+	  dataType : "jsonp",
+	  success : function(parsed_json) {
+		  if(!parsed_json.response.error){
+			  var location = parsed_json['location']['city'];
+			  var temp_f = parsed_json['current_observation']['temp_f'];
+			  var txt=document.getElementById(weather_div);
+			  txt.innerHTML="<br>Weather Box<br> Weather for "+parsed_json['location']['city']+", "+parsed_json['location']['state']+
+			  "<br> Temperature: "+parsed_json['current_observation']['temp_f']+" &#176;F&nbsp&nbsp&nbsp Humidity: "+parsed_json['current_observation']['relative_humidity']+
+			  "<br> "+parsed_json['current_observation']['precip_today_string']+"<br>Wind Speed: "+parsed_json['current_observation']['wind_mph'] +" mph &nbsp&nbsp&nbsp Wind Direction: "+parsed_json['current_observation']['wind_dir'] +" ("+parsed_json['current_observation']['wind_degrees'] +"&#176;)"+
+			  "<br> "+parsed_json['current_observation']['observation_time'];
+			  update_compass_arrow(weather_div,parsed_json['current_observation']['wind_degrees']);
+			  //get radar should put this in it's own div
+			  var radarbx = document.getElementById(radar_box)
+			  radarbx.innerHTML = '<img src="getRadarImg.php?centerlat='+mapCenterPoint.lat()+'&centerlon='+mapCenterPoint.lng()+'"/>';
+		  }
+		  }
+	  });
+
+
+}
+function recieveimage()
+{
+	console.log("rec test");
+}
+function update_compass_arrow(weather_div, inWindDir)
+{
+	var txt = document.getElementById(weather_div);
+	txt.innerHTML+="<br><img id=\"compass_arrow\" src=\"images/compass_arrow.png\"></img>"
+	$("#compass_arrow").rotate(inWindDir+180);				
+}
+
+
+
+/*********************************************Cookie code***********************************/
 function writeCookie(name, value, hours)
 {
   var expire = "";
@@ -502,4 +474,53 @@ function readCookie(name)
     }
   }
   return cookieValue;
+}
+
+/******************************************Other random functions***************************/
+var convertSeconds = function(input){
+	if(input < 60){
+		return "1 min";
+	}else if (input < 3600){
+		return Math.round(input / 60) + " mins";
+	}else if (input < 86400){
+		return Math.round(input / 3600) + " hours";	
+	}else if (input < 604800){
+		return Math.round(input / 86400) + " days";
+	}else{
+		return Math.round(input / 604800) + " weeks";
+	}
+}
+
+//Searches using the Google search function
+function searchNow(){
+	var inputstring = "San Diego";
+	if ($("#searchbox").val() != ""){
+		inputstring = $("#searchbox").val();
+	}
+	searched = true;
+	var geocoderequest = new google.maps.Geocoder();
+	var geocoderesult;
+	var geocodestatus;
+	geocoderequest.geocode({address: inputstring}, function(geocoderesult, geocodestatus){
+		if (geocodestatus == "OK"){
+			$.each(geocoderesult, function(index, value){
+				thisx = this;
+				if(index == 0){
+					map.fitBounds(value.geometry.viewport);
+				}
+				
+			})
+		}
+		else if (geocodestatus == "ZERO_RESULTS"){
+			
+		}
+		else
+		{
+			$("#info").html("Error, try again later");
+		}
+	});
+};
+
+var randomColor = function(){
+	return '#' + (function co(lor){   return (lor += [0,1,2,3,4,5,6,7,8,9,'a','b','c','d','e','f'][Math.floor(Math.random()*16)]) && (lor.length == 6) ?  lor : co(lor); })('');	
 }
