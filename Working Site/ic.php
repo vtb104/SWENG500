@@ -11,13 +11,19 @@
 <title>Command Center</title>
 <link rel="icon" type="image/png" href="favicon.ico"/>
 
+<!-- Libraries-->
 <script type="text/javascript" src="https://maps.google.com/maps/api/js?sensor=true"></script>
 <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=weather"></script>
 <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
 <script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
-<script src="ic.js"></script>
 <script type="text/javascript" src="StyledMarker.js"></script>
 <script type="text/javascript" src="lib/jQueryRotate.js"></script>
+
+<!-- Page JavaScript -->
+<script src="ic.js"></script>
+<script src="cookies.js"></script>
+
+
 <style>
 
 ul
@@ -91,6 +97,10 @@ body {
 	float: right;
 }
 
+.pointoptions{
+	margin-bottom: 5px;	
+}
+
 /*Weather stuff*/
 
 #outer_weather_box{
@@ -138,21 +148,43 @@ body {
     <br>
     <li><a href="Locator.html">Locate Personel</a></li>
   </ul>
-  <div id="info">Info Here</div> 	
-  Update Interval:
+  
+  
+  	<div class="pointoptions">Select a Search to View
+        <select id="currentSearchNumber">
+        	<option value="all">All Searches</option>
+            <option value="new">Create new search...</option>
+        </select>
+    </div>  
+  	<div class="pointoptions">Team Position to View:
+        <select id="currentTeamNumber">
+        	<option value="all">All Teams</option>
+        	<option value="1">Team 1</option>
+        </select>
+    </div>
+  	<div class="pointoptions">Update Interval:
         <select id="updateInt">
             <option value="1000">1s</option>
             <option value="5000">5s</option>
             <option value="60000">1 min</option>
         </select>
-  <br> Track History Length:
+	</div>
+   <div class="pointoptions">Track History Length:
         <select id="updateTrackLength">
-            <option value="60000">Last Minute</option>
-            <option value="1800000">30 mins</option>
-            <option value="3600000">1 hour</option>
-            <option value="86400000">1 day</option>
-            <option value="99999999999">All Data</option>
+            <option value="60">Last Minute</option>
+            <option value="1800">30 mins</option>
+            <option value="3600">1 hour</option>
+            <option value="86400">1 day</option>
+            <option value="604800">1 Week</option>
+            <option value="1209600">2 Weeks</option>
         </select>
+	</div>
+        
+    
+    
+    
+ <!--Items below this line are absolute or fixed, and not in line with the rest of the document-->
+    <div id="info">Info Here</div>
 		<div id="outer_weather_box">
         	<div align="center" id="showweather" class="weathercursor">Click to show weather</div>
             <div align="center"	id="hideweather" style="display: none" class="weathercursor" >Click to hide weather</div>
@@ -161,49 +193,7 @@ body {
 				<br />
 			</div>	
 			<div class="weathershow" id="radar_box" style="float:right;"></div>
-                        <div>   
-                            <?php
-                                require_once("phpcommon.php");
-
-                                echo "<script>";
-                                //get all the users
-                                //TODO: list users only on a search
-                                $userList = json_decode($db->list_users());
-                                $userIDArray = array();
-                                foreach ($userList as $arrVal)
-                                {
-                                    array_push($userIDArray,$arrVal->userID); 
-                                }
-                                
-                                //get points for each user for the last 4 hours
-                                //TODO: make start time time dynamic
-                                $start_time = time() - (3600 * 24 * 7);//(3 hours ago -> 3 hours * 60 minutes * 60 seconds)
-                                $userLocationHistoryArray = array();
-                                foreach ($userIDArray as $uID)
-                                {
-                                    $userLocationHistoryArray[$uID] = json_decode($db->get_points($start_time,$uID));
-                                }
-                  
-                               //createuserList array variable in javascript
-                                echo 'var userList = '.json_encode($userIDArray).';'; 
-                               //create a userHistory, includes lat lng point ids etc
-                                echo 'var userHistory = '.json_encode($userLocationHistoryArray).';';
-                                //create set of poly lines for each user in javascript
-                                echo 'var usersPolyLines = [];';
-                                echo 'for(var outerCnt = 0; outerCnt < userList.length; outerCnt++){';
-                                echo 'var tempArray = [];';
-                                echo 'for(var innerCnt = 0; innerCnt < userHistory[userList[outerCnt]].length; innerCnt++){';
-                                echo 'tempArray[innerCnt] = new google.maps.LatLng(userHistory[userList[outerCnt]][innerCnt].lat,userHistory[userList[outerCnt]][innerCnt].lng)';
-                                echo '}';
-                                echo 'usersPolyLines[userList[outerCnt]] = tempArray}';
-
-                                echo "</script>";
-                                
-                            ?>
-                        </div>
-			<script>
-
-			</script>				
+                        				
 			</div>
 		</div>
 </div>
@@ -217,9 +207,21 @@ body {
 <script>
 //Put jQuery button listeners here, don't put too many functions here due to scope issues.
 $(function(){
+	
+	//Change the update interval
 	$("#updateInt").change(function(){
-		getNewPoints();
+		updateIntervalCaller();
 	});
+	
+	//Change the update track length
+	$("#updateTrackLength").change(function(){
+		updateTrackLength();
+	});
+	
+	//Change the team number to view
+	$("#currentTeamNumber").change(function(){
+		updateTeamNumber();
+	}); 
 	
 	$("#showweather").click(function(){
 		$(this).hide();
@@ -234,6 +236,11 @@ $(function(){
 		$(".weathershow").hide("fast");
 		$("#outer_weather_box").animate({bottom: "-275px"}, 400, function(){});
 	});
+	
+	$("#searchnow").click(function(){
+		searchNow();
+	});
+	
 });
 </script>
 </html>

@@ -63,6 +63,19 @@ class Database
 		
 	}
 	
+	//Returns the user's data in an array
+	public function get_user($userID, $returnJSON = true){
+		$query = "SELECT username, fname, lname FROM Users WHERE userID = '$userID'";
+		$result = $this->db_obj->query($query);
+		
+		if($result){
+			return $this->return_array($result, $returnJSON);
+		}else{
+			return false;	
+		}
+		
+	}
+	
 	//Returns the userID for an e-mail address, used for checking if one exists, and for forgotten e-mails.
 	public function check_email($email){
 
@@ -162,14 +175,14 @@ class Database
 	 * @param OPTIONAL int $userID = the user ID for the points to return.
 	 *@return json array of all points 
 	 */
-	public function get_points($start = 0, $userID = 0){
+	public function get_points($userID = 0, $start = 0, $teamID = 0, $searchID = 0, $returnJSON = true){
 		if($userID){
 			$query = "SELECT * FROM Points WHERE dateCreated > " . $start . " AND userID = " . $userID . " ORDER BY Points.dateCreated DESC";	
 		}else{
 			$query = "SELECT * FROM Points WHERE dateCreated > " . $start  . " ORDER BY Points.dateCreated DESC";
 		}
 		$result = $this->db_obj->query($query);
-		return $this->return_json($result);
+		return $this->return_array($result, $returnJSON);
 	}
 	
 	/**Returns the most recent point from a Team
@@ -188,11 +201,10 @@ class Database
 	/** Get latest location for a user
 	 *  @return a point in json format	
 	*/
-	public function latest_user_location($userID){
+	public function latest_user_location($userID, $returnJSON = true){
 		$query = "SELECT Points.* FROM Points WHERE userID = '".$userID."' ORDER BY dateCreated DESC LIMIT 1";
 		$result = $this->db_obj->query($query);
-		$result2 = $result->fetch_row();
-		return $result2;
+		return $this->return_array($result, $returnJSON);
 	}
 	
 	
@@ -206,9 +218,9 @@ class Database
 
 		if(!$lat && !$lng && !$dist)
 		{
-			$query = "SELECT teamID, teamName FROM teams";
+			$query = "SELECT teamID, teamName FROM Teams";
 			$result = $this->db_obj->query($query);
-			return $this->return_json($result);
+			return $this->return_array($result);
 		}
 		else
 	 	{
@@ -247,9 +259,9 @@ class Database
 
 		if(!$lat && !$lng && !$dist)
 		{
-			$query = "SELECT owner, searchID, searchName FROM searches";
+			$query = "SELECT owner, searchID, searchName FROM Searches";
 			$result = $this->db_obj->query($query);
-			return $this->return_json($result);
+			return $this->return_array($result);
 		}
 		else
 	 	{
@@ -263,7 +275,7 @@ class Database
 	 *	@return json array
 	 */
 	 public function list_searching($searchID){
-		return $this->return_json($this->db_obj->query("SELECT userID FROM Searching WHERE searchID='$searchID'"));
+		return $this->return_array($this->db_obj->query("SELECT userID FROM Searching WHERE searchID='$searchID'"));
 	 }
 	 
 	 
@@ -278,7 +290,7 @@ class Database
 		if(!$lat && !$lng && !$dist)
 		{
 			$query = 'SELECT userID FROM Users';
-			$result = $this->return_json($this->db_obj->query($query));
+			$result = $this->return_array($this->db_obj->query($query));
 			if($result){
 				return $result;	
 			}else{
@@ -356,7 +368,7 @@ class Database
 		return $query->execute();
 	 }
 	 
-	  /** Create a Team
+	 /** Create a Team
 	 *
 	 *	@param $userID - the owner of the team
 	 *	@return - the new teamnumber
@@ -376,6 +388,15 @@ class Database
 		}
 	 }
 	 
+	 /** Returns an array of all the team members
+	 *
+	 *	@param $teamID, 
+	 *	@return - array of team member ID
+	 */
+	 public function list_team($teamID, $returnJSON = true){
+		$query = "SELECT userID FROM TeamMembers WHERE teamID = '$teamID'";
+		return $this->return_array($this->db_obj->query($query), $returnJSON);
+	 }
 	 
 	 /** User joins a team
 	 *
@@ -489,13 +510,20 @@ class Database
 		return $result2[0];
 	}
 	
-	//Takes a resulting MYSQL output and turns it into a JSON String
-	private function return_json($input){
+	/**Takes a resulting MYSQL output and turns it into a JSON String
+	 * Default is return a JSON string
+	 */
+	private function return_array($input, $json = true){
 		$return = array();
 		while($one = $input->fetch_array(MYSQLI_ASSOC)){
 			array_push($return, $one);
 		};
-		return json_encode($return);
+		
+		if($json){
+			return json_encode($return);
+		}else{
+			return $return;
+		}
 	}
 	
 	//This function prints all the results of a query.  Used for testing. 

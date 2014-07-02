@@ -6,11 +6,7 @@ require_once("phpcommon.php");
 	header("Good Auth");	
 }*/
 
-
-echo "->" . $auth->check_cookie() . "<-";
-
-die();
-$db_obj = new MySQLi('localhost', _DB_USERNAME, _DB_PASSWORD, _DB_NAME) or die (mysqli_error() . "Database Error 1");
+//$db_obj = new MySQLi('localhost', _DB_USERNAME, _DB_PASSWORD, _DB_NAME) or die (mysqli_error() . "Database Error 1");
 /*$query = 'INSERT INTO Users (username, fname, lname, email, role, password, userKey) VALUES ("ryan", "Ryan", "Young", "ryanessonyoung@gmail.com", "admin", "hello", "thisisakey")';
 echo $query . "<br><br/>";
 //$query = 'INSERT INTO Points (userID, lat, lng, alt, dateCreated, pointNotes) VALUES ("2", "2", "3", "4", "222", "5")';
@@ -26,7 +22,7 @@ if($result){
 
 
 
-echo $db_obj->get_user_id('ryan');
+var_dump($db->list_team(1, false));
 
 die();
 

@@ -22,16 +22,49 @@ require_once("phpcommon.php");
 //echo $db->latest_team_location(1);
 
 //else if the message is a request/send
+
 if(isset($_POST['update_ic_req']))
 {
 	
-	$user_location_array = array();
-	$user_id_array = json_decode($db->list_users());
-	foreach($user_id_array as $one){
-		array_push($user_location_array, $db->latest_user_location($one->userID));
-	}
+	//Unpackage the request
+	$data = $_POST['update_ic_req'];
 
-    echo json_encode($user_location_array);
+	//If there is a data for a team
+	if($data["team"]){
+		
+		//How old the points should be
+		$thetime = time() - $data["theTime"];
+		
+		//Start an array of people
+		$return_array = $db->list_team($data["team"], false);
+		$counter = 0;
+		
+		//Build the array
+		foreach($return_array as $one){
+			
+			$return_array[$counter]["points"] = array();
+			$return_array[$counter]["userData"] = $db->get_user($one["userID"], false);
+			
+			//Push the points on to each user
+			$tempArray = $db->get_points($one["userID"], $thetime, 0, 0, $returnJSON = false);
+			
+			//if points show up, pull them all
+			if(count($tempArray)){
+				foreach($tempArray as $one){
+					array_push($return_array[$counter]["points"], $one);
+				}
+			}else{
+			//If no points show up, pull the latest
+				$tempArray = $db->latest_user_location($one["userID"], false);
+				array_push($return_array[$counter]["points"], $tempArray[0]);
+			}
+			
+			$counter++;
+		}
+	}
+	
+
+    echo json_encode($return_array);
 }
 
 

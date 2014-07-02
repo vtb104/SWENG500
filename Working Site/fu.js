@@ -1,6 +1,5 @@
 var updateInterval = 5000;
 var timer = 0;
-var defaultLatLng = new google.maps.LatLng(34.0983425, -118.3267434);  
 
 function positionCallback(posi)
 {
@@ -9,7 +8,6 @@ function positionCallback(posi)
 	var tempLoc = new google.maps.LatLng(posi.coords.latitude, posi.coords.longitude);
 	marker.setPosition(tempLoc);
 	map.panTo(tempLoc);
-	
 }
 navigator.geolocation.getCurrentPosition (function (pos)
 {
@@ -34,7 +32,7 @@ function initialize(){
         zoom: 15, 
         center: latlng,
         mapTypeControl: true,
-	mapTypeId : google.maps.MapTypeId.TERRAIN
+		mapTypeId : google.maps.MapTypeId.TERRAIN
     };
 	
     //Creates the map
@@ -44,6 +42,7 @@ function initialize(){
         map: null,  
         position: latlng
     };
+	
     var positionMarker = new google.maps.Marker(markerOptions);
     positionMarker.setMap(map);
 	
@@ -58,11 +57,14 @@ function initialize(){
     return true;
 }
 
+google.maps.event.addDomListener(window, "load", initialize);
+
 function sendPosition(){
 	
 	if(timer){
 		window.clearTimeout(timer);
 	}
+	var result = false;
 	
 	updateInterval = $("#updateInt").val();
 	$("#updateMessage").html("Updating every " + (updateInterval / 1000) + " seconds");
@@ -104,20 +106,20 @@ function sendPosition(){
 					}
 				}
 			});
-			
+			result = true;
 		}
 
 		function fail(error) 
 		{
-			map.panTo(defaultLatLng);  // Failed to find location, show default map
+			// Failed to find location, do nothing
 		}
         
     }
     else
     {
         $("#info").html("Location not allowed for this application.  Please allow location sharing to enable this feature.");
-        return false;
     }
+	return result;
 }
 
 function sendMessage(msg){
@@ -134,28 +136,6 @@ function sendMessage(msg){
 function getMessage(){
     msg = "";
     return msg;
-}
-
-function registerUser(msg){
-    if (msg)
-    {
-        return true;
-    }
-    else
-    {
-        return false;
-    }
-}
-
-function unregisterUser(msg){
-    if (msg)
-    {
-        return true;
-    }
-    else
-    {
-        return false;
-    }
 }
 	
 /*$( document ).on( "pageinit", "#geoMap", function() {

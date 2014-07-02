@@ -35,7 +35,7 @@
 		echo "<script>userID = \"".$_SESSION['userid']."\"</script>";
 	}
 ?>
-<body onLoad="initialize()"> 
+<body> 
 <div data-role=page id=geoMap>
         <div data-role=header>
             <a href="#geoMapHelp" class="ui-btn ui-btn-inline ui-corner-all ui-shadow">Help</a><a href="logout.php">Logout</a>

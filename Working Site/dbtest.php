@@ -73,6 +73,11 @@ if(!$auth->authenticate()){
     <h3>Return: </h3> <?php $teamnumber = $db->create_team($usernumber, 'Test Team' , '' , 'Test Team Info', $searchNumber); echo $teamnumber;?><br/>
 </p>
 <p>
+	<h2>List Members of a team</h2>
+	<h3>Call:  $db->list_team(1, false)</h3>
+    <h3>Return: </h3> <?php echo $db->list_team(1, true); ?><br/>
+</p>
+<p>
 	<h2>List teams</h2>
 	<h3>Call:  $db->list_teams($lat, $lng, $dist) (Optional coords for location listing within a distance) </h3>
     <h3>Return: </h3> <?php echo $db->list_teams(); ?><br/>
