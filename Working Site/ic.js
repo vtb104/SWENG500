@@ -122,6 +122,19 @@ Users.prototype.checkUsers = function(inputUsers){
 	});
 }
 
+//Draws the buttons for active users
+Users.prototype.drawUserButtons = function(){
+	$("#searcherlist").html("");
+	$.each(this.userArray, function(index, value){
+		$("#searcherlist").append('<div id="user' + value.userID + '" class="searcher" userID="' + value.userID + '">' + value.userID +' ' + value.username + '</div>');
+		$(".searcher").on("click", function(e){
+			users.panToPerson($(this).attr("userID"));
+		});
+		
+	});
+}
+
+
 //Plots the current user array
 Users.prototype.plotPoints = function(){
 	$.each(this.userArray, function(index, value){
@@ -136,13 +149,31 @@ Users.prototype.updateTrails = function(){
 	});
 }
 
+Users.prototype.panToPerson = function(input){
+	$.each(this.userArray, function(index, value){
+		if(value.userID === input){
+			value.panToPerson();
+			return	
+		}
+	})
+};
+
 
 
 //First to run
 var initialize = function(){
+	var overviewOptions = {opened: false};
+	var panControlOptions = {position: google.maps.ControlPosition.RIGHT_TOP};
+	var scaleControlOptions = {position: google.maps.ControlPosition.LEFT_BOTTOM};
+	var zoomControlOptions = {position: google.maps.ControlPosition.RIGHT_CENTER};
 	
-	//Sets options for the map with vars above
-	var myOptions = {zoom: mapZoom, center: mapHome};
+	//Sets options for the map
+	var myOptions = {zoom: mapZoom, 
+					 center: mapHome,
+					 panControlOptions: panControlOptions,
+					 zoomControlOptions: zoomControlOptions,
+					 overviewOptions: overviewOptions
+					 };
 	
 	//Creates the map
 	map = new google.maps.Map(document.getElementById('map_canvas'), myOptions);
@@ -232,6 +263,7 @@ var getNewPoints = function(){
 			users.checkUsers(msg);
 			pointsShowing = 0;
 			users.plotPoints();	
+			users.drawUserButtons();
 		}
 	});
 };
@@ -340,7 +372,7 @@ function Person(input){
 	$.each(input.points, function(index, value){
 		thisPointer.addPoint(value);
 	});
-	this.userName = input.userData.username;
+	this.username = input.userData.username;
 	this.fname = input.userData.fname;
 	this.lname = input.userData.lname;
 };
@@ -399,6 +431,10 @@ Person.prototype.drawTrail = function(){
 	this.trail.setMap(map);
 }
 
+Person.prototype.panToPerson = function(){
+	map.panTo(this.currentMarker.getPosition());
+}
+
 //Adds a point to the array if it doesn't already exist
 Person.prototype.addPoint = function(point){
 	if(!this.checkPoints(point)){
@@ -439,7 +475,6 @@ Person.prototype.destroy = function(){
 };
 
 /*Cookie code*/
-
 function writeCookie(name, value, hours)
 {
   var expire = "";

@@ -43,7 +43,9 @@ if(isset($_POST['update_ic_req']))
 		foreach($return_array as $one){
 			
 			$return_array[$counter]["points"] = array();
-			$return_array[$counter]["userData"] = $db->get_user($one["userID"], false);
+			$return_array[$counter]["userData"] = array();
+			$tempArray = $db->get_user($one["userID"], false);
+			$return_array[$counter]["userData"] = $tempArray[0];
 			
 			//Push the points on to each user
 			$tempArray = $db->get_points($one["userID"], $thetime, 0, 0, $returnJSON = false);
