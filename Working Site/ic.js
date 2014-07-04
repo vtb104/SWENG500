@@ -71,6 +71,11 @@ var initialize = function(){
 	//Add a listener that only updates the weather when the map moves
 	google.maps.event.addListener(map, 'idle', function() {updateWeather('weather_box','radar_box');} );
 	
+	//Updates the cursor location for grabbing coords
+	google.maps.event.addListener(map, 'mousemove', function(event) {
+		$("#cursorLocation").html("Lat: " + event.latLng.lat() + " Lng: " + event.latLng.lng())
+	});
+	
 	//Adds listeners for cookie creation
 	google.maps.event.addListener(map, "center_changed", function(){
 		temp = new google.maps.LatLng();
@@ -195,13 +200,14 @@ Users.prototype.checkUsers = function(inputUsers){
 	var userPointer = this;
 	var indexPasser = false;
 	var found = false;
+	var toDestroy = 0;
 	
 	//First figure out if a user wasn't in the incoming array and remove them if they are not
-	$.each(userPointer.userArray, function(index, value){
+	for(i=userPointer.userArray.length-1; i > -1; i--){
 		found = false
 		indexPasser = false;
 		$.each(inputUsers, function(index2, value2){
-			if(value.userID === value2.userID){
+			if(userPointer.userArray[i].userID === value2.userID){
 				found = true;
 				indexPasser = index2;
 			};
@@ -209,10 +215,10 @@ Users.prototype.checkUsers = function(inputUsers){
 		
 		if(!found){
 			//If the user isn't found on the input, remove them from the map
-			value.destroy();
-			userPointer.userArray.splice(indexPasser, 1);
+			userPointer.userArray[i].destroy();
+			userPointer.userArray.splice(i, 1);
 		}
-	});
+	}
 	
 	
 	//Now the array should be cleaned of everyone not incoming, now add new users

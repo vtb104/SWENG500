@@ -128,6 +128,7 @@ body {
 	right: 0px;
 	width: 200px;
 	background-color: #666;
+	overflow: scroll;
 }
 
 #searcherlist .searcher{
@@ -155,6 +156,15 @@ body {
 	z-Index: 50;
 	Padding: 3px;
 }
+#cursorLocation{
+	position: fixed;
+	right: 0px;
+	bottom: 20px;
+	color: red;	
+	z-Index: 50;
+	Padding: 3px;
+}
+
 
 #searchform{
 	position: absolute;
@@ -218,6 +228,7 @@ var testFunction = function (){
     
     
     <div id="menubar">
+    	<a href="searchertest.php" target="_blank">Searcher Test</a>
     	<a href="Messages.html">Messages</a>
     	<a href="fu.php">Field Unit</a>
         <a id="logoutbutton" href="logout.php">Log Out</a>
@@ -292,6 +303,7 @@ var testFunction = function (){
     <img id="logo" src="images/med_logo.png" />
     <div id="searchform" action="#"><input type="text" id="searchbox"/><button id="searchnow">Map Search</button></div>
     <div id="map_canvas"></div>
+    <div id="cursorLocation">Cursor Location</div>
 	<div id="floatNote">Test</div>
 
 <div><!-- Page Wrapper-->

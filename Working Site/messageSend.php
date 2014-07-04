@@ -51,14 +51,16 @@ if(isset($_POST['update_ic_req']))
 			$tempArray = $db->get_points($one["userID"], $thetime, 0, 0, $returnJSON = false);
 			
 			//if points show up, pull them all
-			if(count($tempArray)){
+			if(count($tempArray) > 1){
 				foreach($tempArray as $one){
 					array_push($return_array[$counter]["points"], $one);
 				}
-			}else{
+			}else if (count($tempArray) == 1){
 			//If no points show up, pull the latest
 				$tempArray = $db->latest_user_location($one["userID"], false);
 				array_push($return_array[$counter]["points"], $tempArray[0]);
+			}else{
+					
 			}
 			
 			$counter++;
