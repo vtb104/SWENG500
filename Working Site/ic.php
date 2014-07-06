@@ -281,8 +281,32 @@ var testFunction = function (){
                        
         </div>
          
-         <div style="position: absolute; bottom: 20px; left: 0px;">   
-        <div id="testOutput">Test Code Here</div>
+         <div style="position: absolute; bottom: 20px; left: 0px;">  
+             <div style="border:1px solid white; float:left;width:300px; height:400px; background-color:#232323;">
+                            <button type="button" onclick="startNewArea()">Start New Area</button><br>
+                            <select id="AreaEditSelector" onchange="updatePointList()">
+                                <!--Add list of areas for this search-->
+                            </select>
+                            <button type="button" onclick="deleteArea()">Delete Area</button>
+                            <hr>
+                            
+                            <div>
+                                <form>
+                                    <div id="areaBoxContent">
+                                       <!-- Area Name
+                                        <input type="text" name="AreaName" id="AreaName" value="Area 1"><input type="color" id="area_color" value="#00ff00"><br>-->
+                                        <div id="PointsOfArea">
+
+                                        </div>
+                                        
+                                    </div>
+                                    
+                                </form>
+                                
+                            </div>
+
+                        </div>
+        <div id="testOutput">Test Codes Here</div>
         <button id="testbutton">Test Button</button>
         </div>
         </div>  <!-- Content Div-->    
@@ -293,7 +317,8 @@ var testFunction = function (){
         <div id="outer_weather_box">
             <div align="center" id="showweather" class="weathercursor">Click to show weather</div>
             <div align="center"	id="hideweather" style="display: none" class="weathercursor" >Click to hide weather</div>
-            <div class="weathershow" id="weather_box" style="width:200px; height:400px; background-color:#232323; border:1px solid black; float: left;">Weather Box</div>	
+            <div class="weathershow" id="weather_box" style="width:200px; height:400px; background-color:#232323; border:1px solid black; float: left;">Weather Box</div>
+            
             <div class="weathershow" id="radar_box" style="float:right;"></div>
                                         
         </div>

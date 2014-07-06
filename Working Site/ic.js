@@ -9,6 +9,15 @@ var cookieDuration = 24 * 30;	//30 days
 var usaCoord = new google.maps.LatLng(39.57, -99.10);
 var startLat = 39.57;  //America
 var startLng = -100;
+//shane  add 7-6-2014
+var poly;
+var pointCount = 0;
+var pointArray = [];
+var areaArray = [];
+var currentAreaPoly;
+var areaData;
+var polyStorage = [];
+var areaNameData;
 
 if(readCookie("sar.location.lat") && readCookie("sar.location.lng")){
 	startLat = readCookie("sar.location.lat");
@@ -109,10 +118,215 @@ var initialize = function(){
 
 	//Start the timer to get new points
 	getNewPoints();
-	
+        //this event listener will be used for area creation <<<< Start Shane Edit
+        var polyOptions = 
+	{
+		strokeColor: "#00ff00",
+		strokeOpacity: 1.0,
+		strokeWeight: 3
+	};
+	poly = new google.maps.Polyline(polyOptions);
+	poly.setMap(map);      
+        //find a place for these
+        updateAreaSelectMenu();
+        udpateAreaObjectMenu("Area1");
 };
+/*******************Area Creation Methods*******************************/
+//This fucntion is used to add areas to maps
+function addLatLng(event) 
+{
 
+    var path = poly.getPath();
+    // Because path is an MVCArray, we can simply append a new coordinate
+    // and it will automatically appear.
 
+    path.push(event.latLng);
+
+    // Add a new marker at the new plotted point on the polyline.
+    var styleMaker1 = new StyledMarker({styleIcon:new StyledIcon(StyledIconTypes.MARKER,{color:document.getElementById("area_color").value,text:""+pointCount}),position:event.latLng,map:map});
+    document.getElementById("PointsOfArea").innerHTML += '<input type="radio" name="point' + pointCount + '">Point '+pointCount+'<br>';
+    if(document.getElementById("tempMsg") != null)
+    {
+        document.getElementById("tempMsg").innerHTML = "";
+    }
+    //add the "click" to the current poly array
+    currentAreaPoly.push(event.latLng);
+    
+    pointCount++;
+}
+//this section populates the "area creation box"
+//get all current area objects and populate select menu
+function updateAreaSelectMenu()
+{
+    //TODO: database call for current areas
+
+    $.ajax({
+        type: "POST",
+        url: "AreaHandler.php",
+        data: {searchID:"1"},//change search ID for multiple searches
+        dataType: "json",
+        success: function(msg){
+            //for each area create a select menu item
+            var selectMenu = document.getElementById("AreaEditSelector");
+            selectMenu.options.length = 0;
+            selectMenu.options.add(new Option("Select Area", "Select Area"));
+            for(var cnt=0; cnt< msg.length; cnt++)
+            {
+                selectMenu.options.add(new Option(msg[cnt].areaName, msg[cnt].areaName));
+            }
+        }});
+}
+function udpateAreaObjectMenu(areaName)
+{
+    //TODO: get points of area
+    //update area name
+    var areaName = document.getElementById("AreaName");
+    var pointsDiv = document.getElementById("PointsOfArea");
+    pointsDiv.innerHTML = "";
+}
+//this function is called when the user selects a different area
+function updatePointList()
+{
+    //load area selected points
+     $.ajax({
+        type: "POST",
+        url: "AreaHandler.php",
+        data: {getAreaPoints:document.getElementById("AreaEditSelector").value},//change search ID for multiple searches
+        dataType: "json",
+        success: function(areaData){
+            pointArray = [];
+            areaNameData = areaData[0].areaName;
+            document.getElementById("areaBoxContent").innerHTML = "";
+            document.getElementById("areaBoxContent").innerHTML += 'Area Name: <b><label id="AreaName">'+areaData[0].areaName+' </b></label><input type="color" id="area_color" value="#00ff00"><br>';
+            for(var cnt=0; cnt < areaData.length; cnt++)
+            {
+                document.getElementById("areaBoxContent").innerHTML += 'Point '+cnt+':Lat '+areaData[cnt].lat+' | Lng: '+areaData[cnt].lng+'<br>';
+                pointArray.push(new google.maps.LatLng(areaData[cnt].lat,areaData[cnt].lng));
+            }
+            document.getElementById("areaBoxContent").innerHTML += '<div id="PointsOfArea"></div><button type="button" onclick="showAreaOnMap()">Show Area On Map</button><button type="button" onclick="removeAreaFromMap()">Remove Area From Map</button>';
+            //fillPoly(pointsArray);
+            //alert(JSON.stringify(areaData[0]));
+        }});
+}
+//this funstion is called when "start new area button is clicked
+function startNewArea()
+{ 
+    document.getElementById("areaBoxContent").innerHTML = 'Area Name: <input type="text" name="AreaName" id="AreaName" value="Enter an Area Name"><input type="color" id="area_color" value="#00ff00"><br><div id="tempMsg">Please click on the map to create area boundaries.</div><div id="PointsOfArea"></div><button type="button"  onclick="saveAreaButton()">Save</button>';
+    //TODO check if listener exists already
+    google.maps.event.addListener(map, 'click', addLatLng);
+    currentAreaPoly = [];
+}
+//this function deletes the given area
+function deleteArea()
+{
+     $.ajax({
+        type: "POST",
+        url: "AreaHandler.php",
+        data: {deleteArea:document.getElementById("AreaEditSelector").value},
+        dataType: "json",
+        success: function(areaData){
+           //remove area from list
+           alert(areaData);
+        }});
+}
+//this function is called to show the area on the map
+function showAreaOnMap()
+{
+    fillPoly(areaNameData,pointArray);
+}
+function removeAreaFromMap()
+{
+    var areaIndex = checkArrayForName(polyStorage, areaNameData);
+    if(areaIndex >= 0)
+    {
+        polyStorage[areaIndex].area.setMap(null);
+        polyStorage.splice(areaIndex,1);
+    }
+}
+//fills the poly and completes last border
+function fillPoly(areaName, arrayOfPoints)
+{
+    //check if area exists on map
+    if(checkArrayForName(polyStorage, areaName) == -1)
+    {
+        //create the "fill polygon"
+        var polyObj = new Object();
+        var areaFill = new google.maps.Polygon(
+        {
+            paths: arrayOfPoints,
+            strokeColor: document.getElementById("area_color").value,
+            strokeOpacity: 0.8,
+            strokeWeight: 3,
+            fillColor: document.getElementById("area_color").value,
+            fillOpacity: 0.35
+        });
+        areaFill.setMap(map);
+        polyObj.name = areaName;
+        polyObj.area = areaFill;
+        polyStorage.push(polyObj);
+        document.getElementById("PointsOfArea").innerHTML += "Area is: "+google.maps.geometry.spherical.computeArea(areaFill.getPath())/4046.86+" acres";
+    }
+}
+function checkArrayForName(inArray, inName)
+{
+    for(var cnt =0; cnt < inArray.length; cnt++)
+    {
+        if(inArray[cnt].name == inName)
+        {
+            return cnt;
+        }
+    }
+   return -1;
+}
+//this function is called when "save" is clicked after adding an area
+function saveAreaButton()
+{
+    fillPoly(areaNameData,currentAreaPoly);
+
+    google.maps.event.clearListeners(map, 'click');
+    //send area to database
+    areaData = new Object();
+    areaData.name = document.getElementById("AreaName").value;
+    areaData.userID = userID;
+    areaData.points = currentAreaPoly;
+    $.ajax({
+        type: "POST",
+        url: "AreaHandler.php",
+        data: { createArea:JSON.stringify(areaData) },
+		dataType: "json",
+        success: function(msg){ }});
+    //reset all data for next area
+    currentAreaPoly = [];
+    pointCount = 0;
+    var polyOptions = 
+    {
+            strokeColor: document.getElementById("area_color").value,
+            strokeOpacity: 1.0,
+            strokeWeight: 3
+    };
+    poly = new google.maps.Polyline(polyOptions);
+    poly.setMap(map);
+}
+var polylineStorage = [];
+var markerStorage = [];
+//create user tracks
+function updateUserTrack(userNumber)
+{
+    polylineStorage[userNumber] = new google.maps.Polyline({
+    path: usersPolyLines[userNumber],
+    geodesic: true,
+    strokeColor: '#FF0000',
+    strokeOpacity: 1.0,
+    strokeWeight: 2
+	});
+    polylineStorage[userNumber].setMap(map);
+    //alert(usersPolyLines[userNumber]);
+    tempPos = usersPolyLines[userNumber][usersPolyLines[userNumber].length-1];
+    
+    markerStorage[userNumber] = new StyledMarker({styleIcon:new StyledIcon(StyledIconTypes.MARKER,{color:"#99FF66",text:""+userNumber}),position:tempPos,map:map});
+    markerStorage[userNumber].setPosition(tempPos);
+   
+}
 //This is the function that runs every 5s from the timer
 var getNewPoints = function(){
 	
