@@ -496,8 +496,58 @@ class Database
 		 
 		 return '<span style="color: red">Fail ' . __LINE__ . '</span>';
 	 }
-	
-	
+	/** get areas for a given search id 
+          * 
+          */
+         public function list_areas($searchID)
+         {
+             $query = 'SELECT DISTINCT areaName FROM areas';
+		$result = $this->return_array($this->db_obj->query($query));
+		if($result){
+			return $result;	
+		}else{
+			return false;	
+		}
+         }
+	/** get points for a given area 
+          * 
+          */
+         public function list_points_in_area($areaName)
+         {
+            $query = "SELECT areaName,lat,lng FROM areas WHERE areaName='".$areaName."'";
+            $result = $this->return_array($this->db_obj->query($query));
+            if($result){
+                    return $result;	
+            }else{
+                    return false;	
+            }
+         }
+         /** create a new area given a name and a set of points
+          * 
+          */
+         public function create_area($areaName, $inlat, $inlng)
+         {
+             $query = 'INSERT INTO areas (areaName, lat, lng) VALUES ("' . $areaName . '","'.$inlat.'","'.$inlng.'")';
+		$result = $this->db_obj->query($query);
+		if($result){
+			return TRUE;
+		}else{
+			return FALSE;
+		}
+         }
+         /** create a new area given a name and a set of points
+          * 
+          */
+         public function delete_area($areaName)
+         {
+             $query = 'DELETE FROM areas WHERE areaName="'.$areaName.'"';
+		$result = $this->db_obj->query($query);
+		if($result){
+			return TRUE;
+		}else{
+			return FALSE;
+		}
+         }
 	/***********************************************************************/
 	/*Below this line are private functions that work on the public methods*/
 	/***********************************************************************/

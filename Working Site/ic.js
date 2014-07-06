@@ -228,6 +228,8 @@ function deleteArea()
            //remove area from list
            alert(areaData);
         }});
+    updateAreaSelectMenu();
+    document.getElementById("areaBoxContent").innerHTML = "";
 }
 //this function is called to show the area on the map
 function showAreaOnMap()
@@ -306,6 +308,7 @@ function saveAreaButton()
     };
     poly = new google.maps.Polyline(polyOptions);
     poly.setMap(map);
+    updateAreaSelectMenu();
 }
 var polylineStorage = [];
 var markerStorage = [];

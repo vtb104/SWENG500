@@ -280,9 +280,7 @@ var testFunction = function (){
         <div id="searcherlist">
                        
         </div>
-         
-         <div style="position: absolute; bottom: 20px; left: 0px;">  
-             <div style="border:1px solid white; float:left;width:300px; height:400px; background-color:#232323;">
+         <div style="border:1px solid white; width:300px; height:300px; position: absolute; bottom: 100px; background-color:#232323;">
                             <button type="button" onclick="startNewArea()">Start New Area</button><br>
                             <select id="AreaEditSelector" onchange="updatePointList()">
                                 <!--Add list of areas for this search-->
@@ -306,7 +304,9 @@ var testFunction = function (){
                             </div>
 
                         </div>
-        <div id="testOutput">Test Codes Here</div>
+         <div style="position: absolute; bottom: 20px; left: 0px;">   
+             
+        <div id="testOutput">Test Code Here</div>
         <button id="testbutton">Test Button</button>
         </div>
         </div>  <!-- Content Div-->    
