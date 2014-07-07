@@ -1,4 +1,4 @@
-var map;
+ 	var map;
 //Troubleshooting variable
 var objectCount = 0;
 var pointsShowing = 0;
@@ -82,7 +82,7 @@ var initialize = function(){
 	
 	//Updates the cursor location for grabbing coords
 	google.maps.event.addListener(map, 'mousemove', function(event) {
-		$("#cursorLocation").html("Lat: " + event.latLng.lat() + " Lng: " + event.latLng.lng())
+		$("#cursorLocation").html("Lat: " + Math.round4(event.latLng.lat()) + " Lng: " + Math.round4(event.latLng.lng()))
 	});
 	
 	//Adds listeners for cookie creation
@@ -378,6 +378,7 @@ var getNewPoints = function(){
 			pointsShowing = 0;
 			users.plotPoints();	
 			users.drawUserButtons();
+			users.updateTrails();
 		}
 	});
 };
@@ -469,7 +470,7 @@ Users.prototype.checkUsers = function(inputUsers){
 Users.prototype.drawUserButtons = function(){
 	$("#searcherlist").html("");
 	$.each(this.userArray, function(index, value){
-		$("#searcherlist").append('<div id="user' + value.userID + '" class="searcher" userID="' + value.userID + '" style="background-color:' + value.userColor +'">' + value.userID +' ' + value.username + '</div>');
+		$("#searcherlist").append('<div id="user' + value.userID + '" class="searcher" userID="' + value.userID + '" style="background-color:' + value.userColor +'">' + value.userID +' ' + value.username + '-- Dist: <span id="userTrail' + value.userID + '"-</span></div>');
 		$(".searcher").on("click", function(e){
 			users.panToPerson($(this).attr("userID"));
 		});
@@ -488,6 +489,7 @@ Users.prototype.plotPoints = function(){
 Users.prototype.updateTrails = function(){
 	$.each(this.userArray, function(index, value){
 		value.drawTrail();
+		$("#userTrail" + value.userID).html(value.trailLength + "m");
 	});
 }
 
@@ -513,6 +515,7 @@ function Person(input){
 	this.pointArray = [];
 	this.showTrail = true;
 	this.trailArray = [];
+	this.trailLength = 0;
 	this.trail = new google.maps.Polyline({
 		map: null,
 		geodesic: true,
@@ -581,8 +584,21 @@ Person.prototype.drawTrail = function(){
 		}
 	});
 	this.trailArray = tempTrailArray;
+	this.trailLength = this.getTrailLength();
 	this.trail.setPath(this.trailArray);
 	this.trail.setMap(map);
+}
+
+//Takes the active trail within the trailArray and outputs the length in meters
+Person.prototype.getTrailLength = function(){
+	var tempLength = 0;
+	if (this.trailArray.length > 1){
+		for (var i = 1; i < this.trailArray.length; i++){
+			tempLength = tempLength + findDistance(this.trailArray[i - 1], this.trailArray[i]);
+			//var resultMiles = Math.round(tempLength * 1000 / 1609) / 1000;
+		}
+	}
+	return tempLength;
 }
 
 Person.prototype.panToPerson = function(){
@@ -745,5 +761,29 @@ function searchNow(){
 };
 
 var randomColor = function(){
-	return '#' + (function co(lor){   return (lor += [0,1,2,3,4,5,6,7,8,9,'a','b','c','d','e','f'][Math.floor(Math.random()*16)]) && (lor.length == 6) ?  lor : co(lor); })('');	
+	return '#' + (function co(lor){   return (lor += [0,1,2,3,4,5,6,7,8,9,'a','b','c','d','e','f'][Math.floor(Math.random()*16)]) && (lor.length == 6) ?  lor : co(lor); })('');	}
+	
+	
+	//Finds the distance between two points
+function findDistance(startPos, endPos){
+	var R = 6371000; // meters
+	var dLat = (endPos.lat()-startPos.lat()) * Math.PI / 180;
+	var dLon = (endPos.lng()-startPos.lng()) * Math.PI / 180;
+	var lat1 = startPos.lat() * Math.PI / 180;
+	var lat2 = endPos.lat() * Math.PI / 180;
+	var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+			Math.sin(dLon/2) * Math.sin(dLon/2) * Math.cos(lat1) * Math.cos(lat2); 
+	var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+	d = R * c;
+	return Math.round(d);
 }
+
+
+/*************************Math*******************************/
+Math.round4 = function (input){return Math.round(input * 10000) / 10000;};
+Math.round3 = function (input){return Math.round(input * 1000) / 1000;};
+Math.round2 = function(input){return Math.round(input * 100) / 100;};
+Math.round1 = function(input){return Math.round(input * 10) / 10;};
+Math.degrees = function(rad){return rad*(180/Math.PI);}
+Math.radians = function(deg){return deg * (Math.PI/180);}
+function mToFeet(input){return input * 3.28084};
