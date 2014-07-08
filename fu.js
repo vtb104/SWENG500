@@ -5,6 +5,8 @@ var msgTimer = 0;
 var firstLoop = true;
 var currentLoc = new google.maps.LatLng(0, 0);
 
+// test test
+
 // decompose the position values into items for display
 // set the new marker
 // pan to the new marker if this is the first time this function is called
