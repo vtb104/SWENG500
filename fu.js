@@ -1,14 +1,34 @@
-var updateInterval = 5000;
-var timer = 0;
+// Declaration of global vars
+var updateLocationInterval = 5000;
+var locTimer = 0;
+var msgTimer = 0;
+var firstLoop = true;
+var currentLoc = new google.maps.LatLng(0, 0);
 
-function positionCallback(posi)
+// decompose the position values into items for display
+// set the new marker
+// pan to the new marker if this is the first time this function is called
+function positionCallback(position)
 {
-	$("#lat").val(posi.coords.latitude);
-	$("#lng").val(posi.coords.longitude);
-	var tempLoc = new google.maps.LatLng(posi.coords.latitude, posi.coords.longitude);
-	marker.setPosition(tempLoc);
-	map.panTo(tempLoc);
+	$("#lat").val(position.coords.latitude);
+	$("#lng").val(position.coords.longitude);
+	currentLoc = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+	marker.setPosition(currentLoc);
+	
+	if (firstLoop)
+	{
+		firstLoop = false;
+		map.panTo(currentLoc);
+	}
 }
+
+// pan the map to the current marker location
+function panToCurrentLocation()
+{
+	map.panTo(currentLoc);
+}
+
+// get the current location
 navigator.geolocation.getCurrentPosition (function (pos)
 {
   curPosition = pos;
@@ -18,10 +38,11 @@ navigator.geolocation.getCurrentPosition (function (pos)
   $("#lng").val (lng);
 });
 
-//Runs on load
+// Runs on load
 function initialize(){
-	$("#updateInt").val(updateInterval);
+	$("#updateLocInt").val(updateLocationInterval);
 	sendPosition();
+	getMessage();
 	
 	var lat = $("#lat").val ();
     var lng = $("#lng").val ();
@@ -37,39 +58,41 @@ function initialize(){
 	
     //Creates the map
     map = new google.maps.Map(document.getElementById('map_canvas'), myOptions);
-
+	
     var markerOptions = {
         map: null,  
         position: latlng
     };
-	
+
     var positionMarker = new google.maps.Marker(markerOptions);
     positionMarker.setMap(map);
 	
-    var timer = setTimeout(function(){sendPosition()}, updateInterval);
+    var locTimer = setTimeout(function(){sendPosition()}, updateLocationInterval);
 	
 	marker = new google.maps.Marker({
 		position: latlng,
 		map: map,
 		title: "SAR Map"
 	});
-    
+	
     return true;
 }
 
-google.maps.event.addDomListener(window, "load", initialize);
-
-function sendPosition(){
-	
-	if(timer){
-		window.clearTimeout(timer);
-	}
+// Update locTimer information
+// if geo service is available, send the current location to the server
+function sendPosition()
+{
 	var result = false;
 	
-	updateInterval = $("#updateInt").val();
-	$("#updateMessage").html("Updating every " + (updateInterval / 1000) + " seconds");
-	timer = setTimeout(function(){sendPosition()}, updateInterval);
+	if(locTimer)
+	{
+		window.clearTimeout(locTimer);
+	}
 	
+	updateLocationInterval = $("#updateLocInt").val();
+	$("#updateLocInfo").html("Updating every " + (updateLocationInterval / 1000) + " seconds");
+	locTimer = setTimeout(function(){sendPosition()}, updateLocationInterval);
+
     if ( navigator.geolocation ) 
     {
 		var geoOptions = {
@@ -83,7 +106,6 @@ function sendPosition(){
 		function success(pos)
 		{
 			// Location found, update the coords, move the map and the marker.
-			
 			positionCallback(pos);
 			var sendMsg = new Object();
 			sendMsg.user = ""+userID;
@@ -92,7 +114,7 @@ function sendPosition(){
 	
 			var forwardMsg = JSON.stringify(sendMsg);
 			
-			$("#info").html("Sending location...");
+			$("#infoLoc").html("Sending location...");
 			
 			$.ajax({
 				type: "POST",
@@ -100,9 +122,9 @@ function sendPosition(){
 				data: {dataMsg:forwardMsg},
 				success: function(msg){
 					if(msg){
-						$("#info").html(msg);
+						$("#infoLoc").html(msg);
 					}else{
-						$("#info").html(msg);
+						$("#infoLoc").html(msg);
 					}
 				}
 			});
@@ -113,7 +135,6 @@ function sendPosition(){
 		{
 			// Failed to find location, do nothing
 		}
-        
     }
     else
     {
@@ -131,62 +152,25 @@ function sendMessage(msg){
     {
         return false;
     }
+	
+	// use the sendposition as an example of object and ajax call methodology once the server side is setup.
 }
 
 function getMessage(){
+	updateCheckMsgInterval = $("#checkMsgInt").val();
+	
+	if(msgTimer)
+	{
+		window.clearTimeout(msgTimer);
+	}
+	
+	updateCheckMsgInterval = $("#checkMsgInt").val();
+	$("#updateMsgInfo").html("Updating every " + (updateCheckMsgInterval / 1000) + " seconds");
+	msgTimer = setTimeout(function(){getMessage()}, updateCheckMsgInterval);
+	
     msg = "";
+	
+	// use the sendposition as an example of object and ajax call methodology once the server side is setup.
     return msg;
 }
-	
-/*$( document ).on( "pageinit", "#geoMap", function() {
-    // Default to Hollywood, CA when no geolocation support
-	
-
-    if ( navigator.geolocation ) 
-    {
-		function success(pos)
-        {
-            // Location found, show map with these coordinates
-            drawMap(new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude));
-		}
-
-		function fail(error) 
-        {
-            drawMap(defaultLatLng);  // Failed to find location, show default map
-		}
-
-		// Find the users current position.  Cache the location for 5 minutes, timeout after 6 seconds
-		navigator.geolocation.getCurrentPosition(success, fail, {maximumAge: 500000, enableHighAccuracy:true, timeout: 6000});
-    } 
-    else 
-    {
-		drawMap(defaultLatLng);  // No geolocation support, show default map
-    }
-});*/
-
-/*
-$( document ).on( "pageinit", "#geoMap", function() {
-    var lat = $("#lat").val ();
-    var lng = $("#lng").val ();
-    var latlng = new google.maps.LatLng (lat, lng);
-    
-    //Sets options for the map with vars above
-    var myOptions = {
-        zoom: 15, 
-        center: latlng,
-        mapTypeControl: true,
-	mapTypeId : google.maps.MapTypeId.TERRAIN
-    };
-	
-    //Creates the map
-    map = new google.maps.Map(document.getElementById('map_canvas'), myOptions);
-
-    var markerOptions = {
-        map: null,  
-        position: latlng
-    };
-    var positionMarker = new google.maps.Marker(markerOptions);
-    positionMarker.setMap(map);
-});
-*/
 

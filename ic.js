@@ -470,7 +470,7 @@ Users.prototype.checkUsers = function(inputUsers){
 Users.prototype.drawUserButtons = function(){
 	$("#searcherlist").html("");
 	$.each(this.userArray, function(index, value){
-		$("#searcherlist").append('<div id="user' + value.userID + '" class="searcher" userID="' + value.userID + '" style="background-color:' + value.userColor +'">' + value.userID +' ' + value.username + '-- Dist: <span id="userTrail' + value.userID + '"-</span></div>');
+		$("#searcherlist").append('<div id="user' + value.userID + '" class="searcher" userID="' + value.userID + '" style="background-color:' + value.userColor +'"><span class="buttonNameStyle">' + value.userID +' ' + value.username + '</span> <span class="buttonInfoStyle" id="userTrail' + value.userID + '">Dist: -</span></div>');
 		$(".searcher").on("click", function(e){
 			users.panToPerson($(this).attr("userID"));
 		});

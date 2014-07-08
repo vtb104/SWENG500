@@ -126,7 +126,7 @@ body {
 	top: 200px;
 	bottom: 40px;
 	right: 0px;
-	width: 200px;
+	width: 45%;
 	background-color: #666;
 	overflow: scroll;
 }
@@ -134,6 +134,7 @@ body {
 #searcherlist .searcher{
 	padding: 3px;
 	background-color: #781F20;	
+	height: 20px;
 	text-align: center;
 	margin: 2px;
 	border-radius: 4px;
@@ -145,6 +146,22 @@ body {
 	background-color: #CC4E50;	
 }
 
+.buttonNameStyle{
+	float: left;
+}
+
+.buttonInfoStyle{
+	float: right;	
+}
+
+#searchAreaBox{
+	border:1px solid white; 
+	width:45%; 
+	height:300px; 
+	position: absolute; 
+	top: 400px; 
+	background-color:#232323;	
+}
 
 
 /*Non fixed items*/
@@ -280,7 +297,7 @@ var testFunction = function (){
         <div id="searcherlist">
                        
         </div>
-         <div style="border:1px solid white; width:300px; height:300px; position: absolute; bottom: 100px; background-color:#232323;">
+         <div id="searchAreaBox">
                             <button type="button" onclick="startNewArea()">Start New Area</button><br>
                             <select id="AreaEditSelector" onchange="updatePointList()">
                                 <!--Add list of areas for this search-->
@@ -306,8 +323,8 @@ var testFunction = function (){
                         </div>
          <div style="position: absolute; bottom: 20px; left: 0px;">   
              
-        <div id="testOutput">Test Code Here</div>
-        <button id="testbutton">Test Button</button>
+        <!--<div id="testOutput">Test Code Here</div>
+        <button id="testbutton">Test Button</button>-->
         </div>
         </div>  <!-- Content Div-->    
 

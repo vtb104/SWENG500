@@ -35,7 +35,7 @@
 		echo "<script>userID = \"".$_SESSION['userid']."\"</script>";
 	}
 ?>
-<body> 
+<body onLoad="initialize()">
 <div data-role=page id=geoMap>
         <div data-role=header>
             <a href="#geoMapHelp" class="ui-btn ui-btn-inline ui-corner-all ui-shadow">Help</a><a href="logout.php">Logout</a>
@@ -43,16 +43,19 @@
         </div>
     
         <div data-role="panel" id="geoMapHelp"> 
-                <h2>Geo Map Help</h2>
-                <p>You can close the help panel by clicking outside the panel, pressing the Esc key or by swiping.</p>
-                <p>insert help text here</p>
+                <h2>Geo Location Map Help</h2>
+                <p>This screen provides the user with a local area map with an icon denoting their current location.</p>
+                <p>In addition, the longitude and latitude are displayed along with a red text counter that iterates as a new set of coordinates are sent to the server.</p>
+				<p>Navigation is capable at the bottom of the window to the Messages and Configure screens.</p>
+				<p>You can close the help panel by clicking outside the panel, pressing the Esc key or by swiping.</p>
         </div>
 
         <div data-role="content">
-            <div id="info" style="color: red">Attempting to find current location...</div>
+            <div id="infoLoc" style="color: red">Attempting to find current location...</div>
             <input id="lat"/>
             <input id="lng"/>
-            <span id="updateMessage"></span>
+			<button onclick="panToCurrentLocation()">Pan to Current Location</button>
+            <span id="updateLocInfo"></span>
         </div>
     
         <div role="main" class="ui-content" id="map_canvas">
@@ -72,7 +75,7 @@
     
 <div data-role="page" id="message">
         <div data-role="header">
-            <a href="#msgHelp" class="ui-btn ui-btn-inline ui-corner-all ui-shadow">Help</a>
+            <a href="#msgHelp" class="ui-btn ui-btn-inline ui-corner-all ui-shadow">Help</a><a href="logout.php">Logout</a>
             <h1>Messages</h1>
         </div>
 
@@ -86,6 +89,10 @@
             <h3>Send and Get Messages</h3>
         </div>
 
+		<div data-role="content">
+            <span id="updateMsgInfo"></span>
+        </div>
+		
         <div data-role="footer" data-position="fixed">
             <div data-role="navbar">
                 <ul>
@@ -99,7 +106,7 @@
 
 <div data-role="page" id="configure">
         <div data-role="header">
-            <a href="#" data-rel="back">Back</a><a href="#confHelp" class="ui-btn ui-btn-inline ui-corner-all ui-shadow">Help</a>
+            <a href="#confHelp" class="ui-btn ui-btn-inline ui-corner-all ui-shadow">Help</a><a href="logout.php">Logout</a>
             <h1>Configure</h1>
 		</div>
         <div data-role="panel" id="confHelp"> 
@@ -111,11 +118,20 @@
         <div data-role="content">
             <h3>Configure the SAR Mobile App</h3>
 
-             <h4>Update Interval</h4>
-             <select id="updateInt">
+             <h4>Update Location Interval</h4>
+             <select id="updateLocInt">
                 <option value="1000">1s</option>
                 <option value="5000">5s</option>
-                <option value="60000">1 min</option>
+                <option value="30000">30s</option>
+				<option value="60000">1min</option>
+            </select>
+			
+			<h4>Check for Message Interval</h4>
+             <select id="checkMsgInt">
+                <option value="5000">5s</option>
+                <option value="10000">10s</option>
+                <option value="30000">30s</option>
+				<option value="60000">30s</option>
             </select>
         </div>
 
