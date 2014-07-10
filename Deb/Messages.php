@@ -1,5 +1,5 @@
 <?php
-    require_once('phpcommon.php');
+    require_once('../phpcommon.php');
     if(!$auth->authenticate()){
  	header("location: login.php"); 
     }
@@ -119,7 +119,9 @@ font-family: Gotham, 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 
 
   <div class="clearfix" id="page"><!-- group -->
       <a class="nonblock nontext Button ButtonSelected rounded-corners clearfix grpelem" id="buttonu160" href="Messages.php"><!-- container box --><div class="clearfix grpelem" id="u161-4"><!-- content --><p>View Messages</p></div></a>
-   <div class="clearfix grpelem" id="pu159-4"><!-- column -->
+      <button id="test" onclick="callToCheckForMessage()" style="position:absolute; right:25px; top:10px;">Test Button</button>
+      <div id="messageDisplay" style="position:absolute; right:25px; top:30px; height:200px; width:200px; border: #FFFFFF solid 1;"></div>
+      <div class="clearfix grpelem" id="pu159-4"><!-- column -->
     <div class="clearfix colelem" id="u159-4"><!-- content -->
      <p>Message Center</p>
     </div>
@@ -145,7 +147,18 @@ font-family: Gotham, 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 
     <div class="messageView">
         <textarea placeholder="View Message Here" id="messageWindow" name="viewMessages"></textarea>
     </div>
-          
+          <script> 
+              function callToCheckForMessage()
+              {
+              $.ajax({
+        type: "POST",
+        url: "../messageReceive.php",
+        data: {getMessages:"1"},//change search ID for multiple searches
+        dataType: "json",
+        success: function(msg){
+            document.getElementById("messageDisplay").innerHTML = "To: "+msg.to+" <br>From: "+msg.from+"<br>Subject: "+msg.subject+"<br><br>body: "+msg.body+"<br><br>Sent on: "+msg.date;
+            
+        }});}</script>   
   <!-- JS includes -->
   <script type="text/javascript">
    if (document.location.protocol != 'https:') document.write('\x3Cscript src="http://musecdn2.businesscatalyst.com/scripts/4.0/jquery-1.8.3.min.js" type="text/javascript">\x3C/script>');
