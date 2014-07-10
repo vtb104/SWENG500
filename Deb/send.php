@@ -1,10 +1,9 @@
 <?php
-	if(isset($_SESSION['userid']))
-	{
-		echo "var userID = " . $_SESSION['userid'];
-	}else{
-		echo "var userID = 0";
-	}	
+    require_once('phpcommon.php');
+    if(!$auth->authenticate()){
+ 	header("location: login.php"); 
+    }
+
 ?>
  <head>
 
