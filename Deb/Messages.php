@@ -131,7 +131,7 @@ font-family: Gotham, 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 
    <div class="verticalspacer"></div>
   </div>
           
-    <div id="messageHeaderTable">
+    <div class="messageHeaderTable">
         <table style="width:700px">  
             <tr>
                 <th>From</th>
@@ -142,7 +142,7 @@ font-family: Gotham, 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 
         </table>
     </div>
           
-    <div id="messageView">
+    <div class="messageView">
         <textarea placeholder="View Message Here" id="messageWindow" name="viewMessages"></textarea>
     </div>
           
