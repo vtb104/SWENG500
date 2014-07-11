@@ -175,11 +175,11 @@ class Database
 	 * @param OPTIONAL int $userID = the user ID for the points to return.
 	 *@return json array of all points 
 	 */
-	public function get_points($userID = 0, $start = 0, $teamID = 0, $searchID = 0, $returnJSON = true){
+	public function get_points($userID = 0, $start = 0, $teamID = 0, $searchID = 0, $returnJSON = true, $limit = 5000){
 		if($userID){
-			$query = "SELECT * FROM Points WHERE dateCreated > " . $start . " AND userID = " . $userID . " ORDER BY Points.dateCreated DESC LIMIT 6000";	
+			$query = "SELECT * FROM Points WHERE dateCreated > " . $start . " AND userID = " . $userID . " ORDER BY Points.dateCreated DESC LIMIT " . $limit;	
 		}else{
-			$query = "SELECT * FROM Points WHERE dateCreated > " . $start  . " ORDER BY Points.dateCreated DESC";
+			$query = "SELECT * FROM Points WHERE dateCreated > " . $start  . " ORDER BY Points.dateCreated DESC LIMIT " . $limit;
 		}
 		$result = $this->db_obj->query($query);
 		return $this->return_array($result, $returnJSON);

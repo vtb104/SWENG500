@@ -39,6 +39,9 @@ if(isset($_POST['update_ic_req']))
 		$return_array = $db->list_team($data["team"], false);
 		$counter = 0;
 		
+		//Divide the number of people returned by the limit and get that many points
+		$limit = $data["updateInterval"] / count($return_array);
+		
 		//Build the array
 		foreach($return_array as $one){
 			
@@ -48,14 +51,14 @@ if(isset($_POST['update_ic_req']))
 			$return_array[$counter]["userData"] = $tempArray[0];
 			
 			//Push the points on to each user
-			$tempArray = $db->get_points($one["userID"], $thetime, 0, 0, $returnJSON = false);
+			$tempArray = $db->get_points($one["userID"], $thetime, 0, 0, $returnJSON = false, $limit);
 			
 			//if points show up, pull them all
 			if(count($tempArray) > 1){
 				foreach($tempArray as $one){
 					array_push($return_array[$counter]["points"], $one);
 				}
-			}else if (count($tempArray) == 1){
+			}else if (count($tempArray) == 0){
 			//If no points show up, pull the latest
 				$tempArray = $db->latest_user_location($one["userID"], false);
 				array_push($return_array[$counter]["points"], $tempArray[0]);

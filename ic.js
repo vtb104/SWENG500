@@ -1,6 +1,9 @@
- 	var map;
-//Troubleshooting variable
-var objectCount = 0;
+var map;
+
+//Points loaded into the arrays
+var pointsLoaded = 0;
+
+//Points showing based on the time requested to show from
 var pointsShowing = 0;
 
 var timer = 0;
@@ -356,7 +359,9 @@ var getNewPoints = function(){
 		team = teamID
 		theTime = time in SECONDS for the age of the points
 	 */
-	requestData = {team: "1", theTime: (Math.round(trackHistoryStart.getTime() / 1000))}
+	requestData = {team: "1", 
+				   theTime: (Math.round(trackHistoryStart.getTime() / 1000)),
+				   updateInterval: updateInterval}
 	
 	//Start the AJAX call
 	$("#floatNote").html("Sending...");
@@ -367,7 +372,7 @@ var getNewPoints = function(){
 		dataType: "json",
         success: function(msg){ 
 			var connectionNow = new Date();
-			$("#floatNote").html("Connected to server for " + (Math.round((connectionNow.getTime() - connectionStart.getTime())/1000)) + "s | Points Loaded: " + objectCount + " | Points plotted: " + pointsShowing);        
+			$("#floatNote").html("Connected to server for " + (Math.round((connectionNow.getTime() - connectionStart.getTime())/1000)) + "s");        
 			//$("#info").html(msg);
 			
 			/*Object format for the returned JSON string:
@@ -387,7 +392,6 @@ var getNewPoints = function(){
 			
 			//Send the msg object to the user singleton to update or create points.
 			users.checkUsers(msg);
-			pointsShowing = 0;
 			users.plotPoints();	
 			users.drawUserButtons();
 			users.updateTrails();
@@ -492,16 +496,20 @@ Users.prototype.drawUserButtons = function(){
 
 //Plots the current user array
 Users.prototype.plotPoints = function(){
+	pointsLoaded = 0;
 	$.each(this.userArray, function(index, value){
 		value.plotPoints();
 	});
+	$("#pointsLoadedData").html(pointsLoaded);
 };
 
 //Runs when the trail value changes to update the trails.
 Users.prototype.updateTrails = function(){
+	pointsShowing = 0;
 	$.each(this.userArray, function(index, value){
 		value.drawTrail();
 		$("#userTrail" + value.userID).html(value.trailLength + "m");
+		$("#pointsShowingData").html(pointsShowing);
 	});
 }
 
@@ -588,14 +596,15 @@ Person.prototype.drawTrail = function(){
 	var rightNow = new Date();
 	var newerThan = Math.round(trackHistoryStart.getTime() / 1000);
 	var tempTrailArray = [];
+	pointsLoaded = pointsLoaded + this.pointArray.length;
 	$.each(this.pointArray, function(index, value){
 		if(value.dateCreated >= newerThan ){ 
 			var tempPoint = new google.maps.LatLng(value.lat, value.lng);
 			tempTrailArray.push(tempPoint);
-			pointsShowing++;
 		}
 	});
 	this.trailArray = tempTrailArray;
+	pointsShowing = pointsShowing + this.trailArray.length
 	this.trailLength = this.getTrailLength();
 	this.trail.setPath(this.trailArray);
 	this.trail.setMap(map);
@@ -620,7 +629,6 @@ Person.prototype.panToPerson = function(){
 //Adds a point to the array if it doesn't already exist
 Person.prototype.addPoint = function(point){
 	if(!this.checkPoints(point)){
-		objectCount++;
 		this.pointArray.push(point);
 		return true;
 	}

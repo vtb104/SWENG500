@@ -177,6 +177,21 @@ body {
 	z-Index: 50;
 	Padding: 3px;
 }
+
+.pointData{
+	color: black;
+	position: fixed;
+	left: 5px;	
+	z-Index: 20;
+}
+
+#pointsLoaded{
+	top: 35px;	
+}
+#pointsShowing{
+	top: 50px;l
+}
+
 #cursorLocation{
 	position: fixed;
 	right: 0px;
@@ -343,6 +358,8 @@ var testFunction = function (){
     <div id="map_canvas"></div>
     <div id="cursorLocation">Cursor Location</div>
 	<div id="floatNote">Test</div>
+    <div id="pointsLoaded" class="pointData">Points Loaded: <span id="pointsLoadedData">0</span></div>
+    <div id="pointsShowing" class="pointData">Points Showing: <span id="pointsShowingData">0</span></div>
 
 <div><!-- Page Wrapper-->
  
