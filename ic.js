@@ -392,8 +392,8 @@ var getNewPoints = function(){
 			
 			//Send the msg object to the user singleton to update or create points.
 			users.checkUsers(msg);
-			users.plotPoints();	
 			users.drawUserButtons();
+			users.plotPoints();	
 			users.updateTrails();
 		}
 	});
@@ -508,7 +508,6 @@ Users.prototype.updateTrails = function(){
 	pointsShowing = 0;
 	$.each(this.userArray, function(index, value){
 		value.drawTrail();
-		$("#userTrail" + value.userID).html(value.trailLength + "m");
 		$("#pointsShowingData").html(pointsShowing);
 	});
 }
@@ -544,6 +543,9 @@ function Person(input){
 		strokeWeight: 2
 	});
 	
+	//This is set if the point is stale and showing an old point
+	this.stale = "";
+	
 	var thisPointer = this;
 	$.each(input.points, function(index, value){
 		thisPointer.addPoint(value);
@@ -555,6 +557,8 @@ function Person(input){
 
 //Plots the points on the map depending on the showTrail value
 Person.prototype.plotPoints = function(){
+	
+	var userCaption = "";
 	
 	//Move the marker for the most recent position
 	if(this.pointArray.length > 1){
@@ -571,10 +575,20 @@ Person.prototype.plotPoints = function(){
 			this.drawTrail();
 		}
 		
+		if(this.trailLength){
+			userCaption = this.trailLength + "m";	
+		}else{
+			var tempDate = new Date(this.pointArray[0].dateCreated * 1000);
+			userCaption = "Last update: " + monthName(tempDate.getMonth()) + "-" + tempDate.getDate() + " " + leadingZero(tempDate.getHours()) + ":" + leadingZero(tempDate.getMinutes());	
+		}
+		
+		
 	}else if(this.pointArray.length === 1){
 		var tempPos = new google.maps.LatLng(this.pointArray[0].lat, this.pointArray[0].lng);
 		this.currentMarker.setPosition(tempPos);
 		this.currentMarker.setMap(map);
+		var tempDate = new Date(this.pointArray[0].dateCreated * 1000);
+		userCaption = "Last update: " + monthName(tempDate.getMonth()) + "-" + tempDate.getDate() + " " + leadingZero(tempDate.getHours()) + ":" + leadingZero(tempDate.getMinutes());
 		
 		//Now color the point base on if it is active or not (within the time given)
 		/*if(this.pointArray[0].dateCreated >= newerThan){	
@@ -585,6 +599,7 @@ Person.prototype.plotPoints = function(){
 		}*/
 		
 	};
+	$("#userTrail" + this.userID).html(userCaption);
 	return true;
 };
 
@@ -833,4 +848,35 @@ function getUITime(){
 	var returnTime = new Date();
 	returnTime.setTime(tempDate + (tempTime[0] * 3600 * 1000) + (tempTime[1] * 60 * 1000));
 	return returnTime;
+}
+
+function monthName(input){
+	switch (input){
+		case 0:
+			return "Jan";
+		case 1:
+			return "Feb";
+		case 2:
+			return "Mar";
+		case 3:
+			return "Apr";
+		case 4:
+			return "May";
+		case 5:
+			return "Jun";
+		case 6:
+			return "Jul";
+		case 7:
+			return "Aug";
+		case 8:
+			return "Sep";
+		case 9: 
+			return "Oct";
+		case 10:
+			return "Nov";
+		case 11:
+			return "Dec";
+		default:
+			return "error";
+	}	
 }
