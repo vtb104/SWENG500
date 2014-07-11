@@ -114,15 +114,17 @@ body {
 	position: absolute;
 	left: 0px;	
 }
-#optiondiv .pointoptions select{
-	width: 100px;	
+#optiondiv .pointoptions select, input{
+	width: 175px;	
 }
 
 #optiondiv select,input{
-	font-size: 16px;	
+	font-size: 16px;
+	height: 25px;	
 }
+
 .pointoptions{
-	margin-bottom: 5px;	
+	height: 28px;
 }
 
 #searcherlist{
@@ -274,36 +276,65 @@ var testFunction = function (){
           <h1 style="text-align: center;">Search and Rescue</h1>
           <h2 style="text-align: center;">Incident Command</h2>
 			<div id="optiondiv">
-                <div class="pointoptions"><span class="optionlabel">Select a Search to View: </span>
+            <table>
+            	<tr class="pointoptions">
+                	<td>
+                    	<span class="optionlabel">Select a Search to View: </span>
+                    </td>
+                    <td>
                     <select id="currentSearchNumber">
                         <option value="all">All Searches</option>
                         <option value="new">Create new search...</option>
                     </select>
-                </div>  
-                <div class="pointoptions"><span class="optionlabel">Team Position to View: </span>
-                    <select id="currentTeamNumber">
-                        <option value="all">All Teams</option>
-                        <option value="1">Team 1</option>
-                    </select>
-                </div>
-                <div class="pointoptions"><span class="optionlabel">Update Interval: </span>
-                    <select id="updateInt">
-                        <option value="5000">5s</option>
-                        <option value="10000">10s</option>
-                        <option value="10000">30s</option>
-                        <option value="60000">1 min</option>
-                    </select>
-                </div>
-               <div class="pointoptions">Track History Start Date:
-					<input id="trackDate" type="text"/><br/>
-                    Track History Start Time:
-                    <input type="time" id="trackTime" value="12:00"/>
-                    <div id="testTime">Here</div>
-                </div>
-                <div class="pointoptions">
+                    </td>
+               </tr>
+           
+               
                 	
-                </div>
-           	</div>
+                    
+                <tr class="pointoptions">
+                	<td>
+                    	<span class="optionlabel">Team Position to View: </span>
+                    </td>
+                    <td>
+                    	<select id="currentTeamNumber">
+                        	<option value="all">All Teams</option>
+                        	<option value="1">Team 1</option>
+                    	</select>
+                	</td>
+               	</tr>
+				<tr class="pointoptions">
+               		<td>
+                    	<span class="optionlabel">Update Interval: </span>
+                    </td>
+                    <td>
+                        <select id="updateInt">
+                            <option value="5000">5s</option>
+                            <option value="10000">10s</option>
+                            <option value="10000">30s</option>
+                            <option value="60000">1 min</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr class="pointoptions">
+                	<td>
+                    	Track History Start Date:
+                    </td>
+                    <td>
+                    	<input id="trackDate" type="text"/><br/>
+                    </td>
+                </tr>
+                <tr>
+                	<td>
+                    	Track History Start Time:
+                    </td>
+                    <td>
+                    	<input type="time" id="trackTime" value="12:00"/>
+                    </td>
+                </tr>
+           </table>
+           	<div id="testTime">Here</div>
+           </div>
             
         <div id="searcherlist">
                        
