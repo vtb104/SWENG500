@@ -117,6 +117,10 @@ body {
 #optiondiv .pointoptions select{
 	width: 100px;	
 }
+
+#optiondiv select,input{
+	font-size: 16px;	
+}
 .pointoptions{
 	margin-bottom: 5px;	
 }
@@ -275,23 +279,15 @@ var testFunction = function (){
                         <option value="60000">1 min</option>
                     </select>
                 </div>
-               <div class="pointoptions"><span class="optionlabel">Track History Length:</span>
-<!--                    <select id="updateTrackLength">
-                        <option value="60">Last Minute</option>
-                        <option value="1800">30 mins</option>
-                        <option value="3600">1 hour</option>
-                        <option value="86400">1 day</option>
-                        <option value="604800">1 Week</option>
-                        <option value="1209600">2 Weeks</option>
-                    </select>-->
-                   <span id="updateTrackLength">60s</span>
-                   <div id="trackSlider" style="width: 400px;"></div>
+               <div class="pointoptions">Track History Start Date:
+					<input id="trackDate" type="text"/><br/>
+                    Track History Start Time:
+                    <input type="time" id="trackTime" value="12:00"/>
+                    <div id="testTime">Here</div>
                 </div>
                 <div class="pointoptions">
                 	
                 </div>
-                
-                
            	</div>
             
         <div id="searcherlist">
@@ -356,22 +352,14 @@ var testFunction = function (){
 $(function(){
 	
 	//Setup options
-	function refreshLabel(){
-		trackHistoryLength = $("#trackSlider").slider("value");
-		$("#updateTrackLength").html(convertSeconds(trackHistoryLength))
-	}
-	function refreshSlider(){
-		refreshLabel();	
+	$("#trackDate").datepicker({ dateFormat: "mm-dd-yy" });
+	
+	//Change the track length
+	$("#trackDate").change(function(){
 		updateTrackLength();
-	}
-	$("#trackSlider").slider({
-		min: 60,
-		max: 1209600,  //Two week max
-		//max: 2581200,    //1 Month max
-		step: 60,
-		value: trackHistoryLength,
-      	slide: refreshLabel,
-      	change: refreshSlider
+	});
+	$("#trackTime").change(function(){
+		updateTrackLength();
 	});
 	
 	//Change the update interval

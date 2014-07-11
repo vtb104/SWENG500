@@ -49,12 +49,26 @@ var updateTeamNumber = function(){
 }
 
 //Value and track variable length
-var trackHistoryLength = (3600 * 24)  //Default is one day
-if(readCookie("sar.trackLength")){
-	trackHistoryLength = readCookie("sar.trackLength");
+var nowTime = new Date();
+var trackHistoryStart = new Date();
+
+if(readCookie("sar.trackStart")){
+ 	var temp = readCookie("sar.trackStart");
+	trackHistoryStart.setTime(temp);
+}else{
+	trackHistoryStart.setTime(nowTime.getTime() - (3600 * 24 * 1000));  //Default one day ago
+	
 };
+
 var updateTrackLength = function(){
-	writeCookie("sar.trackLength", trackHistoryLength, cookieDuration);
+	
+	trackHistoryStart = getUITime();
+	$("#testTime").html(trackHistoryStart.toString());
+	
+	//Write the cookie
+	writeCookie("sar.trackStart", trackHistoryStart.getTime(), cookieDuration);
+	
+	//Show the trails in relation to that value
 	pointsShowing = 0;
 	users.updateTrails();
 };
@@ -104,17 +118,13 @@ var initialize = function(){
 	$("#floatNote").html("Connecting...");
 	connectionStart = new Date();
 	
+	//Update trackLength value
+	setUITime(trackHistoryStart);
 	
-	//Can change these to cookie values to remember the last used data
+	$("#testTime").html(trackHistoryStart.toString())
 	
 	//Updates the timer value with the default
 	$("#updateInt").val(updateInterval);
-	
-	//Updates the default length for tracks to the user's last value
-	$("#updateTrackLength").html(convertSeconds(trackHistoryLength))
-
-	//Sets the update value to the variable listed above
-	$("#updateTrackLength").val(trackHistoryLength);
 
 	//Start the timer to get new points
 	getNewPoints();
@@ -330,6 +340,8 @@ function updateUserTrack(userNumber)
     markerStorage[userNumber].setPosition(tempPos);
    
 }
+
+
 //This is the function that runs every 5s from the timer
 var getNewPoints = function(){
 	
@@ -344,7 +356,7 @@ var getNewPoints = function(){
 		team = teamID
 		theTime = time in SECONDS for the age of the points
 	 */
-	requestData = {team: "1", theTime: trackHistoryLength}
+	requestData = {team: "1", theTime: (Math.round(trackHistoryStart.getTime() / 1000))}
 	
 	//Start the AJAX call
 	$("#floatNote").html("Sending...");
@@ -539,7 +551,7 @@ Person.prototype.plotPoints = function(){
 	//Move the marker for the most recent position
 	if(this.pointArray.length > 1){
 		var rightNow = new Date();
-		var newerThan = Math.round((rightNow.getTime()/1000)- trackHistoryLength);
+		var newerThan = Math.round(trackHistoryStart.getTime()/ 1000);
 
 		//Draw/Move the first point regardless of how old it is
 		var tempPos = new google.maps.LatLng(this.pointArray[0].lat, this.pointArray[0].lng);
@@ -574,7 +586,7 @@ Person.prototype.drawTrail = function(){
 	this.trail.setMap(null);
 	this.trailArray = [];
 	var rightNow = new Date();
-	var newerThan = Math.round((rightNow.getTime()/1000)- trackHistoryLength);
+	var newerThan = Math.round(trackHistoryStart.getTime() / 1000);
 	var tempTrailArray = [];
 	$.each(this.pointArray, function(index, value){
 		if(value.dateCreated >= newerThan ){ 
@@ -787,3 +799,30 @@ Math.round1 = function(input){return Math.round(input * 10) / 10;};
 Math.degrees = function(rad){return rad*(180/Math.PI);}
 Math.radians = function(deg){return deg * (Math.PI/180);}
 function mToFeet(input){return input * 3.28084};
+
+function leadingZero(input){
+	if(input < 10){
+		return "0" + input;
+	}else{
+		return input;
+	}
+}
+
+//Sets the UI date, takes a Date object
+function setUITime(input){
+	input.setTime(input.getTime() + input.getTimezoneOffset());
+	var dateString = (input.getMonth() + 1) + "-" + input.getDate() + "-" + input.getFullYear();
+	$("#trackDate").datepicker('setDate', dateString);
+	var timeString = leadingZero(input.getHours()) + ":" + leadingZero(input.getMinutes());
+	$("#trackTime").val(timeString);
+}
+
+//Returns a Date Object of the time in the UI
+function getUITime(){
+	var tempTime = $("#trackTime").val().split(":");
+	var tempDate = $("#trackDate").datepicker("getDate").getTime();
+
+	var returnTime = new Date();
+	returnTime.setTime(tempDate + (tempTime[0] * 3600 * 1000) + (tempTime[1] * 60 * 1000));
+	return returnTime;
+}

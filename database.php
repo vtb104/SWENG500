@@ -177,7 +177,7 @@ class Database
 	 */
 	public function get_points($userID = 0, $start = 0, $teamID = 0, $searchID = 0, $returnJSON = true){
 		if($userID){
-			$query = "SELECT * FROM Points WHERE dateCreated > " . $start . " AND userID = " . $userID . " ORDER BY Points.dateCreated DESC";	
+			$query = "SELECT * FROM Points WHERE dateCreated > " . $start . " AND userID = " . $userID . " ORDER BY Points.dateCreated DESC LIMIT 6000";	
 		}else{
 			$query = "SELECT * FROM Points WHERE dateCreated > " . $start  . " ORDER BY Points.dateCreated DESC";
 		}

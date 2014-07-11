@@ -33,7 +33,7 @@ if(isset($_POST['update_ic_req']))
 	if($data["team"]){
 		
 		//How old the points should be
-		$thetime = time() - $data["theTime"];
+		$thetime = $data["theTime"];
 		
 		//Start an array of people
 		$return_array = $db->list_team($data["team"], false);
