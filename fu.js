@@ -1,11 +1,16 @@
 // Declaration of global vars
 var updateLocationInterval = 5000;
+var updateCheckMsgInterval = 5000;
+var updateSendLocationInterval = 60000;
+
 var locTimer = 0;
 var msgTimer = 0;
+var sendLocTimer = 0;
+
 var firstLoop = true;
 var currentLoc = new google.maps.LatLng(0, 0);
-
-// test test
+var arrayGeoLocation = [];
+var uploadingGeoLocation = false;
 
 // decompose the position values into items for display
 // set the new marker
@@ -41,10 +46,16 @@ navigator.geolocation.getCurrentPosition (function (pos)
 });
 
 // Runs on load
-function initialize(){
+function initialize()
+{
 	$("#updateLocInt").val(updateLocationInterval);
 	sendPosition();
+	
+	$("#checkMsgInt").val(updateCheckMsgInterval);
 	getMessage();
+	
+	$("#sendLocInt").val(updateSendLocationInterval);
+	sendGeoLocations();
 	
 	var lat = $("#lat").val ();
     var lng = $("#lng").val ();
@@ -69,7 +80,9 @@ function initialize(){
     var positionMarker = new google.maps.Marker(markerOptions);
     positionMarker.setMap(map);
 	
-    var locTimer = setTimeout(function(){sendPosition()}, updateLocationInterval);
+    locTimer = setTimeout(function(){sendPosition()}, updateLocationInterval);
+	msgTimer = setTimeout(function(){getMessage()}, updateCheckMsgInterval);
+	sendLocTimer = setTimeout(function(){sendGeoLocations()}, updateSendLocationInterval);
 	
 	marker = new google.maps.Marker({
 		position: latlng,
@@ -95,57 +108,70 @@ function sendPosition()
 	$("#updateLocInfo").html("Updating every " + (updateLocationInterval / 1000) + " seconds");
 	locTimer = setTimeout(function(){sendPosition()}, updateLocationInterval);
 
-    if ( navigator.geolocation ) 
-    {
-		var geoOptions = {
-		  enableHighAccuracy: true,
-		  timeout: 2000,
-		  maximumAge: 0
-		};
+	// If the geo location points are being uploaded, then do not collect a new point
+	if (!uploadingGeoLocation)
+	{
+		if ( navigator.geolocation ) 
+		{
+			var geoOptions = {
+			  enableHighAccuracy: true,
+			  timeout: 2000,
+			  maximumAge: 0
+			};
+			
+			navigator.geolocation.getCurrentPosition(success, fail, geoOptions);
+
+			function success(pos)
+			{
+				// Location found, update the coords, move the map and the marker.
+				positionCallback(pos);
+				var sendMsg = new Object();
+				sendMsg.user = ""+userID;
+				sendMsg.lat = $("#lat").val();
+				sendMsg.lng = $("#lng").val();
+				var dateObject = new Date();
+				sendMsg.time = ""+dateObject.getTime();
+				
+				arrayGeoLocation.push(sendMsg); 
 		
-		navigator.geolocation.getCurrentPosition(success, fail, geoOptions);
-
-		function success(pos)
-		{
-			// Location found, update the coords, move the map and the marker.
-			positionCallback(pos);
-			var sendMsg = new Object();
-			sendMsg.user = ""+userID;
-			sendMsg.lat = $("#lat").val();
-			sendMsg.lng = $("#lng").val();
-	
-			var forwardMsg = JSON.stringify(sendMsg);
-			
-			$("#infoLoc").html("Sending location...");
-			
-			$.ajax({
-				type: "POST",
-				url: "messageReceive.php",
-				data: {dataMsg:forwardMsg},
-				success: function(msg){
-					if(msg){
-						$("#infoLoc").html(msg);
-					}else{
-						$("#infoLoc").html(msg);
+				var forwardMsg = JSON.stringify(sendMsg);
+				
+				$("#infoLoc").html("Sending location...");
+				
+				$.ajax({
+					type: "POST",
+					url: "messageReceive.php",
+					data: {dataMsg:forwardMsg},
+					success: function(msg){
+						if(msg){
+							$("#infoLoc").html(msg);
+						}else{
+							$("#infoLoc").html(msg);
+						}
 					}
-				}
-			});
-			result = true;
-		}
+				});
+				result = true;
+			}
 
-		function fail(error) 
-		{
-			// Failed to find location, do nothing
+			function fail(error) 
+			{
+				// Failed to find location, do nothing
+			}
 		}
-    }
-    else
-    {
-        $("#info").html("Location not allowed for this application.  Please allow location sharing to enable this feature.");
-    }
+		else
+		{
+			$("#info").html("Location not allowed for this application.  Please allow location sharing to enable this feature.");
+		}
+	}
+	else
+	{
+		result = true;
+	}
 	return result;
 }
 
-function sendMessage(msg){
+function sendMessage(msg)
+{
     if (msg)
     {
         return true;
@@ -158,9 +184,8 @@ function sendMessage(msg){
 	// use the sendposition as an example of object and ajax call methodology once the server side is setup.
 }
 
-function getMessage(){
-	updateCheckMsgInterval = $("#checkMsgInt").val();
-	
+function getMessage()
+{
 	if(msgTimer)
 	{
 		window.clearTimeout(msgTimer);
@@ -174,5 +199,25 @@ function getMessage(){
 	
 	// use the sendposition as an example of object and ajax call methodology once the server side is setup.
     return msg;
+}
+
+function sendGeoLocations()
+{
+	// set the global var to stop gathering geo location points
+	uploadingGeoLocation = true;
+	
+	if(sendLocTimer)
+	{
+		window.clearTimeout(sendLocTimer);
+	}
+
+	sendLocTimer = setTimeout(function(){sendGeoLocations()}, updateSendLocationInterval);
+	
+	// send all cached geo locations
+	arrayGeoLocation.forEach(sendGeoLocations)
+	arrayGeoLocation.
+	
+	// allow the gathering of geo location points
+	uploadingGeoLocation = false;
 }
 
