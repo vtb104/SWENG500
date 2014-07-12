@@ -1,0 +1,218 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Jul 11, 2014, 9:25:36 PM
+    Author     : Shane
+*/
+ul
+{
+	list-style-type: none;
+	margin: 2;
+	padding: 2;
+	overflow: hidden;
+	text-align: right;
+}
+li
+{
+	float: inherit;
+	text-align: left;
+}
+a:link,a:visited
+{
+display:inline;
+font-weight:bold;
+color:#FFFFFF;
+background-color:#232323;
+text-align:center;
+text-decoration:none;
+text-transform:uppercase;
+}
+a:hover,a:active
+{
+	color: #4C507E;
+}
+body {
+	font-family: Gotham, 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 12; color: #ECEDF3; background-color: #232323;
+	
+}
+
+#logo{position: fixed; right: 0px; top: 30px; width: 150px; z-index: 20}
+
+#main{
+	position: absolute;
+	right: 0px;
+	top: 0px;
+	bottom: 0px;
+	width: 49%;
+	min-width: 300px;
+	padding: 5px;
+	z-index: 11;
+	background-color: #232323;
+}
+
+#menubar{
+	padding-top: 3px;
+	position: absolute;
+	height: 24px;
+	right: 0px;
+	width: 100%;	
+	border-bottom: 2px #999 solid;
+}
+
+#menubar a{
+	padding: 4px;
+	background-color: #494242;	
+	border: 1px solid #847272;
+	border-radius: 3px;
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+		
+}
+
+#menubar a:hover{
+	background-color: #ccc;
+}
+
+
+#content{
+	padding: 10px;	
+	position: absolute;
+	top: 35px;
+	bottom: 20px;
+	width: 95%;
+}
+
+#optiondiv{
+	position: absolute;
+	left: 0px;	
+}
+#optiondiv .pointoptions select, input{
+	width: 175px;	
+}
+
+#optiondiv select,input{
+	font-size: 16px;
+	height: 25px;	
+}
+
+.pointoptions{
+	height: 28px;
+}
+
+#searcherlist{
+	position: absolute;
+	top: 200px;
+	bottom: 40px;
+	right: 0px;
+	width: 45%;
+	background-color: #666;
+	overflow: scroll;
+}
+
+#searcherlist .searcher{
+	padding: 3px;
+	background-color: #781F20;	
+	height: 20px;
+	text-align: center;
+	margin: 2px;
+	border-radius: 4px;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+}
+#searcherlist .searcher:hover{
+	cursor: pointer;
+	background-color: #CC4E50;	
+}
+
+.buttonNameStyle{
+	float: left;
+}
+
+.buttonInfoStyle{
+	float: right;	
+}
+
+#searchAreaBox{
+	border:1px solid white; 
+	width:45%; 
+	height:300px; 
+	position: absolute; 
+	top: 400px; 
+	background-color:#232323;	
+}
+
+
+/*Non fixed items*/
+#floatNote{
+	position: fixed;
+	right: 0px;
+	bottom: 0px;
+	color: red;	
+	z-Index: 50;
+	Padding: 3px;
+}
+
+.pointData{
+	color: black;
+	position: fixed;
+	left: 5px;	
+	z-Index: 20;
+}
+
+#pointsLoaded{
+	top: 35px;	
+}
+#pointsShowing{
+	top: 50px;
+}
+
+#cursorLocation{
+	position: fixed;
+	right: 0px;
+	bottom: 20px;
+	color: red;	
+	z-Index: 50;
+	Padding: 3px;
+}
+
+
+#searchform{
+	position: absolute;
+	left: 0px;
+	z-index: 20;
+	padding: 1px;
+	background-color: #232323;
+}
+
+#map_canvas{
+	position: absolute;
+	left: 0px;
+	bottom: 0px;
+	height: 100%;
+	width: 50%;
+	z-index: 10;
+}
+
+/*Weather stuff*/
+
+#outer_weather_box{
+	position: fixed;
+	z-index: 20;
+	background-color: #444;
+	height: 300px;
+	width: 500px;
+	left: 50px;
+	bottom: -275px;
+	border-radius: 5px;
+}
+
+.weathershow{
+	display: none;
+}
+
+.weathercursor:hover{
+	cursor: pointer;	
+}
