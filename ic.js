@@ -535,7 +535,7 @@ Users.prototype.destroyArray = function(){
 	$.each(this.userArray, function(index, value){
 		value.destroy();
 	});
-	$("#searcherlist").html(" ");
+	$("#searcherlist").html("");
 	this.userArray = [];
 }
 

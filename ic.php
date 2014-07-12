@@ -21,7 +21,7 @@
 <!-- jQuery UI-->
 <script src="jquery-ui-1.11.0/jquery-ui.min.js"></script>
 <link rel="stylesheet" href="jquery-ui-1.11.0/jquery-ui.min.css"/>
-<script src="jquerytools.js"></script>
+
 <script type="text/javascript" src="StyledMarker.js"></script>
 <script type="text/javascript" src="lib/jQueryRotate.js"></script>
 
@@ -29,7 +29,199 @@
 <script src="ic.js"></script>
 <script src="cookies.js"></script>
 
-<link rel="stylesheet" type="text/css" href="ic.css">
+
+<style>
+
+ul
+{
+	list-style-type: none;
+	margin: 2;
+	padding: 2;
+	overflow: hidden;
+	text-align: right;
+}
+li
+{
+	float: inherit;
+	text-align: left;
+}
+a:link,a:visited
+{
+display:inline;
+font-weight:bold;
+color:#FFFFFF;
+background-color:#232323;
+text-align:center;
+text-decoration:none;
+text-transform:uppercase;
+}
+a:hover,a:active
+{
+	color: #4C507E;
+}
+body {
+	font-family: Gotham, 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 12; color: #ECEDF3; background-color: #232323;
+	
+}
+
+#logo{position: fixed; right: 0px; top: 30px; width: 150px; z-index: 20}
+
+#main{
+	position: absolute;
+	right: 0px;
+	top: 0px;
+	bottom: 0px;
+	width: 49%;
+	min-width: 300px;
+	padding: 5px;
+	z-index: 11;
+	background-color: #232323;
+}
+
+#menubar{
+	padding-top: 3px;
+	position: absolute;
+	height: 24px;
+	right: 0px;
+	width: 100%;	
+	border-bottom: 2px #999 solid;
+}
+
+#menubar a{
+	padding: 4px;
+	background-color: #494242;	
+	border: 1px solid #847272;
+	border-radius: 3px;
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+		
+}
+
+#menubar a:hover{
+	background-color: #ccc;
+}
+
+
+#content{
+	padding: 10px;	
+	position: absolute;
+	top: 35px;
+	bottom: 20px;
+	width: 95%;
+}
+
+#optiondiv{
+	position: absolute;
+	left: 0px;	
+}
+#optiondiv .pointoptions select{
+	width: 100px;	
+}
+.pointoptions{
+	margin-bottom: 5px;	
+}
+
+#searcherlist{
+	position: absolute;
+	top: 200px;
+	bottom: 40px;
+	right: 0px;
+	width: 45%;
+	background-color: #666;
+	overflow: scroll;
+}
+
+#searcherlist .searcher{
+	padding: 3px;
+	background-color: #781F20;	
+	height: 20px;
+	text-align: center;
+	margin: 2px;
+	border-radius: 4px;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+}
+#searcherlist .searcher:hover{
+	cursor: pointer;
+	background-color: #CC4E50;	
+}
+
+.buttonNameStyle{
+	float: left;
+}
+
+.buttonInfoStyle{
+	float: right;	
+}
+
+#searchAreaBox{
+	border:1px solid white; 
+	width:45%; 
+	height:300px; 
+	position: absolute; 
+	top: 400px; 
+	background-color:#232323;	
+}
+
+
+/*Non fixed items*/
+#floatNote{
+	position: fixed;
+	right: 0px;
+	bottom: 0px;
+	color: red;	
+	z-Index: 50;
+	Padding: 3px;
+}
+#cursorLocation{
+	position: fixed;
+	right: 0px;
+	bottom: 20px;
+	color: red;	
+	z-Index: 50;
+	Padding: 3px;
+}
+
+
+#searchform{
+	position: absolute;
+	left: 0px;
+	z-index: 20;
+	padding: 1px;
+	background-color: #232323;
+}
+
+#map_canvas{
+	position: absolute;
+	left: 0px;
+	bottom: 0px;
+	height: 100%;
+	width: 50%;
+	z-index: 10;
+}
+
+/*Weather stuff*/
+
+#outer_weather_box{
+	position: fixed;
+	z-index: 20;
+	background-color: #444;
+	height: 300px;
+	width: 500px;
+	left: 50px;
+	bottom: -275px;
+	border-radius: 5px;
+}
+
+.weathershow{
+	display: none;
+}
+
+.weathercursor:hover{
+	cursor: pointer;	
+}
+
+</style>
 
 <script>
 <?php
@@ -40,6 +232,7 @@
 		echo "var userID = 0";
 	}	
 ?>
+
 var testFunction = function (){
 	$("#testOutput").html("test");
 };
@@ -62,6 +255,7 @@ var testFunction = function (){
           <h1 style="text-align: center;">Search and Rescue</h1>
           <h2 style="text-align: center;">Incident Command</h2>
 			<div id="optiondiv">
+<<<<<<< HEAD
             <table class="defaulttable" id="pointoptionstable">
             	<tr>
                 	<td>
@@ -114,6 +308,46 @@ var testFunction = function (){
            </table>
            	<div id="testTime">Here</div>
            </div>
+=======
+                <div class="pointoptions"><span class="optionlabel">Select a Search to View: </span>
+                    <select id="currentSearchNumber">
+                        <option value="all">All Searches</option>
+                        <option value="new">Create new search...</option>
+                    </select>
+                </div>  
+                <div class="pointoptions"><span class="optionlabel">Team Position to View: </span>
+                    <select id="currentTeamNumber">
+                        <option value="all">All Teams</option>
+                        <option value="1">Team 1</option>
+                    </select>
+                </div>
+                <div class="pointoptions"><span class="optionlabel">Update Interval: </span>
+                    <select id="updateInt">
+                        <option value="5000">5s</option>
+                        <option value="10000">10s</option>
+                        <option value="10000">30s</option>
+                        <option value="60000">1 min</option>
+                    </select>
+                </div>
+               <div class="pointoptions"><span class="optionlabel">Track History Length:</span>
+<!--                    <select id="updateTrackLength">
+                        <option value="60">Last Minute</option>
+                        <option value="1800">30 mins</option>
+                        <option value="3600">1 hour</option>
+                        <option value="86400">1 day</option>
+                        <option value="604800">1 Week</option>
+                        <option value="1209600">2 Weeks</option>
+                    </select>-->
+                   <span id="updateTrackLength">60s</span>
+                   <div id="trackSlider" style="width: 400px;"></div>
+                </div>
+                <div class="pointoptions">
+                	
+                </div>
+                
+                
+           	</div>
+>>>>>>> origin/master
             
         <div id="searcherlist">
                        
@@ -168,11 +402,10 @@ var testFunction = function (){
     <div id="map_canvas"></div>
     <div id="cursorLocation">Cursor Location</div>
 	<div id="floatNote">Test</div>
-    <div id="pointsLoaded" class="pointData">Points Loaded: <span id="pointsLoadedData">0</span></div>
-    <div id="pointsShowing" class="pointData">Points Showing: <span id="pointsShowingData">0</span></div>
 
 <div><!-- Page Wrapper-->
  
+<<<<<<< HEAD
  <!--Overlays-->
  
 <div class="overlay" id="newsearchoverlay">
@@ -220,12 +453,15 @@ var testFunction = function (){
 </div>
  
  
+=======
+>>>>>>> origin/master
 </body>
 <script>
 //Put jQuery button listeners here, don't put too many functions here due to scope issues.
 $(function(){
 	
 	//Setup options
+<<<<<<< HEAD
 	$(".datepicker").datepicker({ dateFormat: "mm-dd-yy" });
 	
 	//Overlay options
@@ -240,7 +476,24 @@ $(function(){
 		updateTrackLength();
 	});
 	$("#trackTime").change(function(){
+=======
+	function refreshLabel(){
+		trackHistoryLength = $("#trackSlider").slider("value");
+		$("#updateTrackLength").html(convertSeconds(trackHistoryLength))
+	}
+	function refreshSlider(){
+		refreshLabel();	
+>>>>>>> origin/master
 		updateTrackLength();
+	}
+	$("#trackSlider").slider({
+		min: 60,
+		max: 1209600,  //Two week max
+		//max: 2581200,    //1 Month max
+		step: 60,
+		value: trackHistoryLength,
+      	slide: refreshLabel,
+      	change: refreshSlider
 	});
 	
 	//Change the update interval
@@ -279,15 +532,6 @@ $(function(){
 	
 	$("#testbutton").click(function(){
 		testFunction();
-	});
-	
-	$("#currentSearchNumber").change(function(){
-		if($(this).val() !== "all"){
-			currentSearch = $(this).val();
-			getNewPoints();
-		}else{
-			$("#info").html("New Search");
-		}
 	});
 	
 });

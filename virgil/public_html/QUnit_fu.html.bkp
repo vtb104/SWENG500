@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>QUnit for SAR Field Unit</title>
+<link rel="stylesheet" href="qunit-1.14.0.css">
+<link rel="stylesheet" href="https://code.jquery.com/mobile/1.4.2/jquery.mobile-1.4.2.min.css">
+<script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+<script src="https://code.jquery.com/mobile/1.4.2/jquery.mobile-1.4.2.min.js"></script>
+<script src="https://maps.googleapis.com/maps/api/js?sensor=true"></script>
+</head>
+<body>
+<div id="qunit"></div>
+<div id="qunit-fixture"></div>
+<script src="qunit-1.14.0.js"></script>
+<script src="fu_test.js"></script>
+
+<script>
+    test("Field Unit Basics: Initialize", function() 
+    {
+        equal(initialize(), true, "Test of the Initialize function");
+    });
+    
+    test("Field Unit Basics: sendPosition", function() 
+    {
+        equal(sendPosition(), true, "Test of the sendPosition function");
+    });
+    
+    test("Field Unit Basics: sendMessage (parameter non-null)", function() 
+    {
+        var msg = "This is a message";
+        equal(sendMessage(msg), true, "Test of the sendMessage function");
+    });
+    
+    test("Field Unit Basics: sendMessage (parameter null)", function() 
+    {
+        var msg = "";
+        equal(sendMessage(msg), false, "Test of the sendMessage function");
+    });
+    
+    test("Field Unit Basics: getMessage", function() 
+    {
+        equal(getMessage(), "", "Test of the getMessage function");
+    });
+    
+    test("Field Unit Basics: registerUser", function() 
+    {
+        var msg = "";
+        equal(registerUser(msg), true, "Test of the registerUser function");
+    });
+    
+    test("Field Unit Basics: unregisterUser", function() 
+    {
+        var msg = "";
+        equal(unregisterUser(msg), true, "Test of the unregisterUser function");
+    });
+    
+    
+</script>
+
+</body>
+</html>

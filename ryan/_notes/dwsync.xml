@@ -1,9 +1,28 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <dwsync>
-<file name="database.php" server="96.126.123.248//var/www/sweng500/" local="130466054851583966" remote="130466055650000000" Dst="2" />
-<file name="index.php" server="96.126.123.248//var/www/sweng500/" local="130466055317644601" remote="130466055660000000" Dst="2" />
-<file name="vars.php" server="96.126.123.248//var/www/sweng500/" local="130464311215183782" remote="130465041890000000" Dst="2" />
+<file name="database.php" server="96.126.123.248//var/www/sweng500/" local="130486657610000000" remote="130486657610000000" Dst="2" />
+<file name="index.php" server="96.126.123.248//var/www/sweng500/" local="130473312000000000" remote="130473312000000000" Dst="2" />
+<file name="vars.php" server="96.126.123.248//var/www/sweng500/" local="130472100560000000" remote="130472100560000000" Dst="2" />
 <file name="test.php" server="96.126.123.248//var/www/sweng500/" local="130464341342295665" remote="130464341460000000" Dst="2" />
-<file name="info.php" server="96.126.123.248//var/www/sweng500/" local="130464358005596911" remote="130464358400000000" Dst="2" />
-<file name="databaseClean.php" server="96.126.123.248//var/www/sweng500/" local="130465056855672176" remote="130465057040000000" Dst="2" />
+<file name="info.php" server="96.126.123.248//var/www/sweng500/" local="130464358400000000" remote="130464358400000000" Dst="2" />
+<file name="databaseClean.php" server="96.126.123.248//var/www/sweng500/" local="130472923740000000" remote="130472923740000000" Dst="2" />
+<file name="register.php" server="96.126.123.248//var/www/sweng500/" local="130472976040000000" remote="130472976040000000" Dst="2" />
+<file name="class.pop3.php" server="96.126.123.248//var/www/sweng500/" local="130472100510000000" remote="130472100510000000" Dst="2" />
+<file name="cookie.php" server="96.126.123.248//var/www/sweng500/" local="130472100530000000" remote="130472100530000000" Dst="2" />
+<file name="confirm.php" server="96.126.123.248//var/www/sweng500/" local="130472931360000000" remote="130472931360000000" Dst="2" />
+<file name="ic.js" server="96.126.123.248//var/www/sweng500/" local="130486657620000000" remote="130486657620000000" Dst="2" />
+<file name="class.phpmailer.php" server="96.126.123.248//var/www/sweng500/" local="130472100510000000" remote="130472100510000000" Dst="2" />
+<file name="contact.php" server="96.126.123.248//var/www/sweng500/" local="130472923710000000" remote="130472923710000000" Dst="2" />
+<file name="cookies.js" server="96.126.123.248//var/www/sweng500/" local="130486657630000000" remote="130486657630000000" Dst="2" />
+<file name="logout.php" server="96.126.123.248//var/www/sweng500/" local="130472923750000000" remote="130472923750000000" Dst="2" />
+<file name="class.smtp.php" server="96.126.123.248//var/www/sweng500/" local="130472100520000000" remote="130472100520000000" Dst="2" />
+<file name="verify.php" server="96.126.123.248//var/www/sweng500/" local="130472978580000000" remote="130472978580000000" Dst="2" />
+<file name="authenticate.php" server="96.126.123.248//var/www/sweng500/" local="130472923740000000" remote="130472923740000000" Dst="2" />
+<file name="login.php" server="96.126.123.248//var/www/sweng500/" local="130473311970000000" remote="130473311970000000" Dst="2" />
+<file name="messageSend.php" server="96.126.123.248//var/www/sweng500/" local="130486657610000000" remote="130486657610000000" Dst="2" />
+<file name="dbtest.php" server="96.126.123.248//var/www/sweng500/" local="130486657600000000" remote="130486657600000000" Dst="2" />
+<file name="serverlogin.php" server="96.126.123.248//var/www/sweng500/" local="130472978570000000" remote="130472978570000000" Dst="2" />
+<file name="mailer.php" server="96.126.123.248//var/www/sweng500/" local="130472927130000000" remote="130472927130000000" Dst="2" />
+<file name="ic.php" server="96.126.123.248//var/www/sweng500/" local="130486657620000000" remote="130486657620000000" Dst="2" />
+<file name="phpcommon.php" server="96.126.123.248//var/www/sweng500/" local="130472923750000000" remote="130472923750000000" Dst="2" />
 </dwsync>
