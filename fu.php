@@ -16,6 +16,7 @@
   <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
   <script src="https://code.jquery.com/mobile/1.4.2/jquery.mobile-1.4.2.min.js"></script>
   <script src="https://maps.googleapis.com/maps/api/js?sensor=true"></script>
+  <script src="sharedJS.js"></script>
   <script src="fu.js"></script>
 </head> 
 <?php
