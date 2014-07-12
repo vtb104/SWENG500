@@ -39,6 +39,10 @@ body {
 	
 }
 
+button{
+	font-size: 14px;	
+}
+
 #logo{position: fixed; right: 0px; top: 30px; width: 150px; z-index: 20}
 
 #main{
@@ -89,7 +93,7 @@ body {
 	position: absolute;
 	left: 0px;	
 }
-#optiondiv .pointoptions select, input{
+#optiondiv tr select, input{
 	width: 175px;	
 }
 
@@ -98,7 +102,7 @@ body {
 	height: 25px;	
 }
 
-.pointoptions{
+.defaulttable tr{
 	height: 28px;
 }
 
@@ -202,6 +206,16 @@ body {
 	z-index: 10;
 }
 
+#newsearchtable{
+	position: relative;
+	left: 100px;
+	font-size: 14px;	
+}
+
+#newsearchtable td{
+	width: 40%;
+}
+
 /*Weather stuff*/
 
 #outer_weather_box{
@@ -224,8 +238,7 @@ body {
 }
 
 .overlay {
-	left: 50%;
-	margin-left: 340px;
+	left: 30%;
 	display:none;
 	z-index:10000;
 	width:675px;	
@@ -241,4 +254,11 @@ body {
 	-moz-border-radius: 3px;
 	-webkit-border-radius: 3px;
 	border-radius: 3px;	
+}
+
+.overlay .close{
+	padding: 3px;
+	border: 2px solid #fff;
+	float: right;
+	cursor: pointer;	
 }

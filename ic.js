@@ -79,6 +79,15 @@ var updateTrackLength = function(){
 	users.updateTrails();
 };
 
+var updateCurrentSearch = function(){
+	if($("#currentSearchNumber").val() !== "all"){
+		currentSearch = $("#currentSearchNumber").val();
+		getNewPoints();
+	}else{
+		$("#info").html("New Search");
+	}
+}
+
 /*******************First to run, initializes all the points*******************************/
 var initialize = function(){
 	var overviewOptions = {opened: false};
@@ -134,7 +143,7 @@ var initialize = function(){
 
 	//Pulls the list of searches from the database and updates the list
 	updateSearches();
-
+	
 	//Start the timer to get new points
 	getNewPoints();
         //this event listener will be used for area creation <<<< Start Shane Edit
