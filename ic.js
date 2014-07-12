@@ -12,6 +12,9 @@ var cookieDuration = 24 * 30;	//30 days
 var usaCoord = new google.maps.LatLng(39.57, -99.10);
 var startLat = 39.57;  //America
 var startLng = -100;
+
+var currentSearch = 1;
+
 //shane  add 7-6-2014
 var poly;
 var pointCount = 0;
@@ -128,6 +131,9 @@ var initialize = function(){
 	
 	//Updates the timer value with the default
 	$("#updateInt").val(updateInterval);
+
+	//Pulls the list of searches from the database and updates the list
+	updateSearches();
 
 	//Start the timer to get new points
 	getNewPoints();
@@ -359,7 +365,7 @@ var getNewPoints = function(){
 		team = teamID
 		theTime = time in SECONDS for the age of the points
 	 */
-	requestData = {team: "1", 
+	requestData = {currentSearch: currentSearch, 
 				   theTime: (Math.round(trackHistoryStart.getTime() / 1000)),
 				   updateInterval: updateInterval}
 	
@@ -399,11 +405,22 @@ var getNewPoints = function(){
 	});
 };
 
-//This function updates the team numbers
-var updateTeamNumbers = function(){
-	//AJAX call to pull list of teams from the database and update drop down, update on 10 second intervals
-	
-};
+//This function grabs the searches that are in the database
+var updateSearches = function(){
+	$("#currentSearchNumber").html("");
+	$.ajax({
+        type: "POST",
+        url: "messageSend.php",
+        data: "updateSearches=true",
+		dataType: "json",
+        success: function(msg){ 
+			$.each(msg, function(index, value){
+				$("#currentSearchNumber").append("<option value='" + value.searchID + "'>" + value.searchName + "</option>");
+			});
+		}
+	});
+	$("#currentSearchNumber").append("<option value='all'>All Searches</option>");
+}
 
 
 /************************Object of Users****************************************

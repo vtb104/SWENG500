@@ -274,8 +274,8 @@ class Database
 	 *	@param $searchID
 	 *	@return json array
 	 */
-	 public function list_searching($searchID){
-		return $this->return_array($this->db_obj->query("SELECT userID FROM Searching WHERE searchID='$searchID'"));
+	 public function list_searching($searchID, $json = true){
+		return $this->return_array($this->db_obj->query("SELECT userID FROM Searching WHERE searchID='$searchID'"), $json);
 	 }
 	 
 	 

@@ -21,7 +21,7 @@
 <!-- jQuery UI-->
 <script src="jquery-ui-1.11.0/jquery-ui.min.js"></script>
 <link rel="stylesheet" href="jquery-ui-1.11.0/jquery-ui.min.css"/>
-
+<script src="jquerytools.js"></script>
 <script type="text/javascript" src="StyledMarker.js"></script>
 <script type="text/javascript" src="lib/jQueryRotate.js"></script>
 
@@ -40,7 +40,6 @@
 		echo "var userID = 0";
 	}	
 ?>
-
 var testFunction = function (){
 	$("#testOutput").html("test");
 };
@@ -69,10 +68,8 @@ var testFunction = function (){
                     	<span class="optionlabel">Select a Search to View: </span>
                     </td>
                     <td>
-                    <select id="currentSearchNumber">
-                        <option value="all">All Searches</option>
-                        <option value="new">Create new search...</option>
-                    </select>
+                    <!--Populated by function updateSearches-->
+                    <select id="currentSearchNumber"></select>
                     </td>
                </tr>
            
@@ -86,7 +83,6 @@ var testFunction = function (){
                     <td>
                     	<select id="currentTeamNumber">
                         	<option value="all">All Teams</option>
-                        	<option value="1">Team 1</option>
                     	</select>
                 	</td>
                	</tr>
@@ -120,6 +116,7 @@ var testFunction = function (){
                     </td>
                 </tr>
            </table>
+           <button rel="#newsearchoverlay" id="newsearch">New Search</button>
            	<div id="testTime">Here</div>
            </div>
             
@@ -181,6 +178,15 @@ var testFunction = function (){
 
 <div><!-- Page Wrapper-->
  
+ <!--Overlays-->
+ 
+<div class="overlay" id="newsearchoverlay">
+	<span class="close">Cancel</span>
+	New search functions here
+
+</div>
+ 
+ 
 </body>
 <script>
 //Put jQuery button listeners here, don't put too many functions here due to scope issues.
@@ -188,6 +194,13 @@ $(function(){
 	
 	//Setup options
 	$("#trackDate").datepicker({ dateFormat: "mm-dd-yy" });
+	
+	//Overlay options
+	overlayvar = {mask: {color: '#ccc',loadSpeed: 100, opacity: 0.7}, closeOnClick: false};
+	$("input[rel], button[rel], div[rel]").overlay(overlayvar);
+	
+	//Overlay buttons
+	
 	
 	//Change the track length
 	$("#trackDate").change(function(){
@@ -227,6 +240,15 @@ $(function(){
 	
 	$("#testbutton").click(function(){
 		testFunction();
+	});
+	
+	$("#currentSearchNumber").change(function(){
+		if($(this).val() !== "all"){
+			currentSearch = $(this).val();
+			getNewPoints();
+		}else{
+			$("#info").html("New Search");
+		}
 	});
 	
 });
