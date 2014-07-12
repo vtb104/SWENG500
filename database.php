@@ -175,11 +175,11 @@ class Database
 	 * @param OPTIONAL int $userID = the user ID for the points to return.
 	 *@return json array of all points 
 	 */
-	public function get_points($userID = 0, $start = 0, $teamID = 0, $searchID = 0, $returnJSON = true, $limit = 5000){
+	public function get_points($userID = 0, $start = 0, $teamID = 0, $searchID = 0, $returnJSON = true){
 		if($userID){
-			$query = "SELECT * FROM Points WHERE dateCreated > " . $start . " AND userID = " . $userID . " ORDER BY Points.dateCreated DESC LIMIT " . $limit;	
+			$query = "SELECT * FROM Points WHERE dateCreated > " . $start . " AND userID = " . $userID . " ORDER BY Points.dateCreated DESC";	
 		}else{
-			$query = "SELECT * FROM Points WHERE dateCreated > " . $start  . " ORDER BY Points.dateCreated DESC LIMIT " . $limit;
+			$query = "SELECT * FROM Points WHERE dateCreated > " . $start  . " ORDER BY Points.dateCreated DESC";
 		}
 		$result = $this->db_obj->query($query);
 		return $this->return_array($result, $returnJSON);
@@ -274,8 +274,8 @@ class Database
 	 *	@param $searchID
 	 *	@return json array
 	 */
-	 public function list_searching($searchID, $json = true){
-		return $this->return_array($this->db_obj->query("SELECT userID FROM Searching WHERE searchID='$searchID'"), $json);
+	 public function list_searching($searchID){
+		return $this->return_array($this->db_obj->query("SELECT userID FROM Searching WHERE searchID='$searchID'"));
 	 }
 	 
 	 

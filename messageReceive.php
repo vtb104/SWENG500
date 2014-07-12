@@ -37,14 +37,6 @@ if(isset($_POST['dataMsg'])){
 if(isset($_POST['userRequest'])){
 	echo $db->list_users();
 };
-if(isset($_POST['getMessages'])){
-    $testMessage = new stdClass();
-    $testMessage->to = "Deb";
-    $testMessage->from = "Shane";
-    $testMessage->subject = "This is a test message";
-    $testMessage->body = "Hello there";
-    $testMessage->date = time();
-    echo json_encode($testMessage);
-};
+
 
 ?>

@@ -1,9 +1,6 @@
-var map;
-
-//Points loaded into the arrays
-var pointsLoaded = 0;
-
-//Points showing based on the time requested to show from
+ 	var map;
+//Troubleshooting variable
+var objectCount = 0;
 var pointsShowing = 0;
 
 var timer = 0;
@@ -12,9 +9,6 @@ var cookieDuration = 24 * 30;	//30 days
 var usaCoord = new google.maps.LatLng(39.57, -99.10);
 var startLat = 39.57;  //America
 var startLng = -100;
-
-var currentSearch = 1;
-
 //shane  add 7-6-2014
 var poly;
 var pointCount = 0;
@@ -55,26 +49,12 @@ var updateTeamNumber = function(){
 }
 
 //Value and track variable length
-var nowTime = new Date();
-var trackHistoryStart = new Date();
-
-if(readCookie("sar.trackStart")){
- 	var temp = readCookie("sar.trackStart");
-	trackHistoryStart.setTime(temp);
-}else{
-	trackHistoryStart.setTime(nowTime.getTime() - (3600 * 24 * 1000));  //Default one day ago
-	
+var trackHistoryLength = (3600 * 24)  //Default is one day
+if(readCookie("sar.trackLength")){
+	trackHistoryLength = readCookie("sar.trackLength");
 };
-
 var updateTrackLength = function(){
-	
-	trackHistoryStart = getUITime();
-	$("#testTime").html(trackHistoryStart.toString());
-	
-	//Write the cookie
-	writeCookie("sar.trackStart", trackHistoryStart.getTime(), cookieDuration);
-	
-	//Show the trails in relation to that value
+	writeCookie("sar.trackLength", trackHistoryLength, cookieDuration);
 	pointsShowing = 0;
 	users.updateTrails();
 };
@@ -124,16 +104,17 @@ var initialize = function(){
 	$("#floatNote").html("Connecting...");
 	connectionStart = new Date();
 	
-	//Update trackLength value
-	setUITime(trackHistoryStart);
 	
-	$("#testTime").html(trackHistoryStart.toString())
+	//Can change these to cookie values to remember the last used data
 	
 	//Updates the timer value with the default
 	$("#updateInt").val(updateInterval);
+	
+	//Updates the default length for tracks to the user's last value
+	$("#updateTrackLength").html(convertSeconds(trackHistoryLength))
 
-	//Pulls the list of searches from the database and updates the list
-	updateSearches();
+	//Sets the update value to the variable listed above
+	$("#updateTrackLength").val(trackHistoryLength);
 
 	//Start the timer to get new points
 	getNewPoints();
@@ -349,8 +330,6 @@ function updateUserTrack(userNumber)
     markerStorage[userNumber].setPosition(tempPos);
    
 }
-
-
 //This is the function that runs every 5s from the timer
 var getNewPoints = function(){
 	
@@ -365,9 +344,7 @@ var getNewPoints = function(){
 		team = teamID
 		theTime = time in SECONDS for the age of the points
 	 */
-	requestData = {currentSearch: currentSearch, 
-				   theTime: (Math.round(trackHistoryStart.getTime() / 1000)),
-				   updateInterval: updateInterval}
+	requestData = {team: "1", theTime: trackHistoryLength}
 	
 	//Start the AJAX call
 	$("#floatNote").html("Sending...");
@@ -378,7 +355,7 @@ var getNewPoints = function(){
 		dataType: "json",
         success: function(msg){ 
 			var connectionNow = new Date();
-			$("#floatNote").html("Connected to server for " + (Math.round((connectionNow.getTime() - connectionStart.getTime())/1000)) + "s");        
+			$("#floatNote").html("Connected to server for " + (Math.round((connectionNow.getTime() - connectionStart.getTime())/1000)) + "s | Points Loaded: " + objectCount + " | Points plotted: " + pointsShowing);        
 			//$("#info").html(msg);
 			
 			/*Object format for the returned JSON string:
@@ -398,29 +375,19 @@ var getNewPoints = function(){
 			
 			//Send the msg object to the user singleton to update or create points.
 			users.checkUsers(msg);
-			users.drawUserButtons();
+			pointsShowing = 0;
 			users.plotPoints();	
+			users.drawUserButtons();
 			users.updateTrails();
 		}
 	});
 };
 
-//This function grabs the searches that are in the database
-var updateSearches = function(){
-	$("#currentSearchNumber").html("");
-	$.ajax({
-        type: "POST",
-        url: "messageSend.php",
-        data: "updateSearches=true",
-		dataType: "json",
-        success: function(msg){ 
-			$.each(msg, function(index, value){
-				$("#currentSearchNumber").append("<option value='" + value.searchID + "'>" + value.searchName + "</option>");
-			});
-		}
-	});
-	$("#currentSearchNumber").append("<option value='all'>All Searches</option>");
-}
+//This function updates the team numbers
+var updateTeamNumbers = function(){
+	//AJAX call to pull list of teams from the database and update drop down, update on 10 second intervals
+	
+};
 
 
 /************************Object of Users****************************************
@@ -513,19 +480,16 @@ Users.prototype.drawUserButtons = function(){
 
 //Plots the current user array
 Users.prototype.plotPoints = function(){
-	pointsLoaded = 0;
 	$.each(this.userArray, function(index, value){
 		value.plotPoints();
 	});
-	$("#pointsLoadedData").html(pointsLoaded);
 };
 
 //Runs when the trail value changes to update the trails.
 Users.prototype.updateTrails = function(){
-	pointsShowing = 0;
 	$.each(this.userArray, function(index, value){
 		value.drawTrail();
-		$("#pointsShowingData").html(pointsShowing);
+		$("#userTrail" + value.userID).html(value.trailLength + "m");
 	});
 }
 
@@ -560,9 +524,6 @@ function Person(input){
 		strokeWeight: 2
 	});
 	
-	//This is set if the point is stale and showing an old point
-	this.stale = "";
-	
 	var thisPointer = this;
 	$.each(input.points, function(index, value){
 		thisPointer.addPoint(value);
@@ -575,12 +536,10 @@ function Person(input){
 //Plots the points on the map depending on the showTrail value
 Person.prototype.plotPoints = function(){
 	
-	var userCaption = "";
-	
 	//Move the marker for the most recent position
 	if(this.pointArray.length > 1){
 		var rightNow = new Date();
-		var newerThan = Math.round(trackHistoryStart.getTime()/ 1000);
+		var newerThan = Math.round((rightNow.getTime()/1000)- trackHistoryLength);
 
 		//Draw/Move the first point regardless of how old it is
 		var tempPos = new google.maps.LatLng(this.pointArray[0].lat, this.pointArray[0].lng);
@@ -592,20 +551,10 @@ Person.prototype.plotPoints = function(){
 			this.drawTrail();
 		}
 		
-		if(this.trailLength){
-			userCaption = this.trailLength + "m";	
-		}else{
-			var tempDate = new Date(this.pointArray[0].dateCreated * 1000);
-			userCaption = "Last update: " + monthName(tempDate.getMonth()) + "-" + tempDate.getDate() + " " + leadingZero(tempDate.getHours()) + ":" + leadingZero(tempDate.getMinutes());	
-		}
-		
-		
 	}else if(this.pointArray.length === 1){
 		var tempPos = new google.maps.LatLng(this.pointArray[0].lat, this.pointArray[0].lng);
 		this.currentMarker.setPosition(tempPos);
 		this.currentMarker.setMap(map);
-		var tempDate = new Date(this.pointArray[0].dateCreated * 1000);
-		userCaption = "Last update: " + monthName(tempDate.getMonth()) + "-" + tempDate.getDate() + " " + leadingZero(tempDate.getHours()) + ":" + leadingZero(tempDate.getMinutes());
 		
 		//Now color the point base on if it is active or not (within the time given)
 		/*if(this.pointArray[0].dateCreated >= newerThan){	
@@ -616,7 +565,6 @@ Person.prototype.plotPoints = function(){
 		}*/
 		
 	};
-	$("#userTrail" + this.userID).html(userCaption);
 	return true;
 };
 
@@ -626,17 +574,16 @@ Person.prototype.drawTrail = function(){
 	this.trail.setMap(null);
 	this.trailArray = [];
 	var rightNow = new Date();
-	var newerThan = Math.round(trackHistoryStart.getTime() / 1000);
+	var newerThan = Math.round((rightNow.getTime()/1000)- trackHistoryLength);
 	var tempTrailArray = [];
-	pointsLoaded = pointsLoaded + this.pointArray.length;
 	$.each(this.pointArray, function(index, value){
 		if(value.dateCreated >= newerThan ){ 
 			var tempPoint = new google.maps.LatLng(value.lat, value.lng);
 			tempTrailArray.push(tempPoint);
+			pointsShowing++;
 		}
 	});
 	this.trailArray = tempTrailArray;
-	pointsShowing = pointsShowing + this.trailArray.length
 	this.trailLength = this.getTrailLength();
 	this.trail.setPath(this.trailArray);
 	this.trail.setMap(map);
@@ -661,6 +608,7 @@ Person.prototype.panToPerson = function(){
 //Adds a point to the array if it doesn't already exist
 Person.prototype.addPoint = function(point){
 	if(!this.checkPoints(point)){
+		objectCount++;
 		this.pointArray.push(point);
 		return true;
 	}
@@ -839,61 +787,3 @@ Math.round1 = function(input){return Math.round(input * 10) / 10;};
 Math.degrees = function(rad){return rad*(180/Math.PI);}
 Math.radians = function(deg){return deg * (Math.PI/180);}
 function mToFeet(input){return input * 3.28084};
-
-function leadingZero(input){
-	if(input < 10){
-		return "0" + input;
-	}else{
-		return input;
-	}
-}
-
-//Sets the UI date, takes a Date object
-function setUITime(input){
-	input.setTime(input.getTime() + input.getTimezoneOffset());
-	var dateString = (input.getMonth() + 1) + "-" + input.getDate() + "-" + input.getFullYear();
-	$("#trackDate").datepicker('setDate', dateString);
-	var timeString = leadingZero(input.getHours()) + ":" + leadingZero(input.getMinutes());
-	$("#trackTime").val(timeString);
-}
-
-//Returns a Date Object of the time in the UI
-function getUITime(){
-	var tempTime = $("#trackTime").val().split(":");
-	var tempDate = $("#trackDate").datepicker("getDate").getTime();
-
-	var returnTime = new Date();
-	returnTime.setTime(tempDate + (tempTime[0] * 3600 * 1000) + (tempTime[1] * 60 * 1000));
-	return returnTime;
-}
-
-function monthName(input){
-	switch (input){
-		case 0:
-			return "Jan";
-		case 1:
-			return "Feb";
-		case 2:
-			return "Mar";
-		case 3:
-			return "Apr";
-		case 4:
-			return "May";
-		case 5:
-			return "Jun";
-		case 6:
-			return "Jul";
-		case 7:
-			return "Aug";
-		case 8:
-			return "Sep";
-		case 9: 
-			return "Oct";
-		case 10:
-			return "Nov";
-		case 11:
-			return "Dec";
-		default:
-			return "error";
-	}	
-}

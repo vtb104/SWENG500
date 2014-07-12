@@ -38,7 +38,7 @@ var onLoad = function(){
 
 	<h2 data-role="content" id="info" align="center" style="color:red"></h2>
 
-        <div data-role="content" onkeypress="return checkForReturnKeyPress(event)">
+	<div data-role="content">
     
         <p>
         	E-mail Address <b>or</b> Username:<br/>
@@ -70,35 +70,24 @@ var onLoad = function(){
 
 </body>
 <script>
-function checkForReturnKeyPress(e)
-{
-   if(e && e.keyCode == 13)
-   {
-      submitForm();
-   } 
-}
-function submitForm()
-{
-    $.ajax({
-            type: "POST",
-            url: "serverlogin.php",
-            data: "login=" + $("#username").val() + "&" + "password=" + $("#password").val() + "&" + "saveit=" + $("#saveit").val(),
-            async: true,
-            success: function(result){
-                    if(result){
-                            window.location.href = "<?php echo $return;?>";
-                            //$("#info").html(result);
-                    }else{
-                            $("#info").html("Login information was incorrect");
-                    }
-            }
-    });
-}
 $(function() {
 	//Log in the user via ajax
 	$("#submitbutton").click(function(){
 		$("#info").html("");
-		submitForm();
+		$.ajax({
+			type: "POST",
+			url: "serverlogin.php",
+			data: "login=" + $("#username").val() + "&" + "password=" + $("#password").val() + "&" + "saveit=" + $("#saveit").val(),
+			async: true,
+			success: function(result){
+				if(result){
+					window.location.href = "<?php echo $return;?>";
+					//$("#info").html(result);
+				}else{
+					$("#info").html("Login information was incorrect");
+				}
+			}
+		});
 	});
 });
 </script>

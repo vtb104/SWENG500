@@ -1,6 +1,6 @@
 <?php
 //Database test page
-//require_once("phpcommon.php");
+require_once("phpcommon.php");
 
 /*if(!$auth->authenticate()){
 	header("Good Auth");	
@@ -18,41 +18,13 @@ if($result){
 	echo "Error";
 }*/
 
-//date_default_timezone_set("UTC");
-echo date("m-d-y H:i", 1404288000);
+
+
+
+
+var_dump($db->list_team(1, false));
+
 die();
-
-?>
-<html>
-<head>
-<style>
-.back{
-	display: inline-block;
-	width: 1px;
-	height: 1px;
-}
-</style>
-</head>
-<body style="position: absolute; width: 100%;">
-<?php
-$var = 20;
-$step = 20;
-for($x=0;$x<=$var;$x = $x + $step)
-{
-	for($y=0;$y<=$var;$y = $y + $step)
-	{
-		for($z=0;$z<=$var;$z = $y + $step)
-		{
-			echo "<div class='back' style='background-color: rgb(" . $x . "," . $y . "," . $z .")'></div>";
-		}
-	}
-}
-
-?>
-</body>
-<?php
-
-/*var_dump($db->list_team(1, false));
 
 
 $user_id_array = array(4,3,2,5);
@@ -115,7 +87,7 @@ $id = 184;
 $days = 60;*/
 
 die();
-/*$query = "SELECT Points.pointID,Points.userID,Points.lat,Points.lng,Points.dateCreated,MAX(Points.dateCreated) FROM Points JOIN Users ON Points.userID=Users.userID JOIN TeamMembers ON Users.userID=TeamMembers.userID WHERE teamID = '1'";
+$query = "SELECT Points.pointID,Points.userID,Points.lat,Points.lng,Points.dateCreated,MAX(Points.dateCreated) FROM Points JOIN Users ON Points.userID=Users.userID JOIN TeamMembers ON Users.userID=TeamMembers.userID WHERE teamID = '1'";
 
 
 echo "Query:<br/>" . $query . "<br/>";
@@ -136,5 +108,5 @@ if ($result) {
 }
 
 
-*/
+
 ?>

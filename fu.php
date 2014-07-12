@@ -12,11 +12,21 @@
   <link rel="icon" type="image/png" href="favicon.ico"/>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://code.jquery.com/mobile/1.4.2/jquery.mobile-1.4.2.min.css">
-    <link rel="stylesheet" type="text/css" href="fu.css">
+  <style>
+    #map_canvas{
+	position: absolute;
+	left: 0px;
+	bottom: 0px;
+	height: 50%;
+	width: 100%;
+	z-index: 10;
+        margin: 0;
+        padding: 0;
+}
+  </style>
   <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
   <script src="https://code.jquery.com/mobile/1.4.2/jquery.mobile-1.4.2.min.js"></script>
   <script src="https://maps.googleapis.com/maps/api/js?sensor=true"></script>
-  <script src="sharedJS.js"></script>
   <script src="fu.js"></script>
 </head> 
 <?php
