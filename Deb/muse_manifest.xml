@@ -1,0 +1,25 @@
+<manifest alg="2" build="328" opt="true" iceEnabled="true" exportTarget="other" resolutions="1x" timestamp="1404949802006">
+  <folder name="css">
+    <file name="site_global.css" crc="475048684"/>
+    <file name="index.css" crc="291268769" ref="index"/>
+    <file name="send.css" crc="4014180867" ref="send"/>
+  </folder>
+  <folder name="scripts">
+    <file name="jquery-1.8.3.min.js" crc="3850798583" ref="index:send"/>
+    <file name="museutils.js" crc="212726984" ref="index:send"/>
+    <file name="pie.js" crc="3827607177" ref="index:send"/>
+    <file name="jquery.watch.js" crc="4125239756" ref="index:send"/>
+    <file name="webpro.js" crc="114405901" ref="send"/>
+    <file name="form_check.php" crc="303526209" ref="send"/>
+    <file name="form_throttle.php" crc="219462772" ref="send"/>
+    <file name="form-u257.php" crc="4090160292" ref="send"/>
+  </folder>
+  <folder name="images">
+    <file name="u263-17.png" crc="530909091" ref="send"/>
+    <file name="u263-17-r.png" crc="328971334" ref="send"/>
+    <file name="u263-17-m.png" crc="3909915201" ref="send"/>
+    <file name="u263-17-fs.png" crc="4240536930" ref="send"/>
+  </folder>
+  <file name="index.html" crc="4067174252" mt="1404949605700" redirect="true"/>
+  <file name="send.html" crc="3816874794" mt="1404949691882" redirect="true"/>
+</manifest>

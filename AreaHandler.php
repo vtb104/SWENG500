@@ -7,10 +7,9 @@
  */
 require_once('message.php');
 require_once('phpcommon.php');
-/**
- * Description of AreaHandler
- *
- * @author Shane
+
+/*
+ * IC CALLS
  */
 if(isset($_POST['createArea'])){
         $handler = new message();
@@ -29,5 +28,25 @@ if(isset($_POST['getAreaPoints'])){
 };
 if(isset($_POST['deleteArea'])){
         echo $db->delete_area($_POST['deleteArea']);
+};
+
+/*
+ * FU CALLS
+ */
+//call for FU to check if new area has been assigned
+if(isset($_POST['checkForArea'])){
+        $userIDForArea = $_POST['checkForArea'];
+        //TODO: get area asigned to user ID
+        //some code that sets $areaName = area assigned to user (now is is hard coded)
+        $areaName = "erie";
+        //return that area
+        if($db->list_points_in_area($areaName))
+        {
+            echo $db->list_points_in_area($areaName);
+        }
+        else
+        {
+            echo "no areas";
+        }
 };
 ?>
