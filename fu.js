@@ -157,6 +157,8 @@ function sendPosition()
 			{
 				// Failed to find location, do nothing
 			}
+            //Second call to check if there is a new area availible from IC
+            checkForNewAreaFromIC();
 		}
 		else
 		{
@@ -169,9 +171,39 @@ function sendPosition()
 	}
 	return result;
 }
-
-function sendMessage(msg)
+var cnt=0;
+function checkForNewAreaFromIC()
 {
+    if(cnt < 150)
+    {
+        cnt++;
+    $.ajax({
+            type: "POST",
+            url: "AreaHandler.php",
+            data: {checkForArea:"1"},//TODO: replace with actual user ID
+            success: function(msg){
+                //alert("msg leng"+msg.length);
+                if(msg.length > 3)
+                {
+                    var pointArray = [];
+                    var dataObj = JSON.parse(msg);
+                    //create array of points
+                    for(var cnt=0; cnt < dataObj.length; cnt++)
+                    {
+                        pointArray.push(new google.maps.LatLng(dataObj[cnt].lat,dataObj[cnt].lng));
+                    }
+                    fillPoly(msg.areaName, pointArray);
+                }
+                else
+                {
+                    //no areas for user
+                    removeAllPolysFromMap();
+                }
+            }
+    });
+    }
+}
+function sendMessage(msg){
     if (msg)
     {
         return true;
