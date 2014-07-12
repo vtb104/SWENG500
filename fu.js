@@ -171,17 +171,19 @@ function sendPosition()
 	}
 	return result;
 }
+
 var cnt=0;
 function checkForNewAreaFromIC()
 {
     if(cnt < 150)
     {
         cnt++;
-    $.ajax({
+		$.ajax({
             type: "POST",
             url: "AreaHandler.php",
             data: {checkForArea:"1"},//TODO: replace with actual user ID
-            success: function(msg){
+            success: function(msg)
+			{
                 //alert("msg leng"+msg.length);
                 if(msg.length > 3)
                 {
@@ -200,10 +202,12 @@ function checkForNewAreaFromIC()
                     removeAllPolysFromMap();
                 }
             }
-    });
+		});
     }
 }
-function sendMessage(msg){
+
+function sendMessage(msg)
+{
     if (msg)
     {
         return true;
@@ -246,10 +250,9 @@ function sendGeoLocations()
 	sendLocTimer = setTimeout(function(){sendGeoLocations()}, updateSendLocationInterval);
 	
 	// send all cached geo locations
-	arrayGeoLocation.forEach(sendGeoLocations)
-	arrayGeoLocation.
+	//arrayGeoLocation.forEach(sendGeoLocations)
+	//arrayGeoLocation.
 	
 	// allow the gathering of geo location points
 	uploadingGeoLocation = false;
 }
-
