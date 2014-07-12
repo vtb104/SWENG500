@@ -379,7 +379,22 @@ var getNewPoints = function(){
         success: function(msg){ 
 			var connectionNow = new Date();
 			$("#floatNote").html("Connected to server for " + (Math.round((connectionNow.getTime() - connectionStart.getTime())/1000)) + "s");        
-			//$("#info").html(msg);
+			
+			//Check if there was an error before plotting
+			if(msg[0].error){
+				//Error 1 means there were no points, so clear the users
+				if(msg[0].error == 1){
+					users.destroyArray();
+				}else{
+					$("#info").html(msg[0].error);	
+				};
+			}else{
+				//Send the msg object to the user singleton to update or create points.
+				users.checkUsers(msg);
+				users.drawUserButtons();
+				users.plotPoints();	
+				users.updateTrails();	
+			}
 			
 			/*Object format for the returned JSON string:
 				{"userID":"2",
@@ -395,32 +410,9 @@ var getNewPoints = function(){
 				 "userData":
 				 	{"username":"ryan","fname":"Ryan","lname":"lname"}]},
 			*/
-			
-			//Send the msg object to the user singleton to update or create points.
-			users.checkUsers(msg);
-			users.drawUserButtons();
-			users.plotPoints();	
-			users.updateTrails();
 		}
 	});
 };
-
-//This function grabs the searches that are in the database
-var updateSearches = function(){
-	$("#currentSearchNumber").html("");
-	$.ajax({
-        type: "POST",
-        url: "messageSend.php",
-        data: "updateSearches=true",
-		dataType: "json",
-        success: function(msg){ 
-			$.each(msg, function(index, value){
-				$("#currentSearchNumber").append("<option value='" + value.searchID + "'>" + value.searchName + "</option>");
-			});
-		}
-	});
-	$("#currentSearchNumber").append("<option value='all'>All Searches</option>");
-}
 
 
 /************************Object of Users****************************************
@@ -537,6 +529,15 @@ Users.prototype.panToPerson = function(input){
 		}
 	})
 };
+
+//Run when no users are on the input array
+Users.prototype.destroyArray = function(){
+	$.each(this.userArray, function(index, value){
+		value.destroy();
+	});
+	$("#searcherlist").html(" ");
+	this.userArray = [];
+}
 
 
 
@@ -735,7 +736,55 @@ function update_compass_arrow(weather_div, inWindDir)
 	$("#compass_arrow").rotate(inWindDir+180);				
 }
 
+/****************************************Search Management**********************************/
 
+//This function grabs the searches that are in the database
+var updateSearches = function(){
+	$("#currentSearchNumber").html("");
+	$.ajax({
+        type: "POST",
+        url: "messageSend.php",
+        data: "updateSearches=true",
+		dataType: "json",
+        success: function(msg){ 
+			$.each(msg, function(index, value){
+				$("#currentSearchNumber").append("<option value='" + value.searchID + "'>" + value.searchName + "</option>");
+			});
+		}
+	});
+	$("#currentSearchNumber").append("<option value='all'>All Searches</option>");
+}
+
+//This function runs synchronous AJAX call (not async) in order to ensure the new search is created
+var saveNewSearch = function(){
+	$("#newsearchinfo").html("Saving...");
+	
+	var newSearchNumber = 0;
+	
+	var searchStart = 1;
+	
+	var newSearchData = {
+		userID: userID,
+		searchName: $("#newsearchname").val(),
+		searchStart: searchStart,
+		searchNotes: $("#newsearchnotes").val()
+	}
+	
+	$.ajax({
+        type: "POST",
+        url: "messageSend.php",
+        data: {newSearchData: newSearchData},
+		dataType: "json",
+		async: false,
+        success: function(e){ 
+			$("#newsearchinfo").html(e.searchID);
+			
+		}
+	});
+	updateSearches();
+	$("#currentSearchNumber").val(newSearchNumber);
+	getNewPoints();
+}
 
 /*********************************************Cookie code***********************************/
 function writeCookie(name, value, hours)

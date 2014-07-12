@@ -35,7 +35,7 @@
 <?php
 	if(isset($_SESSION['userid']))
 	{
-		echo "var userID = " . $_SESSION['userid'];
+		echo "var userID = " . $_SESSION['userid'] . ";";
 	}else{
 		echo "var userID = 0";
 	}	
@@ -62,21 +62,17 @@ var testFunction = function (){
           <h1 style="text-align: center;">Search and Rescue</h1>
           <h2 style="text-align: center;">Incident Command</h2>
 			<div id="optiondiv">
-            <table>
-            	<tr class="pointoptions">
+            <table class="defaulttable" id="pointoptionstable">
+            	<tr>
                 	<td>
                     	<span class="optionlabel">Select a Search to View: </span>
                     </td>
                     <td>
                     <!--Populated by function updateSearches-->
-                    <select id="currentSearchNumber"></select>
+                    <select id="currentSearchNumber"></select><button rel="#newsearchoverlay" id="newsearch">New Search</button>
                     </td>
                </tr>
-           
-               
-                	
-                    
-                <tr class="pointoptions">
+                <tr>
                 	<td>
                     	<span class="optionlabel">Team Position to View: </span>
                     </td>
@@ -86,7 +82,7 @@ var testFunction = function (){
                     	</select>
                 	</td>
                	</tr>
-				<tr class="pointoptions">
+				<tr>
                		<td>
                     	<span class="optionlabel">Update Interval: </span>
                     </td>
@@ -99,12 +95,12 @@ var testFunction = function (){
                         </select>
                     </td>
                 </tr>
-                <tr class="pointoptions">
+                <tr>
                 	<td>
                     	Track History Start Date:
                     </td>
                     <td>
-                    	<input id="trackDate" type="text"/><br/>
+                    	<input id="trackDate" class="datepicker" type="text"/><br/>
                     </td>
                 </tr>
                 <tr>
@@ -116,7 +112,6 @@ var testFunction = function (){
                     </td>
                 </tr>
            </table>
-           <button rel="#newsearchoverlay" id="newsearch">New Search</button>
            	<div id="testTime">Here</div>
            </div>
             
@@ -182,8 +177,46 @@ var testFunction = function (){
  
 <div class="overlay" id="newsearchoverlay">
 	<span class="close">Cancel</span>
-	New search functions here
-
+	<h3 align="center">Create a New Search</h3>
+    <br/>
+    <p>
+    	<table id="newsearchtable" class="defaulttable">
+        	<tr>
+            	<td>
+                	Search Name:
+                </td>
+                <td>
+                	<input id="newsearchname" type="text"/>
+                </td>
+            </tr>
+            <tr>
+            	<td>
+                	Search Start Date:
+                </td>
+                <td>
+                	<input class="datepicker" id="newsearchdate" type="text"/>
+                </td>
+            </tr>
+            <tr>
+            	<td>
+                	Search Start Time:
+                </td>
+                <td>
+                	<input id="newsearchtime" type="time" val="0900"/>
+                </td>
+            </tr>
+            <tr>
+            	<td>
+                	Search Notes:
+                </td>
+            	<td>
+                	<textarea id="newsearchnotes" style="width: 100%; height: 100px;"></textarea>
+                <td>
+            </tr>
+        </table><br/>
+         <button id="savenewsearch" style="float: right">Save New Search</button>
+         <h2 align="center" style="color: red" id="newsearchinfo"></h2>
+    </p>
 </div>
  
  
@@ -193,7 +226,7 @@ var testFunction = function (){
 $(function(){
 	
 	//Setup options
-	$("#trackDate").datepicker({ dateFormat: "mm-dd-yy" });
+	$(".datepicker").datepicker({ dateFormat: "mm-dd-yy" });
 	
 	//Overlay options
 	overlayvar = {mask: {color: '#ccc',loadSpeed: 100, opacity: 0.7}, closeOnClick: false};
@@ -219,6 +252,12 @@ $(function(){
 	$("#currentTeamNumber").change(function(){
 		updateTeamNumber();
 	}); 
+	
+	//Start a new search
+	$("#savenewsearch").click(function(){
+		saveNewSearch();
+		//$(".button[rel]").overlay().close();
+	});
 	
 	$("#showweather").click(function(){
 		$(this).hide();

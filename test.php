@@ -1,10 +1,13 @@
 <?php
 //Database test page
-//require_once("phpcommon.php");
+require_once("phpcommon.php");
 
 /*if(!$auth->authenticate()){
 	header("Good Auth");	
 }*/
+
+$var = $db->get_points(2, $limit = 10200);
+echo count($var);
 
 //$db_obj = new MySQLi('localhost', _DB_USERNAME, _DB_PASSWORD, _DB_NAME) or die (mysqli_error() . "Database Error 1");
 /*$query = 'INSERT INTO Users (username, fname, lname, email, role, password, userKey) VALUES ("ryan", "Ryan", "Young", "ryanessonyoung@gmail.com", "admin", "hello", "thisisakey")';
@@ -18,39 +21,6 @@ if($result){
 	echo "Error";
 }*/
 
-//date_default_timezone_set("UTC");
-echo date("m-d-y H:i", 1404288000);
-die();
-
-?>
-<html>
-<head>
-<style>
-.back{
-	display: inline-block;
-	width: 1px;
-	height: 1px;
-}
-</style>
-</head>
-<body style="position: absolute; width: 100%;">
-<?php
-$var = 20;
-$step = 20;
-for($x=0;$x<=$var;$x = $x + $step)
-{
-	for($y=0;$y<=$var;$y = $y + $step)
-	{
-		for($z=0;$z<=$var;$z = $y + $step)
-		{
-			echo "<div class='back' style='background-color: rgb(" . $x . "," . $y . "," . $z .")'></div>";
-		}
-	}
-}
-
-?>
-</body>
-<?php
 
 /*var_dump($db->list_team(1, false));
 
