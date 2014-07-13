@@ -80,4 +80,8 @@ if(isset($_POST['updateSearches'])){
 	echo $db->list_searches();	
 }
 
+if(isset($_POST['deleteSearch'])){
+	echo $db->delete_search($_POST['deleteSearch']);	
+}
+
 ?>

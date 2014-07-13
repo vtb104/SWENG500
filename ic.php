@@ -75,7 +75,16 @@ var testFunction = function (){
                     </td>
                     <td>
                     <!--Populated by function updateSearches-->
-                    <select id="currentSearchNumber"></select><button rel="#newsearchoverlay" id="newsearch">New Search</button>
+                    <select id="currentSearchNumber"></select>
+                    </td>
+               </tr>
+               <tr>
+               		<td>
+                    	
+                    </td>
+                    <td>
+                    	<button rel="#newsearchoverlay" id="newsearch">New Search</button>
+                    	<button id="deletesearch">Delete Search</button>
                     </td>
                </tr>
                 <tr>
@@ -258,6 +267,11 @@ $(function(){
 	$("#savenewsearch").click(function(){
 		saveNewSearch();
 		//$(".button[rel]").overlay().close();
+	});
+	
+	//Delte a search
+	$("#deletesearch").click(function(){
+		deleteSearch();
 	});
 	
 	$("#showweather").click(function(){

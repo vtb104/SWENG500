@@ -779,6 +779,23 @@ var saveNewSearch = function(){
 	getNewPoints();
 }
 
+var deleteSearch = function(){
+	if(window.confirm("Are you sure you want to delete the \"" + $("#currentSearchNumber option[value='" + currentSearch + "']").text() + "\"?")){
+		$.ajax({
+			type: "POST",
+			url: "messageSend.php",
+			data: "deleteSearch=" + currentSearch,
+			dataType: "json",
+			async: false,
+			success: function(e){ 
+				$("#info").html(e);
+				currentSearch = 1;
+				updateSearches();
+			}
+		});
+	}
+}
+
 
 
 //Searches using the Google search function

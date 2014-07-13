@@ -253,6 +253,19 @@ class Database
 		}
 	 }
 	 
+	 //Delete a search
+	 public function delete_search($searchID){
+		$query = "DELETE FROM Searching WHERE searchID = '$searchID'";
+		$result1 = $this->db_obj->query($query);
+		$query = "DELETE FROM Searches WHERE searchID = '$searchID'";
+		$result2 = $this->db_obj->query($query); 
+		if($result1 && $result2){
+			return true;	
+		}else{
+			return false;
+		}
+	 }
+	 
 	 /** List searches
 	 *
 	 *	@param $lat/$lng/$dist, default is 0, finds searches within a certain distance of the point
