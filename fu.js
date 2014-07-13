@@ -132,24 +132,10 @@ function sendPosition()
 				var dateObject = new Date();
 				sendMsg.time = ""+dateObject.getTime();
 				
-				arrayGeoLocation.push(sendMsg); 
-		
-				var forwardMsg = JSON.stringify(sendMsg);
+				arrayGeoLocation.push(sendMsg);
 				
-				$("#infoLoc").html("Sending location...");
+				$("#infoLoc").html("msg created. timestamp: " + sendMsg.time);
 				
-				$.ajax({
-					type: "POST",
-					url: "messageReceive.php",
-					data: {dataMsg:forwardMsg},
-					success: function(msg){
-						if(msg){
-							$("#infoLoc").html(msg);
-						}else{
-							$("#infoLoc").html(msg);
-						}
-					}
-				});
 				result = true;
 			}
 
@@ -250,8 +236,32 @@ function sendGeoLocations()
 	sendLocTimer = setTimeout(function(){sendGeoLocations()}, updateSendLocationInterval);
 	
 	// send all cached geo locations
-	//arrayGeoLocation.forEach(sendGeoLocations)
-	//arrayGeoLocation.
+	for (i = 0; i < arrayGeoLocation.length; i++) 
+	{ 
+		var forwardMsg = JSON.stringify(arrayGeoLocation[i]);
+				
+		$("#infoLoc").html("Sending location...");
+					
+		$.ajax({
+			type: "POST",
+			url: "messageReceive.php",
+			data: {dataMsg:forwardMsg},
+			success: function(msg)
+			{
+				if(msg){
+					$("#infoLoc").html(msg);
+				}else{
+					$("#infoLoc").html(msg);
+				}
+			}
+		});
+	}
+
+	// clear array of geo locations
+	while(arrayGeoLocation.length > 0)
+	{ 
+		arrayGeoLocation.pop();
+	}
 	
 	// allow the gathering of geo location points
 	uploadingGeoLocation = false;
