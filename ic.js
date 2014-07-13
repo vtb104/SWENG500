@@ -13,8 +13,6 @@ var usaCoord = new google.maps.LatLng(39.57, -99.10);
 var startLat = 39.57;  //America
 var startLng = -100;
 
-var currentSearch = 1;
-
 //shane  add 7-6-2014
 var poly;
 var pointCount = 0;
@@ -79,13 +77,15 @@ var updateTrackLength = function(){
 	users.updateTrails();
 };
 
+var currentSearch = 1;
+if(readCookie("sar.currentSearch")){
+	currentSearch = readCookie("sar.currentSearch");
+}
+
 var updateCurrentSearch = function(){
-	if($("#currentSearchNumber").val() !== "all"){
-		currentSearch = $("#currentSearchNumber").val();
-		getNewPoints();
-	}else{
-		$("#info").html("New Search");
-	}
+	currentSearch = $("#currentSearchNumber").val();
+	writeCookie("sar.currentSearch", currentSearch, cookieDuration);
+	getNewPoints();
 }
 
 /*******************First to run, initializes all the points*******************************/
@@ -388,6 +388,8 @@ var getNewPoints = function(){
         success: function(msg){ 
 			var connectionNow = new Date();
 			$("#floatNote").html("Connected to server for " + (Math.round((connectionNow.getTime() - connectionStart.getTime())/1000)) + "s");        
+			
+			//$("#info").html(msg);
 			
 			//Check if there was an error before plotting
 			if(msg[0].error){
@@ -759,6 +761,7 @@ var updateSearches = function(){
 			$.each(msg, function(index, value){
 				$("#currentSearchNumber").append("<option value='" + value.searchID + "'>" + value.searchName + "</option>");
 			});
+			$("#currentSearchNumber").val(currentSearch);
 		}
 	});
 	$("#currentSearchNumber").append("<option value='all'>All Searches</option>");

@@ -38,6 +38,16 @@ if(!$auth->authenticate()){
     User Created with userID:  <?php $usernumber =  $db->create_user('testuser' .time(), 'bob',  'robert', 'this@email.com', 'password', 'userkey', $role = 'searcher'); echo $usernumber;?>
  </p>
  <p>
+	<h2>Check for a user name in the database</h2>
+    <h3>Call: checK_username('testuser');</h3>
+    User ID "testuser" exists: <?php echo $db->check_username('testuser'); ?>
+ </p>
+  <p>
+	<h2>Returns a user's data from the database with a userID</h2>
+    <h3>Call: get_user(<?php echo $usernumber;?>)</h3>
+    User Info:  <?php echo $db->get_user($usernumber);?>
+ </p>
+ <p>
 	<h2>Change a user's password</h2>
     <h3>Call: $db->change_password(<?php echo $usernumber;?>, 'Change password')</h3>
     Password changed: <?php echo $db->change_password($usernumber, 'Change password');;?>

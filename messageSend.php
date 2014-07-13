@@ -11,6 +11,11 @@ if(isset($_POST['update_ic_req']))
 	//If there is a data for a team
 	if($data["currentSearch"]){
 		
+		//For now, if all is selected, delivery #1
+		if($data['currentSearch'] === "all"){
+			$data['currentSearch'] = 1;
+		}
+		
 		//How old the points should be
 		$thetime = $data["theTime"];
 		
@@ -21,11 +26,12 @@ if(isset($_POST['update_ic_req']))
 		if(count($return_array)){
 		
 			//Divide the number of people returned by the limit and get that many points
-			$limit = ($data["updateInterval"] / count($return_array)) * 2;
+			$limit = round(($data["updateInterval"] / count($return_array))); //* 2;
 			
 			//Build the array
 			foreach($return_array as $one){
 				
+				$return_array[$counter]["limit"] = $limit;
 				$return_array[$counter]["points"] = array();
 				$return_array[$counter]["userData"] = array();
 				$tempArray = $db->get_user($one["userID"], false);
@@ -39,9 +45,9 @@ if(isset($_POST['update_ic_req']))
 					foreach($tempArray as $one){
 						array_push($return_array[$counter]["points"], $one);
 					}
-				}else{
+				}else{// if (count($tempArray) === 1){
 					$tempArray = $db->latest_user_location($one["userID"], false);
-					array_push($return_array[$counter]["points"], $tempArray[0]);	
+					$return_array[$counter]["points"] = array(0=>$tempArray[0]);
 				}
 				
 				$counter++;

@@ -204,7 +204,11 @@ class Database
 	public function latest_user_location($userID, $returnJSON = true){
 		$query = "SELECT Points.* FROM Points WHERE userID = '".$userID."' ORDER BY dateCreated DESC LIMIT 1";
 		$result = $this->db_obj->query($query);
-		return $this->return_array($result, $returnJSON);
+		if($result){
+			return $this->return_array($result, $returnJSON);
+		}else{
+			return false;	
+		}
 	}
 	
 	
@@ -363,9 +367,16 @@ class Database
 	 *	@return true or false if successful or not
 	 */
 	 public function user_join_search($userID, $searchID){
-		$query = $this->db_obj->prepare('INSERT INTO Searching (searchID, userID) VALUES (?, ?)');
-		$query->bind_param('ss', $userID, $searchID);
-		return $query->execute();
+		$result = $this->db_obj->query("INSERT INTO Searching (userID, searchID) VALUES ('$userID', '$searchID')");
+		 return $result;
+		 if($result)
+		 {
+			 return true;
+		 }
+		 else
+		 {
+			 return "Fail " . __LINE__ . " " . __FILE__;
+		 }
 	 }
 	 
 	 /** Create a Team

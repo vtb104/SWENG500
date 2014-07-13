@@ -8,7 +8,7 @@ if(isset($_POST['setup'])){
 	$userNumber = array();
 	for($i=0; $i<$numusers; $i++){
 		$one = $db->create_user("TestUser" . $i . time(), 'First' . $i, 'Last' . $i, 'Email', 'hello', 'hello', 'tempSearcherCreated');
-		$db->user_join_team($one, 1);
+		$db->user_join_search($one, 1);
 		array_push($userNumber, $one);
 	};
 	
