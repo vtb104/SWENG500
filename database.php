@@ -375,7 +375,7 @@ class Database
 		 }
 		 else
 		 {
-			 return "Fail " . __LINE__ . " " . __FILE__;
+			 return false;
 		 }
 	 }
 	 
@@ -448,7 +448,13 @@ class Database
 	 */
 	 public function user_leave_search($userID, $searchID){
 		 
-		 return '<span style="color: red">Fail ' . __LINE__ . '</span>';
+		 $query = "DELETE FROM Searching WHERE userID = '$userID' AND searchID = '$searchID'";
+		 $result = $this->db_obj->query($query);
+		 if($result){
+			 return true;
+		 }else{
+			 return false;
+		 }
 	 }
 	 
 	 /** User leaves a team

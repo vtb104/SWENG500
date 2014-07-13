@@ -47,4 +47,33 @@ if(isset($_POST['getMessages'])){
     echo json_encode($testMessage);
 };
 
+//This function either adds a user to a search or removes them
+if(isset($_POST['joinOrLeave'])){
+	
+	
+	$userID = $_POST['userID'];
+	$searchID = $_POST['searchID'];
+	$joinOrLeave = $_POST['joinOrLeave'];
+	
+	if($joinOrLeave){
+		//Join a search
+		$result = $db->user_join_search($userID, $searchID);
+		if($result){
+			echo "You have successfully joined the search.";	
+		}else{
+			echo "<span style='color: red'>There was an error. <br/> You are either already part of the search, or something else is wrong.</span>" . $result;	
+		}
+	}else{
+		//Leave a search	
+		$result = $db->user_leave_search($userID, $searchID);
+		
+		if($result){
+			echo "You have successfully left the search.";	
+		}else{
+			echo "<span style='color: red'>There was an error. <br/> You were not part of that search in the first place.</span>";	
+		}
+	}
+	die();
+}
+
 ?>

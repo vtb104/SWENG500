@@ -19,12 +19,15 @@
   <script src="sharedJS.js"></script>
   <script src="fu.js"></script>
 </head> 
+<script>
 <?php
 	if(isset($_SESSION['userid']))
 	{
-		echo "<script>userID = \"".$_SESSION['userid']."\"</script>";
+		echo "userID = '".$_SESSION['userid']."';";
 	}
 ?>
+
+</script>
 <body onLoad="initialize()">
 <div data-role=page id=geoMap>
         <div data-role=header>
@@ -57,7 +60,7 @@
                 <ul>
                     <li><a href="#geoMap">Map</a></li>
                     <li><a href="#message">Messages</a></li>
-                    <li><a href="#configure">Configure</a></li>
+                    <li><a href="#configure" class=".configure">Configure</a></li>
                 </ul>
             </div>
         </div>
@@ -88,7 +91,7 @@
                 <ul>
                     <li><a href="#geoMap">Map</a></li>
                     <li><a href="#message">Messages</a></li>
-                    <li><a href="#configure">Configure</a></li>
+                    <li><a href="#configure" class=".configure">Configure</a></li>
                 </ul>
             </div>
         </div>
@@ -123,6 +126,16 @@
                 <option value="30000">30s</option>
 				<option value="60000">30s</option>
             </select>
+            <br/>
+            <h3 align="center">Join a search</h3>
+            <!--Updated via Javascript-->
+           	<button id="refreshSearches">Refresh Search List</button>
+            <div class="ui-grid-a">
+            	<div class="ui-block-a"><select id="currentSearchNumber"></select></div>
+                <div class="ui-block-b"><select id="joinOrLeave"><option value="1">Join</option><option value="0">Leave</option></select></div>
+            </div>
+            <button id="currentSearchButton">Save</button>
+            <div align="center" id="joinOrLeaveStatus"></div>
         </div>
 
         <div data-role="footer" data-position="fixed">
@@ -130,11 +143,28 @@
                 <ul>
                     <li><a href="#geoMap">Map</a></li>
                     <li><a href="#message">Messages</a></li>
-                    <li><a href="#configure">Configure</a></li>
+                    <li><a href="#configure" class=".configure">Configure</a></li>
                 </ul>
             </div>
         </div>
 </div> 
 
 </body>
+<script>
+$(function(){
+	$("#currentSearchButton").click(function(){
+		updateCurrentSearch();
+		joinOrLeave();
+	});
+	$("#refreshSearches").click(function(){
+		updateSearches();
+	});
+	
+	$(".configure").click(function(){
+		$("#joinOrLeaveStatus").html("");
+		$("#currentSearchNumber").selectmenu('refresh');
+	});
+	
+});
+</script>
 </html>

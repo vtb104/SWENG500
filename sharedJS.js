@@ -1,12 +1,7 @@
 //Shared JavaScript for the FU and IC
-
+var cookieDuration = 24 * 30;	//30 days
 
 /*************************Specific Functions for search stuff********************************/
-
-
-
-
-
 function testShared()
 {
     alert("Shared works!");
@@ -53,6 +48,24 @@ function checkArrayForName(inArray, inName)
     }
    return -1;
 }
+
+//This function grabs the searches that are in the database
+var updateSearches = function(){
+	$("#currentSearchNumber").html("");
+	$.ajax({
+        type: "POST",
+        url: "messageSend.php",
+        data: "updateSearches=true",
+		dataType: "json",
+        success: function(msg){ 
+			$.each(msg, function(index, value){
+				$("#currentSearchNumber").append("<option value='" + value.searchID + "'>" + value.searchName + "</option>");
+			});
+			$("#currentSearchNumber").val(currentSearch).selectmenu('refresh');
+		}
+	});
+}
+
 
 /***************************************Generic functions for any site*****************/
 

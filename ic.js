@@ -7,7 +7,6 @@ var pointsLoaded = 0;
 var pointsShowing = 0;
 
 var timer = 0;
-var cookieDuration = 24 * 30;	//30 days
 
 var usaCoord = new google.maps.LatLng(39.57, -99.10);
 var startLat = 39.57;  //America
@@ -52,6 +51,16 @@ var updateTeamNumber = function(){
 	currentTeamNumber = $("#currentTeamNumber").val();	
 }
 
+var currentSearch = 1;
+if(readCookie("sar.currentSearchIC")){
+	currentSearch = readCookie("sar.currentSearchIC");
+}
+
+var updateCurrentSearch = function(){
+	currentSearch = $("#currentSearchNumber").val();
+	writeCookie("sar.currentSearchIC", currentSearch, cookieDuration);
+}
+
 //Value and track variable length
 var nowTime = new Date();
 var trackHistoryStart = new Date();
@@ -76,17 +85,6 @@ var updateTrackLength = function(){
 	pointsShowing = 0;
 	users.updateTrails();
 };
-
-var currentSearch = 1;
-if(readCookie("sar.currentSearch")){
-	currentSearch = readCookie("sar.currentSearch");
-}
-
-var updateCurrentSearch = function(){
-	currentSearch = $("#currentSearchNumber").val();
-	writeCookie("sar.currentSearch", currentSearch, cookieDuration);
-	getNewPoints();
-}
 
 /*******************First to run, initializes all the points*******************************/
 var initialize = function(){
@@ -143,6 +141,7 @@ var initialize = function(){
 
 	//Pulls the list of searches from the database and updates the list
 	updateSearches();
+	$("#currentSearchNumber").append("<option value='all'>All Searches</option>");
 	
 	//Start the timer to get new points
 	getNewPoints();
@@ -748,24 +747,6 @@ function update_compass_arrow(weather_div, inWindDir)
 }
 
 /****************************************Search Management**********************************/
-
-//This function grabs the searches that are in the database
-var updateSearches = function(){
-	$("#currentSearchNumber").html("");
-	$.ajax({
-        type: "POST",
-        url: "messageSend.php",
-        data: "updateSearches=true",
-		dataType: "json",
-        success: function(msg){ 
-			$.each(msg, function(index, value){
-				$("#currentSearchNumber").append("<option value='" + value.searchID + "'>" + value.searchName + "</option>");
-			});
-			$("#currentSearchNumber").val(currentSearch);
-		}
-	});
-	$("#currentSearchNumber").append("<option value='all'>All Searches</option>");
-}
 
 //This function runs synchronous AJAX call (not async) in order to ensure the new search is created
 var saveNewSearch = function(){

@@ -12,6 +12,16 @@ var currentLoc = new google.maps.LatLng(0, 0);
 var arrayGeoLocation = [];
 var uploadingGeoLocation = false;
 
+var currentSearch = 1;
+if(readCookie("sar.currentSearchFU")){
+	currentSearch = readCookie("sar.currentSearchFU");
+}
+
+var updateCurrentSearch = function(){
+	currentSearch = $("#currentSearchNumber").val();
+	writeCookie("sar.currentSearchFU", currentSearch, cookieDuration);
+}
+
 // decompose the position values into items for display
 // set the new marker
 // pan to the new marker if this is the first time this function is called
@@ -89,6 +99,9 @@ function initialize()
 		map: map,
 		title: "SAR Map"
 	});
+	
+	//Fills the searches selector
+	updateSearches();
 	
     return true;
 }
@@ -265,4 +278,20 @@ function sendGeoLocations()
 	
 	// allow the gathering of geo location points
 	uploadingGeoLocation = false;
+}
+
+//Either adds the user to a search or removes them
+var joinOrLeave = function(){
+	 var passThis = $("#joinOrLeave").val();
+	 $("#joinOrLeaveStatus").html("Saving...");
+	 $.ajax({
+		type: "POST",
+		url: "messageReceive.php",
+		data: "joinOrLeave=" + passThis + "&userID=" + userID + "&searchID=" + currentSearch,
+		success: function(msg)
+		{
+			$("#joinOrLeaveStatus").html(msg);
+		}
+	});	
+	
 }
