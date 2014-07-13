@@ -28,8 +28,10 @@
 <script type="text/javascript" src="lib/jQueryRotate.js"></script>
 
 <!-- Page JavaScript -->
+<script src="sharedJS.js"></script>
 <script src="ic.js"></script>
 <script src="cookies.js"></script>
+
 
 
 <style></style>
@@ -104,7 +106,7 @@ var testFunction = function (){
                     	Track History Start Date:
                     </td>
                     <td>
-                    	<input id="trackDate" class="datepicker" type="text"/><br/>
+                    	<input id="trackDate" class="datepicker dateSince" type="text"/><br/>
                     </td>
                 </tr>
                 <tr>
@@ -112,7 +114,7 @@ var testFunction = function (){
                     	Track History Start Time:
                     </td>
                     <td>
-                    	<input type="time" id="trackTime" value="12:00"/>
+                    	<input type="time" id="trackTime" class="dateSince" value="12:00"/>
                     </td>
                 </tr>
            </table><div id="testTime">Here</div> 
@@ -238,7 +240,7 @@ $(function(){
 	
 	
 	//Change the track length
-	$("#trackDate").change(function(){
+	$(".dateSince").change(function(){
 		updateTrackLength();
 	});
 	
