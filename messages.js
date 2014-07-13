@@ -32,57 +32,9 @@ msgtimer = setInerval(function(){getNewMessages()}, 1000);
      });
 };
 
-var sendToAll = function (){
+var sendNewMessage = function (){
    
-     sendData = {sentTo: All, from: IC, subject: Subject, urgency: Level, date: Time, body: $(id="u406")}
-     
-     //Start the AJAX call
-     $(id="pamphletu139").html("Sending...");
-	$.ajax({
-        type: "POST",
-        url: "messageSend.php",
-        data: { update_ic_req:sendData },
-		dataType: "json",
-        success: function(msg){ 
-			var sentMessage = new Refresh();
-                        $("#floatNote").html("Message Sent");
-                    },
-        error: function(msg){
-            var failedMessage = new Notice();
-            $("#floatNote").html("Message was not sent. Try again later.")
-            
-     
- }
-});
-};
-
-var sendToTeam = function (){
-   
-     sendData = {sentTo: All, from: IC, subject: Subject, urgency: Level, date: Time, body: $(id="u407")}
-     
-     //Start the AJAX call
-     $(id="pamphletu139").html("Sending...");
-	$.ajax({
-        type: "POST",
-        url: "messageSend.php",
-        data: { update_ic_req:sendData },
-		dataType: "json",
-        success: function(msg){ 
-			var sentMessage = new Refresh();
-                        $("#floatNote").html("Message Sent");
-                    },
-        error: function(msg){
-            var failedMessage = new Notice();
-            $("#floatNote").html("Message was not sent. Try again later.")
-            
-     
- }
-});
-};
-
-var sendToIndividual = function (){
-   
-     sendData = {sentTo: All, from: IC, subject: Subject, urgency: Level, date: Time, body: $(id="u408")}
+     sendData = {sentTo: To, from: From, subject: Subject, urgency: Urgency, date: Time, body: Body}
      
      //Start the AJAX call
      $(id="pamphletu139").html("Sending...");
