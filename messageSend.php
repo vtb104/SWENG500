@@ -73,13 +73,21 @@ if(isset($_POST['newSearchData'])){
 	
 	echo json_encode($return);
 };
+//Creates a new team
+if(isset($_POST['newTeamData'])){
+	$data = $_POST['newTeamData'];
+	//TODO reate_team($userID, $teamName, $teamAssignment, $teamInfo, $searchID = '')
+	echo $db->create_team($data['teamLeader'], $data['teamName'], '', $data['teamNotes'], '');
 
-
+};
 //This script returns a list of searches
 if(isset($_POST['updateSearches'])){
 	echo $db->list_searches();	
 }
-
+//This script returns a list of teams
+if(isset($_POST['updateTeams'])){
+	echo $db->list_teams();	
+}
 if(isset($_POST['deleteSearch'])){
 	echo $db->delete_search($_POST['deleteSearch']);	
 }

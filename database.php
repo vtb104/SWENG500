@@ -398,10 +398,11 @@ class Database
 	 *	@return - the new teamnumber
 	 */
 	 public function create_team($userID, $teamName, $teamAssignment, $teamInfo, $searchID = ''){
-		$query = $this->db_obj->prepare('INSERT INTO Teams (teamName, teamAssignment, teamInfo, searchID, owner) VALUES (?, ?, ?, ?, ?)');
-		$query->bind_param('sssss', $teamName, $teamAssignment, $teamInfo, $searchID, $userID);
-		$result = $query->execute();
-		
+		//$query = $this->db_obj->prepare('INSERT INTO Teams (teamName, teamAssignment, teamInfo, searchID, owner) VALUES (?, ?, ?, ?, ?)');
+		//$query->bind_param('sssss', $teamName, $teamAssignment, $teamInfo, $searchID, $userID);
+                //$result = $query->execute();
+		$query = 'INSERT INTO Teams (teamName, teamAssignment, teamInfo, owner) VALUES ("'.$teamName.'", "'.$teamAssignment.'", "'.$teamInfo.'", "'.$userID.'")';
+		$result = $this->db_obj->query($query);
 		if($result)
 		{
 			return $this->get_last_id();

@@ -65,7 +65,22 @@ var updateSearches = function(){
 		}
 	});
 }
-
+//This function grabs the teams that are in the database
+var updateSearches = function(){
+	//$("#currentSearchNumber").html("");
+	$.ajax({
+        type: "POST",
+        url: "messageSend.php",
+        data: "updateTeams=true",
+		dataType: "json",
+        success: function(msg){ 
+			$.each(msg, function(index, value){
+				$("#currentTeamNumber").append("<option value='" + value.teamID + "'>" + value.teamName + "</option>");
+			});
+			$("#currentTeamNumber").val(currentSearch).selectmenu('refresh');
+		}
+	});
+}
 
 /***************************************Generic functions for any site*****************/
 

@@ -96,6 +96,14 @@ var testFunction = function (){
                         	<option value="all">All Teams</option>
                     	</select>
                 	</td>
+                </tr>
+                <tr>
+                    <td></td>
+                        <td>
+                    	<button rel="#newteamoverlay" id="newteam">New Team</button>
+                    	<button id="deleteteam">Delete Team</button>
+                    </td>
+                   
                	</tr>
 				<tr>
                		<td>
@@ -232,6 +240,44 @@ var testFunction = function (){
          <h2 align="center" style="color: red" id="newsearchinfo"></h2>
     </p>
 </div>
+
+ <div class="overlay" id="newteamoverlay">
+	<span class="close">Cancel</span>
+	<h3 align="center">Create a New Team</h3>
+    <br/>
+    <p>
+    	<table id="newsearchtable" class="defaulttable">
+        	<tr>
+            	<td>
+                	Team Name:
+                </td>
+                <td>
+                	<input id="newteamname" type="text"/>
+                </td>
+            </tr>
+            <tr>
+            	<td>
+                	Team Leader:
+                </td>
+                <td>
+                	<select id="teamleader">
+                            <option value="TODO">TODO: populate with user names</option>
+                        </select>
+                </td>
+            </tr>
+            <tr>
+            	<td>
+                	Team Notes:
+                </td>
+            	<td>
+                	<textarea id="newteamnotes" style="width: 100%; height: 100px;"></textarea>
+                <td>
+            </tr>
+        </table><br/>
+         <button id="savenewteam" style="float: right">Save New Team</button>
+         <h2 align="center" style="color: red" id="newsearchinfo"></h2>
+    </p>
+</div>
  
 </body>
 <script>
@@ -268,7 +314,11 @@ $(function(){
 		saveNewSearch();
 		//$(".button[rel]").overlay().close();
 	});
-	
+        //Start a new team
+	$("#savenewteam").click(function(){
+		saveNewTeam();
+		//$(".button[rel]").overlay().close();
+	});
 	//Delte a search
 	$("#deletesearch").click(function(){
 		deleteSearch();

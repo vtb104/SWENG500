@@ -778,7 +778,27 @@ var saveNewSearch = function(){
 	$("#currentSearchNumber").val(newSearchNumber);
 	getNewPoints();
 }
-
+var saveNewTeam = function(){
+	alert("Funcitonality not implemented yet");
+       	var newTeamData = {
+		teamName: $("#newteamname").val(),
+		teamLeader: $("#teamleader").val(),
+		teamNotes: $("#newteamnotes").val()
+	}
+	
+	$.ajax({
+        type: "POST",
+        url: "messageSend.php",
+        data: {newTeamData: newTeamData},
+		dataType: "json",
+		async: false,
+        success: function(e){ 
+                    //add team to team select menu
+			
+		}
+	});
+        updateSearches();
+}
 var deleteSearch = function(){
 	if(window.confirm("Are you sure you want to delete the \"" + $("#currentSearchNumber option[value='" + currentSearch + "']").text() + "\"?")){
 		$.ajax({
