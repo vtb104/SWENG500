@@ -412,7 +412,16 @@ class Database
 			return "Error ". __LINE__ .  " " . __FILE__;
 		}
 	 }
-	 
+	  //Delete a search
+	 public function delete_team($teamID){
+		$query = "DELETE FROM teams WHERE teamID = '$teamID'";
+		$result1 = $this->db_obj->query($query);
+		if($result1){
+			return true;	
+		}else{
+			return false;
+		}
+	 }
 	 /** Returns an array of all the team members
 	 *
 	 *	@param $teamID, 

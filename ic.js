@@ -52,6 +52,7 @@ var updateTeamNumber = function(){
 }
 
 var currentSearch = 1;
+var currentTeam = 1;
 if(readCookie("sar.currentSearchIC")){
 	currentSearch = readCookie("sar.currentSearchIC");
 }
@@ -60,7 +61,10 @@ var updateCurrentSearch = function(){
 	currentSearch = $("#currentSearchNumber").val();
 	writeCookie("sar.currentSearchIC", currentSearch, cookieDuration);
 }
-
+var updateCurrentTeam = function(){
+	currentTeam = $("#currentTeamNumber").val();
+	writeCookie("sar.currentTeamIC", currentTeam, cookieDuration);
+}
 //Value and track variable length
 var nowTime = new Date();
 var trackHistoryStart = new Date();
@@ -143,6 +147,9 @@ var initialize = function(){
 	updateSearches();
 	$("#currentSearchNumber").append("<option value='all'>All Searches</option>");
 	
+        updateTeams();
+        $("#currentTeamNumber").append("<option value='all'>All Teams</option>");
+        
 	//Start the timer to get new points
 	getNewPoints();
         //this event listener will be used for area creation <<<< Start Shane Edit
@@ -797,7 +804,8 @@ var saveNewTeam = function(){
 			
 		}
 	});
-        updateSearches();
+        updateTeams();
+        $("#currentSearchNumber").val(newSearchNumber);
 }
 var deleteSearch = function(){
 	if(window.confirm("Are you sure you want to delete the \"" + $("#currentSearchNumber option[value='" + currentSearch + "']").text() + "\"?")){
@@ -815,7 +823,22 @@ var deleteSearch = function(){
 		});
 	}
 }
-
+var deleteTeam = function(){
+	if(window.confirm("Are you sure you want to delete the \"" + $("#currentTeamNumber option[value='" + currentTeam + "']").text() + "\"?")){
+		$.ajax({
+			type: "POST",
+			url: "messageSend.php",
+			data: "deleteTeam=" + currentTeam,
+			dataType: "json",
+			async: false,
+			success: function(e){ 
+				$("#info").html(e);
+				currentTeam = 1;
+				updateTeams();
+			}
+		});
+	}
+}
 
 
 //Searches using the Google search function

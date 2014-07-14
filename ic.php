@@ -323,7 +323,10 @@ $(function(){
 	$("#deletesearch").click(function(){
 		deleteSearch();
 	});
-	
+	//Delte a team
+	$("#deleteteam").click(function(){
+		deleteTeam();
+	});
 	$("#showweather").click(function(){
 		$(this).hide();
 		$("#hideweather").show();
@@ -349,7 +352,9 @@ $(function(){
 	$("#currentSearchNumber").change(function(){
 		updateCurrentSearch();
 	});
-	
+        $("#currentTeamNumber").change(function(){
+		updateCurrentTeam();
+	});
 });
 </script>
 </html>

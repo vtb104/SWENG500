@@ -91,5 +91,7 @@ if(isset($_POST['updateTeams'])){
 if(isset($_POST['deleteSearch'])){
 	echo $db->delete_search($_POST['deleteSearch']);	
 }
-
+if(isset($_POST['deleteTeam'])){
+	echo $db->delete_team($_POST['deleteTeam']);	
+}
 ?>
