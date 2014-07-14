@@ -13,6 +13,7 @@
 <div id="qunit"></div>
 <div id="qunit-fixture"></div>
 <script src="qunit-1.14.0.js"></script>
+<script src="sharedJS.js"></script>
 <script src="fu.js"></script>
 
 <script>
@@ -23,6 +24,7 @@
     
     test("Field Unit Basics: sendPosition", function() 
     {
+		initialize();
         equal(sendPosition(), false, "Test of the sendPosition function");
     });
     
@@ -41,6 +43,65 @@
     test("Field Unit Basics: getMessage", function() 
     {
         equal(getMessage(), "", "Test of the getMessage function");
+    });
+	
+	test("Field Unit Basics: positionCallback", function()
+	{
+		expect(0);
+		var geoOptions = {
+			enableHighAccuracy: true,
+			timeout: 2000,
+			maximumAge: 0
+		};
+			
+		navigator.geolocation.getCurrentPosition(success, fail, geoOptions);
+
+		function success(pos)
+		{
+			equal(positionCallback(position), true, "Test of the positionCallback function");
+		}
+		function fail(error) 
+		{
+			// Failed to find location, do nothing
+		}
+	});
+	
+	test("Field Unit Basics: panToCurrentLocation", function() 
+    {
+		var latlng = new google.maps.LatLng (0, 0);
+	
+		//Sets options for the map with vars above
+		var myOptions = {
+			zoom: 15, 
+			center: latlng,
+			mapTypeControl: true,
+			mapTypeId : google.maps.MapTypeId.TERRAIN
+		};
+		
+		//Creates the map
+		map = new google.maps.Map(document.getElementById('map_canvas'), myOptions);
+	
+        equal(panToCurrentLocation(), "", "Test of the panToCurrentLocation function");
+    });
+	
+	test("Field Unit Basics: checkForNewAreaFromIC (less than 150 calls)", function() 
+    {
+        equal(checkForNewAreaFromIC(), false, "Test of the checkForNewAreaFromIC function");
+    });
+	
+	test("Field Unit Basics: checkForNewAreaFromIC (more than 150 calls)", function() 
+    {
+        equal(checkForNewAreaFromIC(), true, "Test of the checkForNewAreaFromIC function");
+    });
+	
+	test("Field Unit Basics: sendGeoLocations (empty array)", function() 
+    {
+        equal(sendGeoLocations(), false, "Test of the sendGeoLocations function");
+    });
+	
+	test("Field Unit Basics: sendGeoLocations (non-empty array)", function() 
+    {
+        equal(sendGeoLocations(), true, "Test of the sendGeoLocations function");
     });
 </script>
 

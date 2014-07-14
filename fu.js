@@ -174,6 +174,8 @@ function sendPosition()
 var cnt=0;
 function checkForNewAreaFromIC()
 {
+	var result = false;
+
     if(cnt < 150)
     {
         cnt++;
@@ -200,9 +202,12 @@ function checkForNewAreaFromIC()
                     //no areas for user
                     removeAllPolysFromMap();
                 }
+				
+				result = true;
             }
 		});
     }
+	return result;
 }
 
 function sendMessage(msg)
@@ -238,6 +243,8 @@ function getMessage()
 
 function sendGeoLocations()
 {
+	var result = false;
+
 	// set the global var to stop gathering geo location points
 	uploadingGeoLocation = true;
 	
@@ -266,6 +273,7 @@ function sendGeoLocations()
 				}else{
 					$("#infoLoc").html(msg);
 				}
+				result = true;
 			}
 		});
 	}
@@ -278,8 +286,9 @@ function sendGeoLocations()
 	
 	// allow the gathering of geo location points
 	uploadingGeoLocation = false;
+	
+	return result;
 }
-
 //Either adds the user to a search or removes them
 var joinOrLeave = function(){
 	 var passThis = $("#joinOrLeave").val();

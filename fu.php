@@ -41,19 +41,20 @@
                 <p>In addition, the longitude and latitude are displayed along with a red text counter that iterates as a new set of coordinates are sent to the server.</p>
 				<p>Navigation is capable at the bottom of the window to the Messages and Configure screens.</p>
 				<p>You can close the help panel by clicking outside the panel, pressing the Esc key or by swiping.</p>
+				
+				<div id="infoLoc" style="color: red">Attempting to find current location...</div>
+				<input id="lat"/>
+				<input id="lng"/>
+				<span id="updateLocInfo"></span>
         </div>
 
         <div data-role="content">
-            <div id="infoLoc" style="color: red">Attempting to find current location...</div>
-            <input id="lat"/>
-            <input id="lng"/>
 			<button onclick="panToCurrentLocation()">Pan to Current Location</button>
-            <span id="updateLocInfo"></span>
         </div>
     
         <div role="main" class="ui-content" id="map_canvas">
 		<!-- map loads here... -->
-	</div>
+		</div>
     
         <div data-role="footer" data-position="fixed">
             <div data-role="navbar">
