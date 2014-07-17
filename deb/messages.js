@@ -17,11 +17,10 @@ msgtimer = setInerval(function(){getNewMessages()}, 1000);
 	$.ajax({
         type: "POST",
         url: "messageReceive.php",
-        data: { ic_msg_recieve:requestData },
+        data: { update_ic_req:requestData },
 		dataType: "json",
         success: function(msg){ 
-			//DEB ADD CODE HERE TO HANDLE NEW RECIEVED MESSAGES
-                        var newMessages = new Refresh();
+			var newMessages = new Refresh();
 			$(id="u403").html(objectCount + "New Messages" + "| From:" + Usernumber + "| Subject:" + Subject + "| Urgency: " + Level + "| Received:" + Time + "| Message:" + Body); 
                         
          },
@@ -42,10 +41,9 @@ var sendNewMessage = function (){
 	$.ajax({
         type: "POST",
         url: "messageSend.php",
-        data: { ic_message_send:sendData },
+        data: { update_ic_req:sendData },
 		dataType: "json",
         success: function(msg){ 
-                        //DEB ADD CODE HERE TO HANDLE SERVER RESPONSE AFTER SENDING A MESSAGE (will return true)
 			var sentMessage = new Refresh();
                         $("#floatNote").html("Message Sent");
                     },
