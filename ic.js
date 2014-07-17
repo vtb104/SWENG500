@@ -530,7 +530,7 @@ Users.prototype.drawUserButtons = function(){
 		
 		//Expand user box
 		$(".searcherexpand").on("mouseenter", function(e){
-			goVar = false;
+			goVar = false; $("#floatNote").html("Updating paused...");
 			 });// $(this).animate({height: "100px"}, 100, function(){})});
 		//Close
 		$(".searcherexpand").on("mouseout", function(e){
