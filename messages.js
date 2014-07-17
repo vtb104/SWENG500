@@ -42,11 +42,7 @@ var sendNewMessage = function (){
 	$.ajax({
         type: "POST",
         url: "messageSend.php",
-<<<<<<< HEAD
         data: { ic_message_send:sendData },
-=======
-        data: { ic_mesg_send:sendData },
->>>>>>> origin/master
 		dataType: "json",
         success: function(msg){ 
                         //DEB ADD CODE HERE TO HANDLE SERVER RESPONSE AFTER SENDING A MESSAGE (will return true)

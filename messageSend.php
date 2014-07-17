@@ -94,4 +94,8 @@ if(isset($_POST['deleteSearch'])){
 if(isset($_POST['deleteTeam'])){
 	echo $db->delete_team($_POST['deleteTeam']);	
 }
+//This script is used to send a message (places it in database)
+if(isset($_POST['ic_message_send'])){
+    return true;
+}
 ?>
