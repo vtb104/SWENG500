@@ -31,6 +31,7 @@
 <script src="sharedJS.js"></script>
 <script src="ic.js"></script>
 <script src="cookies.js"></script>
+<script src="messages.js"></script>
 
 
 
@@ -59,7 +60,7 @@ var testFunction = function (){
     
     <div id="menubar">
     	<a href="searchertest.php" target="_blank">Searcher Test</a>
-    	<a href="Messages.html">Messages</a>
+    	<a href="Messages.php">Messages</a>
     	<a href="fu.php" target="_blank">Field Unit</a>
         <a id="logoutbutton" href="logout.php">Log Out</a>
     </div>
