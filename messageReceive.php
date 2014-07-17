@@ -37,7 +37,7 @@ if(isset($_POST['dataMsg'])){
 if(isset($_POST['userRequest'])){
 	echo $db->list_users();
 };
-if(isset($_POST['getMessages'])){
+/*if(isset($_POST['getMessages'])){
     $testMessage = new stdClass();
     $testMessage->to = "Deb";
     $testMessage->from = "Shane";
@@ -45,7 +45,7 @@ if(isset($_POST['getMessages'])){
     $testMessage->body = "Hello there";
     $testMessage->date = time();
     echo json_encode($testMessage);
-};
+};*/
 if(isset($_POST['ic_msg_recieve'])){
     $testMessage = new stdClass();
     $testMessage->to = "Deb";

@@ -8,9 +8,9 @@
 var getNewMessage = function(){
     
 //This is the timer that runs the getNewMessage query		
-msgtimer = setInerval(function(){getNewMessages()}, 1000);
+//msgtimer = setInerval(function(){getNewMessages()}, 1000);
 
-	requestData = {sentTo: IC, from: Usernumber, subject: Subject, urgency: Level, date: Time, body: Body}
+	requestData = {sentTo: "IC", from: "Usernumber", subject: "Subject", urgency: "Level", date: "Time", body: "Body"}
 	
 	//Start the AJAX call
 	$(id="pamphletu139").html("Refreshing...");
@@ -20,9 +20,10 @@ msgtimer = setInerval(function(){getNewMessages()}, 1000);
         data: { ic_msg_recieve:requestData },
 		dataType: "json",
         success: function(msg){ 
+                        alert(JSON.stringify(msg));
 			//DEB ADD CODE HERE TO HANDLE NEW RECIEVED MESSAGES
-                        var newMessages = new Refresh();
-			$(id="u403").html(objectCount + "New Messages" + "| From:" + Usernumber + "| Subject:" + Subject + "| Urgency: " + Level + "| Received:" + Time + "| Message:" + Body); 
+                      //  var newMessages = new Refresh();
+			$(id="u403").html(objectCount + "New Messages" + "| From:" + msg.from + "| Subject:" + Subject + "| Urgency: " + Level + "| Received:" + Time + "| Message:" + Body); 
                         
          },
          error: function(msg){
