@@ -91,9 +91,7 @@ var testFunction = function (){
                     	<span class="optionlabel">Team Position to View: </span>
                     </td>
                     <td>
-                    	<select id="currentTeamNumber">
-                        	<option value="all">All Teams</option>
-                    	</select>
+                    	<select id="currentTeamNumber"></select>
                 	</td>
                 </tr>
                 <tr>
@@ -172,7 +170,7 @@ var testFunction = function (){
 
     <!--Items below this line are absolute or fixed, and not in line with the rest of the document-->
         
-        <div id="info">Info Here</div>
+        <div id="info" style="color: white; z-index: 10000;">Info Here</div>
         <div id="outer_weather_box">
             <div align="center" id="showweather" class="weathercursor">Click to show weather</div>
             <div align="center"	id="hideweather" style="display: none" class="weathercursor" >Click to hide weather</div>
@@ -303,11 +301,6 @@ $(function(){
 		updateIntervalCaller();
 	});
 	
-	//Change the team number to view
-	$("#currentTeamNumber").change(function(){
-		updateTeamNumber();
-	}); 
-	
 	//Start a new search
 	$("#savenewsearch").click(function(){
 		saveNewSearch();
@@ -351,7 +344,7 @@ $(function(){
 	$("#currentSearchNumber").change(function(){
 		updateCurrentSearch();
 	});
-        $("#currentTeamNumber").change(function(){
+    $("#currentTeamNumber").change(function(){
 		updateCurrentTeam();
 	});
 });

@@ -67,7 +67,6 @@ var updateSearches = function(){
 }
 //This function grabs the teams that are in the database
 var updateTeams = function(){
-    console.log("test");
 	$("#currentTeamNumber").html("");
 	$.ajax({
         type: "POST",
@@ -75,10 +74,11 @@ var updateTeams = function(){
         data: "updateTeams=true",
 		dataType: "json",
         success: function(msg){ 
-			$.each(msg, function(index, value){
+			teamArray = msg;
+			$.each(teamArray, function(index, value){
 				$("#currentTeamNumber").append("<option value='" + value.teamID + "'>" + value.teamName + "</option>");
 			});
-                        $("#currentTeamNumber").val(currentSearch); //.selectmenu('refresh');
+    		$("#currentTeamNumber").val(currentTeam);
 		}
 	});
 }

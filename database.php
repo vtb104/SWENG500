@@ -414,9 +414,12 @@ class Database
 	 }
 	  //Delete a search
 	 public function delete_team($teamID){
-		$query = "DELETE FROM teams WHERE teamID = '$teamID'";
-		$result1 = $this->db_obj->query($query);
-		if($result1){
+		$query1 = "DELETE FROM TeamMembers WHERE teamID = '$teamID'";
+		$result1 = $this->db_obj->query($query1);
+		$query2 = "DELETE FROM Teams WHERE teamID = '$teamID'";
+		$result2 = $this->db_obj->query($query2);
+	
+		if($result1 && $result2){
 			return true;	
 		}else{
 			return false;
@@ -432,14 +435,14 @@ class Database
 		return $this->return_array($this->db_obj->query($query), $returnJSON);
 	 }
 	 
-	 /** User joins a team
-	 *
-	 */
+	 /** User joins a team, first removes the user from any other teams.*/
 	 public function user_join_team($userID, $teamID){
 		 
-		 $result = $this->db_obj->query("INSERT INTO TeamMembers (userID, teamID) VALUES ('$userID', '$teamID')");
-		 return $result;
-		 if($result)
+		 //First remove user from all other teams
+		 $result1 = $this->db_obj->query("DELETE FROM TeamMembers WHERE userID = '$userID'");
+		 
+		 $result2 = $this->db_obj->query("INSERT INTO TeamMembers (userID, teamID) VALUES ('$userID', '$teamID')");
+		 if($result1)
 		 {
 			 return true;
 		 }
@@ -447,6 +450,16 @@ class Database
 		 {
 			 return "Fail " . __LINE__ . " " . __FILE__;
 		 }
+	 }
+	 
+	 //Returns a single digit for the user's team
+	 public function user_team($userID){
+			$result = $this->db_obj->query("SELECT teamID FROM TeamMembers WHERE userID = '$userID'");
+			if($result){
+				return $this->return_single($result); 
+			}else{
+				return "0";
+			}
 	 }
 	 
 	 /** Team joins a search
@@ -614,6 +627,12 @@ class Database
 		}else{
 			return $return;
 		}
+	}
+	
+	//Returns a single result from a single lookup in text form
+	private function return_single($input){
+		$return = $input->fetch_array();	
+		return $return[0];
 	}
 	
 	//This function prints all the results of a query.  Used for testing. 

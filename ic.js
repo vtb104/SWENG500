@@ -1,5 +1,8 @@
 var map;
 
+//Used to halt timers and fetchers for other actions.
+var goVar = true;
+
 //Points loaded into the arrays
 var pointsLoaded = 0;
 
@@ -12,7 +15,8 @@ var usaCoord = new google.maps.LatLng(39.57, -99.10);
 var startLat = 39.57;  //America
 var startLng = -100;
 
-//shane  add 7-6-2014
+var colorArray = {1: "FF5511", 2: "55FF22", 3: "6633DD", 4 : "338833"};
+
 var poly;
 var pointCount = 0;
 var pointArray = [];
@@ -45,16 +49,14 @@ var updateIntervalCaller = function(){
 	getNewPoints();	
 }
 
-//Value and update fucntion for the current team selected
-var currentTeamNumber = 1;
-var updateTeamNumber = function(){
-	currentTeamNumber = $("#currentTeamNumber").val();	
-}
-
+//Value and update fucntion for the current search and team selection
 var currentSearch = 1;
 var currentTeam = 1;
 if(readCookie("sar.currentSearchIC")){
 	currentSearch = readCookie("sar.currentSearchIC");
+}
+if(readCookie("sar.currentTeamIC")){
+	currentTeam = readCookie("sar.currentTeamIC");
 }
 
 var updateCurrentSearch = function(){
@@ -65,6 +67,7 @@ var updateCurrentTeam = function(){
 	currentTeam = $("#currentTeamNumber").val();
 	writeCookie("sar.currentTeamIC", currentTeam, cookieDuration);
 }
+
 //Value and track variable length
 var nowTime = new Date();
 var trackHistoryStart = new Date();
@@ -147,8 +150,8 @@ var initialize = function(){
 	updateSearches();
 	$("#currentSearchNumber").append("<option value='all'>All Searches</option>");
 	
-        updateTeams();
-        $("#currentTeamNumber").append("<option value='all'>All Teams</option>");
+    updateTeams();
+    $("#currentTeamNumber").append("<option value='all'>All Teams</option>");
         
 	//Start the timer to get new points
 	getNewPoints();
@@ -242,7 +245,7 @@ function updatePointList()
             //alert(JSON.stringify(areaData[0]));
         }});
 }
-//this funstion is called when "start new area button is clicked
+//this function is called when "start new area button is clicked
 function startNewArea()
 { 
     document.getElementById("areaBoxContent").innerHTML = 'Area Name: <input type="text" name="AreaName" id="AreaName" value="Enter an Area Name"><input type="color" id="area_color" value="#00ff00"><br><div id="tempMsg">Please click on the map to create area boundaries.</div><div id="PointsOfArea"></div><button type="button"  onclick="saveAreaButton()">Save</button>';
@@ -384,51 +387,54 @@ var getNewPoints = function(){
 				   theTime: (Math.round(trackHistoryStart.getTime() / 1000)),
 				   updateInterval: updateInterval}
 	
-	//Start the AJAX call
-	$("#floatNote").html("Sending...");
-	$.ajax({
-        type: "POST",
-        url: "messageSend.php",
-        data: { update_ic_req:requestData },
-		dataType: "json",
-        success: function(msg){ 
-			var connectionNow = new Date();
-			$("#floatNote").html("Connected to server for " + (Math.round((connectionNow.getTime() - connectionStart.getTime())/1000)) + "s");        
-			
-			//$("#info").html(msg);
-			
-			//Check if there was an error before plotting
-			if(msg[0].error){
-				//Error 1 means there were no points, so clear the users
-				if(msg[0].error == 1){
-					users.destroyArray();
+	//Check if the UI is paused
+	if(goVar){
+		//Start the AJAX call
+		$("#floatNote").html("Sending...");
+		$.ajax({
+			type: "POST",
+			url: "messageSend.php",
+			data: { update_ic_req:requestData },
+			dataType: "json",
+			success: function(msg){ 
+				var connectionNow = new Date();
+				$("#floatNote").html("Connected to server for " + (Math.round((connectionNow.getTime() - connectionStart.getTime())/1000)) + "s");        
+				
+				//$("#info").html(msg);
+				
+				//Check if there was an error before plotting
+				if(msg[0].error){
+					//Error 1 means there were no points, so clear the users
+					if(msg[0].error == 1){
+						users.destroyArray();
+					}else{
+						$("#info").html(msg[0].error);	
+					};
 				}else{
-					$("#info").html(msg[0].error);	
-				};
-			}else{
-				//Send the msg object to the user singleton to update or create points.
-				users.checkUsers(msg);
-				users.drawUserButtons();
-				users.plotPoints();	
-				users.updateTrails();	
+					//Send the msg object to the user singleton to update or create points.
+					users.checkUsers(msg);
+					users.drawUserButtons();
+					users.plotPoints();	
+					users.updateTrails();	
+				}
+				
+				/*Object format for the returned JSON string:
+					{"userID":"2",
+					 "points":
+						{"pointID":"49450",
+						 "userID":"2",
+						 "lat":"64.6790173",
+						 "lng":"-147.0894166",
+						 "alt":"25",
+						 "dateCreated":"1404170736",
+						 "pointNotes":"From FU"},
+						 ....
+					 "userData":
+						{"username":"ryan","fname":"Ryan","lname":"lname"}]},
+				*/
 			}
-			
-			/*Object format for the returned JSON string:
-				{"userID":"2",
-				 "points":
-					{"pointID":"49450",
-					 "userID":"2",
-					 "lat":"64.6790173",
-					 "lng":"-147.0894166",
-					 "alt":"25",
-					 "dateCreated":"1404170736",
-					 "pointNotes":"From FU"},
-					 ....
-				 "userData":
-				 	{"username":"ryan","fname":"Ryan","lname":"lname"}]},
-			*/
-		}
-	});
+		});
+	}
 };
 
 
@@ -512,11 +518,44 @@ Users.prototype.checkUsers = function(inputUsers){
 Users.prototype.drawUserButtons = function(){
 	$("#searcherlist").html("");
 	$.each(this.userArray, function(index, value){
-		$("#searcherlist").append('<div id="user' + value.userID + '" class="searcher" userID="' + value.userID + '" style="background-color:' + value.userColor +'"><span class="buttonNameStyle">' + value.userID +' ' + value.username + '</span> <span class="buttonInfoStyle" id="userTrail' + value.userID + '">Dist: -</span></div>');
+		$("#searcherlist").append('<div id="user' + value.userID + '" class="searcher searcherexpand" userID="' + value.userID + '" style="background-color:' + value.userColor +'"><span class="buttonNameStyle">' + value.userID +' ' + value.username + '</span><select class="teamDrop buttonInfoStyle searcherexpand" userID="' + value.userID + '" id="teamDrop' + value.userID + '"></select> <span class="buttonInfoStyle" id="userTrail' + value.userID + '">-</span></div>');
+		
+		//Attach functions to newly created buttons
 		$(".searcher").on("click", function(e){
 			users.panToPerson($(this).attr("userID"));
 		});
+		$(".teamDrop").on("change", function(e){
+			users.joinTeam($(this).attr("userID"), $(this).val());
+		});
 		
+		//Expand user box
+		$(".searcherexpand").on("mouseenter", function(e){
+			goVar = false;
+			 });// $(this).animate({height: "100px"}, 100, function(){})});
+		//Close
+		$(".searcherexpand").on("mouseout", function(e){
+			goVar = true; });//$(this).animate({height: "20px"}, 100, function(){})});
+		
+	});
+	
+	//Add the list of teams to the search assignments
+	$(".teamDrop").html("<option value='0'>No Team</option>");
+	$.each(teamArray, function(index, value){
+		$(".teamDrop").append("<option value='" + value.teamID + "'>" + value.teamName + "</option>");
+	});
+	
+	//Update the drop downs to reflect the database numbers
+	users.teamDropUpdate();
+}
+
+//Updates the drop downs for the team assignments already assigned
+Users.prototype.teamDropUpdate = function(){
+	$.each(this.userArray, function(index, value){
+		if(value.teamID){
+			$("#teamDrop" + value.userID).val(this.teamID);
+		}else{
+			$("#teamDrop" + value.userID).val("0");
+		}
 	});
 }
 
@@ -538,10 +577,21 @@ Users.prototype.updateTrails = function(){
 	});
 }
 
+//Finds a user and pans to their most current point
 Users.prototype.panToPerson = function(input){
 	$.each(this.userArray, function(index, value){
 		if(value.userID === input){
 			value.panToPerson();
+			return	
+		}
+	})
+};
+
+//Finds the user in the array and joins a team
+Users.prototype.joinTeam = function(input, teamID){
+	$.each(this.userArray, function(index, value){
+		if(value.userID === input){
+			value.joinTeam(teamID);
 			return	
 		}
 	})
@@ -570,6 +620,7 @@ function Person(input){
 	this.showTrail = true;
 	this.trailArray = [];
 	this.trailLength = 0;
+	this.teamID = input.teamID;
 	this.trail = new google.maps.Polyline({
 		map: null,
 		geodesic: true,
@@ -614,7 +665,7 @@ Person.prototype.plotPoints = function(){
 			userCaption = this.trailLength + "m";	
 		}else{
 			var tempDate = new Date(this.pointArray[0].dateCreated * 1000);
-			userCaption = "Last update: " + monthName(tempDate.getMonth()) + "-" + tempDate.getDate() + " " + leadingZero(tempDate.getHours()) + ":" + leadingZero(tempDate.getMinutes());	
+			userCaption = "Updated: " + monthName(tempDate.getMonth()) + "-" + tempDate.getDate() + " " + leadingZero(tempDate.getHours()) + ":" + leadingZero(tempDate.getMinutes());	
 		}
 		
 		
@@ -623,7 +674,7 @@ Person.prototype.plotPoints = function(){
 		this.currentMarker.setPosition(tempPos);
 		this.currentMarker.setMap(map);
 		var tempDate = new Date(this.pointArray[0].dateCreated * 1000);
-		userCaption = "Last update: " + monthName(tempDate.getMonth()) + "-" + tempDate.getDate() + " " + leadingZero(tempDate.getHours()) + ":" + leadingZero(tempDate.getMinutes());
+		userCaption = "Updated: " + monthName(tempDate.getMonth()) + "-" + tempDate.getDate() + " " + leadingZero(tempDate.getHours()) + ":" + leadingZero(tempDate.getMinutes());
 		
 		//Now color the point base on if it is active or not (within the time given)
 		/*if(this.pointArray[0].dateCreated >= newerThan){	
@@ -703,9 +754,17 @@ Person.prototype.sortPoints = function(){
 }
 
 //Sets the value of the person's team
-Person.prototype.setTeam = function(teamID){
+Person.prototype.joinTeam = function(teamID){
 	this.teamID = teamID;	
-	return true;
+	$.ajax({
+        type: "POST",
+        url: "messageSend.php",
+        data: "joinTeam=" + teamID + "&userID=" + this.userID,
+		success: function(reply){
+			$("#info").html(reply);
+		}
+	});
+	
 }
 
 //Removes the person's points and data from the map
@@ -753,7 +812,7 @@ function update_compass_arrow(weather_div, inWindDir)
 	$("#compass_arrow").rotate(inWindDir+180);				
 }
 
-/****************************************Search Management**********************************/
+/****************************************Search and Team Management**********************************/
 
 //This function runs synchronous AJAX call (not async) in order to ensure the new search is created
 var saveNewSearch = function(){
@@ -786,8 +845,7 @@ var saveNewSearch = function(){
 	getNewPoints();
 }
 var saveNewTeam = function(){
-	alert("Funcitonality not implemented yet");
-       	var newTeamData = {
+    var newTeamData = {
 		teamName: $("#newteamname").val(),
 		teamLeader: $("#teamleader").val(),
 		teamNotes: $("#newteamnotes").val()
@@ -800,13 +858,14 @@ var saveNewTeam = function(){
 		dataType: "json",
 		async: false,
         success: function(e){ 
-                    //add team to team select menu
-			
+        	$("#newteaminfo").html(e.teamID);
+			$("#currentTeamNumber").val(e.teamID);
 		}
 	});
-        updateTeams();
-        $("#currentSearchNumber").val(newSearchNumber);
+    updateTeams();
+    
 }
+
 var deleteSearch = function(){
 	if(window.confirm("Are you sure you want to delete the \"" + $("#currentSearchNumber option[value='" + currentSearch + "']").text() + "\"?")){
 		$.ajax({

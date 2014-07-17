@@ -114,12 +114,13 @@ button{
 	width: 45%;
 	background-color: #666;
 	overflow: scroll;
+	font-size:14px;
 }
 
 #searcherlist .searcher{
 	padding: 3px;
 	background-color: #781F20;	
-	height: 20px;
+	height: 30px;
 	text-align: center;
 	margin: 2px;
 	border-radius: 4px;

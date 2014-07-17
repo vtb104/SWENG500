@@ -34,6 +34,7 @@ if(isset($_POST['update_ic_req']))
 				$return_array[$counter]["limit"] = $limit;
 				$return_array[$counter]["points"] = array();
 				$return_array[$counter]["userData"] = array();
+				$return_array[$counter]["teamID"] = $db->user_team($one["userID"]);
 				$tempArray = $db->get_user($one["userID"], false);
 				$return_array[$counter]["userData"] = $tempArray[0];
 				
@@ -76,9 +77,8 @@ if(isset($_POST['newSearchData'])){
 //Creates a new team
 if(isset($_POST['newTeamData'])){
 	$data = $_POST['newTeamData'];
-	//TODO reate_team($userID, $teamName, $teamAssignment, $teamInfo, $searchID = '')
-	echo $db->create_team($data['teamLeader'], $data['teamName'], '', $data['teamNotes'], '');
-
+	$return_array = array("teamID"=> $db->create_team($data['teamLeader'], $data['teamName'], '', $data['teamNotes'], ''));
+	echo $return_array;
 };
 //This script returns a list of searches
 if(isset($_POST['updateSearches'])){
@@ -90,6 +90,9 @@ if(isset($_POST['updateTeams'])){
 }
 if(isset($_POST['deleteSearch'])){
 	echo $db->delete_search($_POST['deleteSearch']);	
+}
+if(isset($_POST['joinTeam'])){
+	echo $db->user_join_team($_POST['userID'] , $_POST['joinTeam']);	
 }
 if(isset($_POST['deleteTeam'])){
 	echo $db->delete_team($_POST['deleteTeam']);	
