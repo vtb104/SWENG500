@@ -61,7 +61,7 @@ var updateSearches = function(){
 			$.each(msg, function(index, value){
 				$("#currentSearchNumber").append("<option value='" + value.searchID + "'>" + value.searchName + "</option>");
 			});
-			$("#currentSearchNumber").val(currentSearch).selectmenu('refresh');
+			$("#currentSearchNumber").val(currentSearch); //.selectmenu('refresh');
 		}
 	});
 }
@@ -78,7 +78,7 @@ var updateTeams = function(){
 			$.each(msg, function(index, value){
 				$("#currentTeamNumber").append("<option value='" + value.teamID + "'>" + value.teamName + "</option>");
 			});
-                        $("#currentTeamNumber").val(currentSearch).selectmenu('refresh');
+                        $("#currentTeamNumber").val(currentSearch); //.selectmenu('refresh');
 		}
 	});
 }

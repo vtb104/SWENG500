@@ -14,8 +14,7 @@
 <link rel="stylesheet" href="ic.css"/>
 
 <!-- Libraries-->
-<script type="text/javascript" src="https://maps.google.com/maps/api/js?sensor=true"></script>
-<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=weather"></script>
+<script type="text/javascript" src="https://maps.google.com/maps/api/js?sensor=true&libraries=weather"></script>
 <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
 <script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
 
@@ -30,7 +29,6 @@
 <!-- Page JavaScript -->
 <script src="sharedJS.js"></script>
 <script src="ic.js"></script>
-<script src="cookies.js"></script>
 <script src="messages.js"></script>
 
 
