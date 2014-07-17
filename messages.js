@@ -17,7 +17,7 @@ msgtimer = setInerval(function(){getNewMessages()}, 1000);
 	$.ajax({
         type: "POST",
         url: "messageReceive.php",
-        data: { update_ic_req:requestData },
+        data: { ic_msg_recieve:requestData },
 		dataType: "json",
         success: function(msg){ 
 			var newMessages = new Refresh();
@@ -41,7 +41,7 @@ var sendNewMessage = function (){
 	$.ajax({
         type: "POST",
         url: "messageSend.php",
-        data: { update_ic_req:sendData },
+        data: { ic_mesg_send:sendData },
 		dataType: "json",
         success: function(msg){ 
 			var sentMessage = new Refresh();
