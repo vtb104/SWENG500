@@ -342,6 +342,7 @@ $(function(){
 		$(".newteamclass").val("");
 		$("#newteaminfo").html("");
 		//Fill the drop down with all the users
+		$("#teamleader").html("");
 		$.each(users.userArray, function(index, value){
 			$("#teamleader").append("<option value='" + value.userID + "'>" + value.username + "</option>");	
 		})
