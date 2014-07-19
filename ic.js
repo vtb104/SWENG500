@@ -148,7 +148,7 @@ var initialize = function(){
 
 	//Pulls the list of searches from the database and updates the list
 	updateSearches();
-	$("#currentSearchNumber").append("<option value='all'>All Searches</option>");
+	$("#currentSearchNumber").append("<option value='all'>All Searches / Users</option>");
 	
     updateTeams();
     $("#currentTeamNumber").append("<option value='all'>All Teams</option>");
@@ -527,6 +527,10 @@ Users.prototype.drawUserButtons = function(){
 			}
 		});
 		
+		if(!value.pointArray.length){
+			leaderString = " (No points)";
+		}
+		
 		$("#searcherlist").append('<div id="user' + value.userID + '" class="searcher searcherexpand" userID="' + value.userID + '" style="background-color:' + value.userColor + "; color: " + value.fontColor + '"><span class="buttonNameStyle">' + value.userID +' ' + value.username + leaderString + '</span><select class="teamDrop buttonInfoStyle searcherexpand" userID="' + value.userID + '" id="teamDrop' + value.userID + '"></select> <span class="buttonInfoStyle" id="userTrail' + value.userID + '">-</span></div>');
 		
 		//Attach functions to newly created buttons
@@ -885,7 +889,7 @@ var saveNewSearch = function(){
 		dataType: "json",
 		async: false,
         success: function(e){ 
-			$("#newsearchinfo").html(e.searchID);
+			$("#newsearchinfo").html("New search creaed with ID: " + e.searchID);
 			
 		}
 	});
@@ -913,7 +917,7 @@ var saveNewTeam = function(){
 		dataType: "json",
 		async: false,
         success: function(e){ 
-        	$("#newteaminfo").html(e.teamID);
+        	$("#newteaminfo").html("New team created with ID: " + e.teamID);
 			currentTeam = e.teamID;
 			updateTeams();
 			users.drawUserButtons();

@@ -43,7 +43,9 @@ if(isset($_POST['update_ic_req']))
 					}
 				}else{// if (count($tempArray) === 1){
 					$tempArray = $db->latest_user_location($one["userID"], false);
-					$return_array[$counter]["points"] = array(0=>$tempArray[0]);
+					if($tempArray){
+						$return_array[$counter]["points"] = array(0=>$tempArray[0]);
+					}
 				}
 				
 				$counter++;
@@ -56,7 +58,6 @@ if(isset($_POST['update_ic_req']))
 		}
 	}
 	
-
     echo json_encode($return_array);
 }
 

@@ -293,7 +293,7 @@ class Database
 	 */
 	 public function list_searching($searchID, $json = true){
 		if($searchID == "all"){
-			return $this->return_array($this->db_obj->query("SELECT userID FROM Searching"), $json); 
+			return $this->return_array($this->db_obj->query("SELECT userID FROM Users LIMIT 0, 1000"), $json); 
 		}else{
 			return $this->return_array($this->db_obj->query("SELECT userID FROM Searching WHERE searchID='$searchID'"), $json);
 		}
@@ -460,7 +460,7 @@ class Database
 			if($result){
 				return $this->return_single($result); 
 			}else{
-				return "0";
+				return "null";
 			}
 	 }
 	 
