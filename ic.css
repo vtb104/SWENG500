@@ -106,15 +106,23 @@ button{
 	height: 28px;
 }
 
-#searcherlist{
+#searcherwrapper{
 	position: absolute;
 	top: 200px;
 	bottom: 40px;
 	right: 0px;
 	width: 45%;
 	background-color: #666;
-	overflow: scroll;
+	overflow: auto;
 	font-size:14px;
+	border-radius: 4px;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	padding: 2px;
+}
+
+#searcherlist{
+	
 }
 
 #searcherlist .searcher{
@@ -128,8 +136,7 @@ button{
 	-moz-border-radius: 4px;
 }
 #searcherlist .searcher:hover{
-	cursor: pointer;
-	background-color: #CC4E50;	
+	cursor: pointer;	
 }
 
 .buttonNameStyle{
@@ -141,12 +148,18 @@ button{
 }
 
 #searchAreaBox{
-	border:1px solid white; 
-	width:45%; 
-	height:300px; 
-	position: absolute; 
-	top: 400px; 
-	background-color:#232323;	
+ 
+
+	height:400px; 
+	background-color:#232323;
+	position: fixed;
+	z-index: 20;
+	background-color: #444;
+	height: 400px;
+	width: 367px;
+	left: 432px;
+	bottom: -375px;
+	border-radius: 5px;	
 }
 
 
@@ -182,8 +195,8 @@ button{
 
 #cursorLocation{
 	position: fixed;
-	right: 0px;
-	bottom: 20px;
+	left: 300px;
+	top: 1 	px;
 	color: red;	
 	z-Index: 50;
 	Padding: 3px;
@@ -224,8 +237,8 @@ button{
 	z-index: 20;
 	background-color: #444;
 	height: 300px;
-	width: 500px;
-	left: 50px;
+	width: 428px;
+	left: 2px;
 	bottom: -275px;
 	border-radius: 5px;
 }

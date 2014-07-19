@@ -11,15 +11,10 @@ if(isset($_POST['update_ic_req']))
 	//If there is a data for a team
 	if($data["currentSearch"]){
 		
-		//For now, if all is selected, delivery #1
-		if($data['currentSearch'] === "all"){
-			$data['currentSearch'] = 1;
-		}
-		
 		//How old the points should be
 		$thetime = $data["theTime"];
 		
-		//Start an array of people
+		//Start an array of people, if all is selected, then all the users will be shown
 		$return_array = $db->list_searching($data["currentSearch"], false);
 		$counter = 0;
 		
@@ -77,8 +72,9 @@ if(isset($_POST['newSearchData'])){
 //Creates a new team
 if(isset($_POST['newTeamData'])){
 	$data = $_POST['newTeamData'];
-	$return_array = array("teamID"=> $db->create_team($data['teamLeader'], $data['teamName'], '', $data['teamNotes'], ''));
-	echo $return_array;
+	$colors = $data['backgroundColor'] . "," . $data['fontColor'];
+	$return_array = array("teamID"=> $db->create_team($data['teamLeader'], $data['teamName'], $data['teamNotes'], $colors));
+	echo json_encode($return_array);
 };
 //This script returns a list of searches
 if(isset($_POST['updateSearches'])){
@@ -89,10 +85,13 @@ if(isset($_POST['updateTeams'])){
 	echo $db->list_teams();	
 }
 if(isset($_POST['deleteSearch'])){
-	echo $db->delete_search($_POST['deleteSearch']);	
+	echo $db->delete_search($_POST['deleteSearch']); 	
 }
 if(isset($_POST['joinTeam'])){
 	echo $db->user_join_team($_POST['userID'] , $_POST['joinTeam']);	
+}
+if(isset($_POST['leaveTeam'])){
+	echo $db->user_leave_team($_POST['leaveTeam']);	
 }
 if(isset($_POST['deleteTeam'])){
 	echo $db->delete_team($_POST['deleteTeam']);	

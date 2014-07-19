@@ -222,7 +222,7 @@ class Database
 
 		if(!$lat && !$lng && !$dist)
 		{
-			$query = "SELECT teamID, teamName FROM Teams";
+			$query = "SELECT teamID, teamName, teamInfo, owner FROM Teams";
 			$result = $this->db_obj->query($query);
 			return $this->return_array($result);
 		}
@@ -292,7 +292,11 @@ class Database
 	 *	@return json array
 	 */
 	 public function list_searching($searchID, $json = true){
-		return $this->return_array($this->db_obj->query("SELECT userID FROM Searching WHERE searchID='$searchID'"), $json);
+		if($searchID == "all"){
+			return $this->return_array($this->db_obj->query("SELECT userID FROM Searching"), $json); 
+		}else{
+			return $this->return_array($this->db_obj->query("SELECT userID FROM Searching WHERE searchID='$searchID'"), $json);
+		}
 	 }
 	 
 	 
@@ -397,10 +401,7 @@ class Database
 	 *	@param $userID - the owner of the team
 	 *	@return - the new teamnumber
 	 */
-	 public function create_team($userID, $teamName, $teamAssignment, $teamInfo, $searchID = ''){
-		//$query = $this->db_obj->prepare('INSERT INTO Teams (teamName, teamAssignment, teamInfo, searchID, owner) VALUES (?, ?, ?, ?, ?)');
-		//$query->bind_param('sssss', $teamName, $teamAssignment, $teamInfo, $searchID, $userID);
-                //$result = $query->execute();
+	 public function create_team($userID, $teamName, $teamAssignment, $teamInfo){
 		$query = 'INSERT INTO Teams (teamName, teamAssignment, teamInfo, owner) VALUES ("'.$teamName.'", "'.$teamAssignment.'", "'.$teamInfo.'", "'.$userID.'")';
 		$result = $this->db_obj->query($query);
 		if($result)
@@ -452,6 +453,7 @@ class Database
 		 }
 	 }
 	 
+	 
 	 //Returns a single digit for the user's team
 	 public function user_team($userID){
 			$result = $this->db_obj->query("SELECT teamID FROM TeamMembers WHERE userID = '$userID'");
@@ -497,8 +499,18 @@ class Database
 	 *
 	 */
 	 public function user_leave_team($userID, $teamID){
+
+		 //A user can only be in one team, so just delete them from all
+		 $result1 = $this->db_obj->query("DELETE FROM TeamMembers WHERE userID = '$userID'");
 		 
-		 return '<span style="color: red">Fail ' . __LINE__ . '</span>';
+		 if($result1)
+		 {
+			 return true;
+		 }
+		 else
+		 {
+			 return "Fail " . __LINE__ . " " . __FILE__;
+		 }
 	 }
 	 
 	 /** Team leaves a search

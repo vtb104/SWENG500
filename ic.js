@@ -50,13 +50,13 @@ var updateIntervalCaller = function(){
 }
 
 //Value and update fucntion for the current search and team selection
-var currentSearch = 1;
-var currentTeam = 1;
+var currentSearch = "all";
+var currentTeam = "all";
 if(readCookie("sar.currentSearchIC")){
 	currentSearch = readCookie("sar.currentSearchIC");
 }
 if(readCookie("sar.currentTeamIC")){
-	currentTeam = readCookie("sar.currentTeamIC");
+	//currentTeam = readCookie("sar.currentTeamIC");
 }
 
 var updateCurrentSearch = function(){
@@ -388,7 +388,7 @@ var getNewPoints = function(){
 				   updateInterval: updateInterval}
 	
 	//Check if the UI is paused
-	if(goVar){
+	if(goVar || true){
 		//Start the AJAX call
 		$("#floatNote").html("Sending...");
 		$.ajax({
@@ -518,7 +518,16 @@ Users.prototype.checkUsers = function(inputUsers){
 Users.prototype.drawUserButtons = function(){
 	$("#searcherlist").html("");
 	$.each(this.userArray, function(index, value){
-		$("#searcherlist").append('<div id="user' + value.userID + '" class="searcher searcherexpand" userID="' + value.userID + '" style="background-color:' + value.userColor +'"><span class="buttonNameStyle">' + value.userID +' ' + value.username + '</span><select class="teamDrop buttonInfoStyle searcherexpand" userID="' + value.userID + '" id="teamDrop' + value.userID + '"></select> <span class="buttonInfoStyle" id="userTrail' + value.userID + '">-</span></div>');
+		
+		var leaderString = '';
+/*		//Check if the user is a team leader to annotate on the button
+		$.each(teamArray, function(index2, value2){
+			if(value.teamID == value2.teamLeader && value.teamID != null){
+				leaderString = "TL";	
+			}
+		});*/
+		
+		$("#searcherlist").append('<div id="user' + value.userID + '" class="searcher searcherexpand" userID="' + value.userID + '" style="background-color:' + value.userColor + "; color: " + value.fontColor + '"><span class="buttonNameStyle">' + value.userID +' ' + value.username + " " + leaderString + '</span><select class="teamDrop buttonInfoStyle searcherexpand" userID="' + value.userID + '" id="teamDrop' + value.userID + '"></select> <span class="buttonInfoStyle" id="userTrail' + value.userID + '">-</span></div>');
 		
 		//Attach functions to newly created buttons
 		$(".searcher").on("click", function(e){
@@ -613,14 +622,28 @@ Users.prototype.destroyArray = function(){
  ***********************************************************************************************/
 function Person(input){
 	this.userID = input.userID;
-	this.userColor = randomColor();
-	this.styleOptions = new StyledIcon(StyledIconTypes.MARKER,{color:this.userColor,text:input.userID});
-	this.currentMarker = new StyledMarker({styleIcon:this.styleOptions,map:map});
 	this.pointArray = [];
 	this.showTrail = true;
 	this.trailArray = [];
 	this.trailLength = 0;
+	
+	//Set up the colors, default is yellow background and black font
+	this.userColor = "#FFF";
+	this.fontColor = "#000";
 	this.teamID = input.teamID;
+	
+	if(this.teamID){
+		var colors = getTeamColors(this.teamID);
+		this.userColor = colors.backgroundColor;
+		this.fontColor = colors.fontColor;	
+	}
+	
+	this.styleOptions = new StyledIcon(StyledIconTypes.MARKER,{color:this.userColor,text:input.userID});
+	this.currentMarker = new StyledMarker({styleIcon:this.styleOptions,map:map});
+	
+	
+	
+	
 	this.trail = new google.maps.Polyline({
 		map: null,
 		geodesic: true,
@@ -764,7 +787,33 @@ Person.prototype.joinTeam = function(teamID){
 			$("#info").html(reply);
 		}
 	});
-	
+	var colors = getTeamColors(teamID);
+	this.changeColor(colors.backgroundColor, colors.fontColor);
+}
+
+//Removes a person from a team
+Person.prototype.leaveTeam = function(){	
+	this.teamID = null;
+	$.ajax({
+        type: "POST",
+        url: "messageSend.php",
+        data: "leaveTeam=" + teamID + "&userID=" + this.userID,
+		success: function(reply){
+			$("#info").html(reply);
+		}
+	});
+	this.changeColor("#FFF", "#000");
+}
+
+//Changes the color of the user's marker, line, and control box
+Person.prototype.changeColor = function(newColor, fontColor){
+	newColor = typeof newColor !== 'undefined' ? newColor : "#FFF";     //Default backgrond color is white
+	fontColor = typeof fontColor !== 'undefined' ? fontColor : "#000";  //Default font color is black
+	this.userColor = newColor;
+	this.fontColor = fontColor;
+	this.trail.setOptions({strokeColor: newColor});
+	this.styleOptions.set("color", newColor);
+	$("#user" + this.userID).css("background-color", newColor).css("color", fontColor);
 }
 
 //Removes the person's points and data from the map
@@ -845,13 +894,19 @@ var saveNewSearch = function(){
 	getNewPoints();
 }
 var saveNewTeam = function(){
+	
+	var t = $("#newteamcolor").spectrum("get");
+	var v = $("#newteamfontcolor").spectrum("get");
+	
     var newTeamData = {
 		teamName: $("#newteamname").val(),
 		teamLeader: $("#teamleader").val(),
-		teamNotes: $("#newteamnotes").val()
+		teamNotes: $("#newteamnotes").val(),
+		backgroundColor: t.toHexString(), 
+		fontColor: v.toHexString()
 	}
 	
-	$.ajax({
+	$.ajax({ 
         type: "POST",
         url: "messageSend.php",
         data: {newTeamData: newTeamData},
@@ -859,12 +914,27 @@ var saveNewTeam = function(){
 		async: false,
         success: function(e){ 
         	$("#newteaminfo").html(e.teamID);
-			$("#currentTeamNumber").val(e.teamID);
+			currentTeam = e.teamID;
+			updateTeams();
+			users.drawUserButtons();
 		}
 	});
-    updateTeams();
+    
     
 }
+
+//Returns the colors for a team
+var getTeamColors = function(teamID){
+	var colors = {backgroundColor: "#FFF", fontColor: "#000"};
+	$.each(teamArray, function(index, value){
+		if(value.teamID == teamID){
+			colors.backgroundColor = value.backgroundColor;
+			colors.fontColor = value.fontColor;
+		}
+	})
+	return colors;
+}
+
 
 var deleteSearch = function(){
 	if(window.confirm("Are you sure you want to delete the \"" + $("#currentSearchNumber option[value='" + currentSearch + "']").text() + "\"?")){
@@ -884,6 +954,14 @@ var deleteSearch = function(){
 }
 var deleteTeam = function(){
 	if(window.confirm("Are you sure you want to delete the \"" + $("#currentTeamNumber option[value='" + currentTeam + "']").text() + "\"?")){
+		//Remove all current members from the team on the UI
+		$.each(users.userArray, function(index, value){
+			if(value.teamID == currentTeam){
+				value.teamID = null;
+				value.changeColor("#FFF", "#000");
+				$("#teamDrop" + value.userID).val(0);
+			}
+		});
 		$.ajax({
 			type: "POST",
 			url: "messageSend.php",
@@ -892,8 +970,9 @@ var deleteTeam = function(){
 			async: false,
 			success: function(e){ 
 				$("#info").html(e);
-				currentTeam = 1;
+				currentTeam = "all";
 				updateTeams();
+				users.drawUserButtons();
 			}
 		});
 	}

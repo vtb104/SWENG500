@@ -23,6 +23,10 @@
 <link rel="stylesheet" href="jquery-ui-1.11.0/jquery-ui.min.css"/>
 <script src="jquerytools.js"></script>
 
+<!--Color chooser-->
+<script type="text/javascript" src="spectrum.js"></script>
+<link rel="stylesheet" href="spectrum.css"/>
+
 <script type="text/javascript" src="StyledMarker.js"></script>
 <script type="text/javascript" src="lib/jQueryRotate.js"></script>
 
@@ -46,7 +50,8 @@
 ?>
 
 var testFunction = function (){
-	$("#testOutput").html("test");
+	$("#testOutput").html(users.userArray[0].userID);
+	users.userArray[0].changeColor("#FFF");
 };
 </script>
 </head>
@@ -88,7 +93,7 @@ var testFunction = function (){
                </tr>
                 <tr>
                 	<td>
-                    	<span class="optionlabel">Team Position to View: </span>
+                    	<span class="optionlabel">Team Listing: </span>
                     </td>
                     <td>
                     	<select id="currentTeamNumber"></select>
@@ -134,39 +139,16 @@ var testFunction = function (){
            </table><div id="testTime">Here</div> 
            	</div>
            	           
-        <div id="searcherlist">
-                       
-        </div>
-         <div id="searchAreaBox">
-                            <button type="button" onclick="startNewArea()">Start New Area</button><br>
-                            <select id="AreaEditSelector" onchange="updatePointList()">
-                                <!--Add list of areas for this search-->
-                            </select>
-                            <button type="button" onclick="deleteArea()">Delete Area</button>
-                            <hr>
-                            
-                            <div>
-                                <form>
-                                    <div id="areaBoxContent">
-                                       <!-- Area Name
-                                        <input type="text" name="AreaName" id="AreaName" value="Area 1"><input type="color" id="area_color" value="#00ff00"><br>-->
-                                        <div id="PointsOfArea">
-
-                                        </div>
-                                        
-                                    </div>
-                                    
-                                </form>
-                                
-                            </div>
-
-                        </div>
-         <div style="position: absolute; bottom: 20px; left: 0px;"></div>   
-             
-        <!--<div id="testOutput">Test Code Here</div>
-        <button id="testbutton">Test Button</button>-->
+        <!--Where all the users are displayed-->
+        <div id="searcherwrapper">
+        	<h4 align="center">List of searchers</h4>
+        	<div id="searcherlist"></div>
 		</div>
-        </div>  <!-- Content Div-->    
+        <div style="position: fixed; bottom: 0px; right: 500px;">    
+            <div id="testOutput">Test Code Here</div>
+            <button id="testbutton">Test Button</button>
+        </div>
+	</div>  <!-- Content Div-->    
 
     <!--Items below this line are absolute or fixed, and not in line with the rest of the document-->
         
@@ -174,11 +156,42 @@ var testFunction = function (){
         <div id="outer_weather_box">
             <div align="center" id="showweather" class="weathercursor">Click to show weather</div>
             <div align="center"	id="hideweather" style="display: none" class="weathercursor" >Click to hide weather</div>
-            <div class="weathershow" id="weather_box" style="width:200px; height:400px; background-color:#232323; border:1px solid black; float: left;">Weather Box</div>
+            <div class="weathershow" id="weather_box" style="width:145px; height:400px; background-color:#232323; border:1px solid black; float: left;">Weather Box</div>
             
             <div class="weathershow" id="radar_box" style="float:right;"></div>
                                         
         </div>
+        
+        <div id="searchAreaBox">
+        	<div align="center" id="showareabox" class="weathercursor">Click to show area control</div>
+             <div align="center" id="hideareabox" style="display: none" class="weathercursor" >Click to hide area control</div><br/>
+            <button type="button" onclick="startNewArea()">Start New Area</button><br>
+            <select id="AreaEditSelector" onchange="updatePointList()">
+                <!--Add list of areas for this search-->
+            </select>
+            <button type="button" onclick="deleteArea()">Delete Area</button>
+            <hr>
+            
+            <div>
+                <form>
+                    <div id="areaBoxContent">
+                       <!-- Area Name
+                        <input type="text" name="AreaName" id="AreaName" value="Area 1"><input type="color" id="area_color" value="#00ff00"><br>-->
+                        <div id="PointsOfArea">
+    
+                        </div>
+                        
+                    </div>
+                    
+                </form>
+                
+            </div>
+    
+        </div>
+        
+        
+        
+        
     </div><!--Main Div-->
     
     <!--Items on map-->
@@ -205,7 +218,7 @@ var testFunction = function (){
                 	Search Name:
                 </td>
                 <td>
-                	<input id="newsearchname" type="text"/>
+                	<input id="newsearchname" class="newsearchclass" type="text"/>
                 </td>
             </tr>
             <tr>
@@ -213,7 +226,7 @@ var testFunction = function (){
                 	Search Start Date:
                 </td>
                 <td>
-                	<input class="datepicker" id="newsearchdate" type="text"/>
+                	<input class="datepicker" class="newsearchclass" id="newsearchdate" type="text"/>
                 </td>
             </tr>
             <tr>
@@ -221,7 +234,7 @@ var testFunction = function (){
                 	Search Start Time:
                 </td>
                 <td>
-                	<input id="newsearchtime" type="time" val="0900"/>
+                	<input id="newsearchtime" class="newsearchclass" type="time" val="0900"/>
                 </td>
             </tr>
             <tr>
@@ -229,7 +242,7 @@ var testFunction = function (){
                 	Search Notes:
                 </td>
             	<td>
-                	<textarea id="newsearchnotes" style="width: 100%; height: 100px;"></textarea>
+                	<textarea id="newsearchnotes" class="newsearchclass" style="width: 100%; height: 100px;"></textarea>
                 <td>
             </tr>
         </table><br/>
@@ -243,13 +256,13 @@ var testFunction = function (){
 	<h3 align="center">Create a New Team</h3>
     <br/>
     <p>
-    	<table id="newsearchtable" class="defaulttable">
+    	<table id="newteamtable" class="defaulttable">
         	<tr>
             	<td>
                 	Team Name:
                 </td>
                 <td>
-                	<input id="newteamname" type="text"/>
+                	<input id="newteamname" class="newteamclass" type="text"/>
                 </td>
             </tr>
             <tr>
@@ -257,9 +270,7 @@ var testFunction = function (){
                 	Team Leader:
                 </td>
                 <td>
-                	<select id="teamleader">
-                            <option value="TODO">TODO: populate with user names</option>
-                        </select>
+                	<select id="teamleader"></select>
                 </td>
             </tr>
             <tr>
@@ -267,12 +278,28 @@ var testFunction = function (){
                 	Team Notes:
                 </td>
             	<td>
-                	<textarea id="newteamnotes" style="width: 100%; height: 100px;"></textarea>
+                	<textarea id="newteamnotes" class="newteamclass" style="width: 200px; height: 100px;"></textarea>
                 <td>
+            </tr>
+            <tr>
+            	<td>
+                	Team/Background Color:
+                </td>
+                <td>
+                	<input type="color" name="color" value="#FF0000" id="newteamcolor"/>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Font Color:
+                </td>
+                <td>
+                    <input type="color" name="color" value="#000000" id="newteamfontcolor"/>
+                </td>
             </tr>
         </table><br/>
          <button id="savenewteam" style="float: right">Save New Team</button>
-         <h2 align="center" style="color: red" id="newsearchinfo"></h2>
+         <h2 align="center" style="color: red" id="newteaminfo"></h2>
     </p>
 </div>
  
@@ -288,8 +315,8 @@ $(function(){
 	overlayvar = {mask: {color: '#ccc',loadSpeed: 100, opacity: 0.7}, closeOnClick: false};
 	$("input[rel], button[rel], div[rel]").overlay(overlayvar);
 	
-	//Overlay buttons
-	
+	//Color chooser
+	$("#teamcolor").spectrum({flat: true, showInput: true});
 	
 	//Change the track length
 	$(".dateSince").change(function(){
@@ -302,16 +329,29 @@ $(function(){
 	});
 	
 	//Start a new search
+	$("#newsearch").click(function(){
+		$(".newsearchclass").val("");
+		$("#newsearchinfo").html("");
+	});
 	$("#savenewsearch").click(function(){
 		saveNewSearch();
 		//$(".button[rel]").overlay().close();
 	});
-        //Start a new team
+    //Start a new team
+	$("#newteam").click(function(){
+		$(".newteamclass").val("");
+		$("#newteaminfo").html("");
+		//Fill the drop down with all the users
+		$.each(users.userArray, function(index, value){
+			$("#teamleader").append("<option value='" + value.userID + "'>" + value.username + "</option>");	
+		})
+		
+	});
 	$("#savenewteam").click(function(){
 		saveNewTeam();
-		//$(".button[rel]").overlay().close();
+		//$("#savenewteam").overlay().close();
 	});
-	//Delte a search
+	//Delete a search
 	$("#deletesearch").click(function(){
 		deleteSearch();
 	});
@@ -319,19 +359,34 @@ $(function(){
 	$("#deleteteam").click(function(){
 		deleteTeam();
 	});
+	
+	//Show and hide the weather box
 	$("#showweather").click(function(){
 		$(this).hide();
 		$("#hideweather").show();
 		$(".weathershow").show("fast");
 		$("#outer_weather_box").animate({bottom: "0px"}, 400, function(){});
 	});
-	
 	$("#hideweather").click(function(){
 		$(this).hide();
 		$("#showweather").show();
 		$(".weathershow").hide("fast");
 		$("#outer_weather_box").animate({bottom: "-275px"}, 400, function(){});
 	});
+	
+	//Show and hide the area creation and management box
+	$("#showareabox").click(function(){
+		$(this).hide();
+		$("#hideareabox").show();
+		$("#searchAreaBox").animate({bottom: "0px"}, 400, function(){});
+	});
+	
+	$("#hideareabox").click(function(){
+		$(this).hide();
+		$("#showareabox").show();
+		$("#searchAreaBox").animate({bottom: "-375px"}, 400, function(){});
+	});
+	
 	
 	$("#searchnow").click(function(){
 		searchNow();

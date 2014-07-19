@@ -1,5 +1,6 @@
 //Shared JavaScript for the FU and IC
 var cookieDuration = 24 * 30;	//30 days
+teamArray = [];
 
 /*************************Specific Functions for search stuff********************************/
 function testShared()
@@ -51,13 +52,13 @@ function checkArrayForName(inArray, inName)
 
 //This function grabs the searches that are in the database
 var updateSearches = function(){
-	$("#currentSearchNumber").html("");
 	$.ajax({
         type: "POST",
         url: "messageSend.php",
         data: "updateSearches=true",
 		dataType: "json",
         success: function(msg){ 
+			$("#currentSearchNumber").html("<option value='all'>All Searches</option>");
 			$.each(msg, function(index, value){
 				$("#currentSearchNumber").append("<option value='" + value.searchID + "'>" + value.searchName + "</option>");
 			});
@@ -67,7 +68,6 @@ var updateSearches = function(){
 }
 //This function grabs the teams that are in the database
 var updateTeams = function(){
-	$("#currentTeamNumber").html("");
 	$.ajax({
         type: "POST",
         url: "messageSend.php",
@@ -75,8 +75,14 @@ var updateTeams = function(){
 		dataType: "json",
         success: function(msg){ 
 			teamArray = msg;
+			$("#currentTeamNumber").html("<option value='all'>All Teams</option>");
 			$.each(teamArray, function(index, value){
 				$("#currentTeamNumber").append("<option value='" + value.teamID + "'>" + value.teamName + "</option>");
+				
+				//Split up the colors for easy reference
+				var tempColors = value.teamInfo.split(",");
+				teamArray[index].backgroundColor = tempColors[0];
+				teamArray[index].fontColor = tempColors[1];
 			});
     		$("#currentTeamNumber").val(currentTeam);
 		}
