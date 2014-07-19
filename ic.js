@@ -83,7 +83,7 @@ if(readCookie("sar.trackStart")){
 var updateTrackLength = function(){
 	
 	trackHistoryStart = getUITime();
-	$("#testTime").html(trackHistoryStart.toString());
+	//$("#testTime").html(trackHistoryStart.toString());
 	
 	//Write the cookie
 	writeCookie("sar.trackStart", trackHistoryStart.getTime(), cookieDuration);
@@ -148,10 +148,9 @@ var initialize = function(){
 
 	//Pulls the list of searches from the database and updates the list
 	updateSearches();
-	$("#currentSearchNumber").append("<option value='all'>All Searches / Users</option>");
 	
+	//Pulls all teams
     updateTeams();
-    $("#currentTeamNumber").append("<option value='all'>All Teams</option>");
         
 	//Start the timer to get new points
 	getNewPoints();

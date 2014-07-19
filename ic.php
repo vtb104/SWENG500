@@ -136,7 +136,7 @@ var testFunction = function (){
                     	<input type="time" id="trackTime" class="dateSince" value="12:00"/>
                     </td>
                 </tr>
-           </table><div id="testTime">Here</div> 
+           </table><!--<div id="testTime">Here</div> -->
            	</div>
            	           
         <!--Where all the users are displayed-->

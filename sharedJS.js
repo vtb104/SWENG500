@@ -58,7 +58,7 @@ var updateSearches = function(){
         data: "updateSearches=true",
 		dataType: "json",
         success: function(msg){ 
-			$("#currentSearchNumber").html("<option value='all'>All Searches</option>");
+			$("#currentSearchNumber").html("<option value='all'>All Searches / Users</option>");
 			$.each(msg, function(index, value){
 				$("#currentSearchNumber").append("<option value='" + value.searchID + "'>" + value.searchName + "</option>");
 			});

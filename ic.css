@@ -91,14 +91,15 @@ button{
 
 #optiondiv{
 	position: absolute;
-	left: 0px;	
+	left: 0px;
+	font-size: 16px;	
 }
 #optiondiv tr select, input{
 	width: 175px;	
 }
 
 #optiondiv select,input{
-	font-size: 16px;
+	font-size: 18px;
 	height: 25px;	
 }
 
