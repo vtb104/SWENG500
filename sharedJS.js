@@ -80,7 +80,7 @@ var updateTeams = function(){
 				$("#currentTeamNumber").append("<option value='" + value.teamID + "'>" + value.teamName + "</option>");
 				
 				//Split up the colors for easy reference
-				var tempColors = value.teamInfo.split(",");
+				var tempColors = value.teamInfo.split("&&");
 				teamArray[index].backgroundColor = tempColors[0];
 				teamArray[index].fontColor = tempColors[1];
 			});

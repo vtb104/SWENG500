@@ -208,7 +208,7 @@ var testFunction = function (){
  <!--Overlays-->
  
 <div class="overlay" id="newsearchoverlay">
-	<span class="close">Cancel</span>
+	<span class="close">Close / Cancel</span>
 	<h3 align="center">Create a New Search</h3>
     <br/>
     <p>
@@ -252,7 +252,7 @@ var testFunction = function (){
 </div>
 
  <div class="overlay" id="newteamoverlay">
-	<span class="close">Cancel</span>
+	<span class="close">Close / Cancel</span>
 	<h3 align="center">Create a New Team</h3>
     <br/>
     <p>

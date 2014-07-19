@@ -520,14 +520,14 @@ Users.prototype.drawUserButtons = function(){
 	$.each(this.userArray, function(index, value){
 		
 		var leaderString = '';
-/*		//Check if the user is a team leader to annotate on the button
+		//Check if the user is a team leader to annotate on the button
 		$.each(teamArray, function(index2, value2){
-			if(value.teamID == value2.teamLeader && value.teamID != null){
-				leaderString = "TL";	
+			if(value.userID == value2.owner && value.teamID != null){
+				leaderString = ", Team Lead";	
 			}
-		});*/
+		});
 		
-		$("#searcherlist").append('<div id="user' + value.userID + '" class="searcher searcherexpand" userID="' + value.userID + '" style="background-color:' + value.userColor + "; color: " + value.fontColor + '"><span class="buttonNameStyle">' + value.userID +' ' + value.username + " " + leaderString + '</span><select class="teamDrop buttonInfoStyle searcherexpand" userID="' + value.userID + '" id="teamDrop' + value.userID + '"></select> <span class="buttonInfoStyle" id="userTrail' + value.userID + '">-</span></div>');
+		$("#searcherlist").append('<div id="user' + value.userID + '" class="searcher searcherexpand" userID="' + value.userID + '" style="background-color:' + value.userColor + "; color: " + value.fontColor + '"><span class="buttonNameStyle">' + value.userID +' ' + value.username + leaderString + '</span><select class="teamDrop buttonInfoStyle searcherexpand" userID="' + value.userID + '" id="teamDrop' + value.userID + '"></select> <span class="buttonInfoStyle" id="userTrail' + value.userID + '">-</span></div>');
 		
 		//Attach functions to newly created buttons
 		$(".searcher").on("click", function(e){
@@ -895,15 +895,15 @@ var saveNewSearch = function(){
 }
 var saveNewTeam = function(){
 	
-	var t = $("#newteamcolor").spectrum("get");
-	var v = $("#newteamfontcolor").spectrum("get");
+	var t = $("#newteamcolor").val()
+	var v = $("#newteamfontcolor").val();
 	
     var newTeamData = {
 		teamName: $("#newteamname").val(),
 		teamLeader: $("#teamleader").val(),
 		teamNotes: $("#newteamnotes").val(),
-		backgroundColor: t.toHexString(), 
-		fontColor: v.toHexString()
+		backgroundColor: t, 
+		fontColor: v
 	}
 	
 	$.ajax({ 

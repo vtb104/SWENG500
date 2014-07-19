@@ -72,7 +72,7 @@ if(isset($_POST['newSearchData'])){
 //Creates a new team
 if(isset($_POST['newTeamData'])){
 	$data = $_POST['newTeamData'];
-	$colors = $data['backgroundColor'] . "," . $data['fontColor'];
+	$colors = $data['backgroundColor'] . "&&" . $data['fontColor'];
 	$return_array = array("teamID"=> $db->create_team($data['teamLeader'], $data['teamName'], $data['teamNotes'], $colors));
 	echo json_encode($return_array);
 };

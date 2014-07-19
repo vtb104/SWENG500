@@ -230,6 +230,16 @@ button{
 	width: 40%;
 }
 
+#newteamtable{
+	position: relative;
+	left: 100px;
+	font-size: 14px;	
+}
+
+#newteamtable td{
+	width: 40%;
+}
+
 /*Weather stuff*/
 
 #outer_weather_box{
