@@ -79,7 +79,7 @@ font-family: Gotham, 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 
 #floatNote{
 	position: fixed;
 	right: 0px;
-	bottom: 0px;
+	bottom: 300px;
 	color: red;	
 	z-Index: 50;
 	Padding: 3px;
@@ -112,14 +112,16 @@ font-family: Gotham, 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 
         <a href="ic.php">Home</a>
     	<a href="fu.php">Field Unit</a>
         <a id="logoutbutton" href="logout.php">Log Out</a>
+        <button onclick="getNewMessage()">TEST GET MSGS</button>
     </div>
+    
     
       <div id="content">
           <h1 style="text-align: center;">Search and Rescue</h1>
 
   <div class="clearfix" id="page"><!-- group -->
       <a class="nonblock nontext Button ButtonSelected rounded-corners clearfix grpelem" id="buttonu160" href="Messages.php"><!-- container box --><div class="clearfix grpelem" id="u161-4"><!-- content --><p>View Messages</p></div></a>
-      <button onclick="getNewMessage()">TEST GET MSGS</button>
+
       <div class="clearfix grpelem" id="pu159-4"><!-- column -->
     <div class="clearfix colelem" id="u159-4"><!-- content -->
      <p>Message Center</p>

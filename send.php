@@ -93,6 +93,7 @@ font-family: Gotham, 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 
         <a href="ic.php">Home</a>
     	<a href="fu.php">Field Unit</a>
         <a id="logoutbutton" href="logout.php">Log Out</a>
+        <button onclick="sendNewMessage()">TEST GET MSGS</button>
     </div>
     
       <div id="content">
@@ -109,13 +110,13 @@ font-family: Gotham, 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 
       <label class="fld-label actAsDiv clearfix grpelem" id="u265-4" for="widgetu264_input"><!-- content -->
        <span class="actAsPara">To:</span>
       </label>
-      <span class="fld-input NoWrap actAsDiv clearfix grpelem" id="u266-4"><!-- content --><input class="wrapped-input" type="text" spellcheck="false" id="widgetu264_input" name="custom_U264" tabindex="1"/><label class="wrapped-input fld-prompt" id="widgetu264_prompt" for="widgetu264_input"><span class="actAsPara">Enter Name</span></label></span>
+      <span class="fld-input NoWrap actAsDiv clearfix grpelem" id="u266-4"><!-- content --><input class="wrapped-input" type="text" spellcheck="false" id="widgetu264_input" name="To" tabindex="1"/><label class="wrapped-input fld-prompt" id="widgetu264_prompt" for="widgetu264_input"><span class="actAsPara">Enter Name</span></label></span>
      </div>
      <div class="fld-grp clearfix grpelem" id="widgetu268" data-required="true"><!-- none box -->
       <label class="fld-label actAsDiv clearfix grpelem" id="u270-4" for="widgetu268_input"><!-- content -->
        <span class="actAsPara">Subject:</span>
       </label>
-      <span class="fld-input NoWrap actAsDiv clearfix grpelem" id="u271-4"><!-- content --><input class="wrapped-input" type="text" spellcheck="false" id="widgetu268_input" name="Email" tabindex="3"/><label class="wrapped-input fld-prompt" id="widgetu268_prompt" for="widgetu268_input"><span class="actAsPara">Enter Subject</span></label></span>
+      <span class="fld-input NoWrap actAsDiv clearfix grpelem" id="u271-4"><!-- content --><input class="wrapped-input" type="text" spellcheck="false" id="widgetu268_input" name="Subject" tabindex="3"/><label class="wrapped-input fld-prompt" id="widgetu268_prompt" for="widgetu268_input"><span class="actAsPara">Enter Subject</span></label></span>
      </div>
      <div class="clearfix grpelem" id="u272-4"><!-- content -->
       <p>Submitting Form...</p>
@@ -126,24 +127,24 @@ font-family: Gotham, 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 
      <div class="clearfix grpelem" id="u273-4"><!-- content -->
       <p>Form received.</p>
      </div>
-     <input class="submit-btn NoWrap grpelem" id="u263-17" type="submit" value="" tabindex="6"/><!-- state-based BG images -->
+     <input class="submit-btn NoWrap grpelem" id="u263-17" type="submit" value="" tabindex="6" on-click="sendNewMessage()"/><!-- state-based BG images -->
      <div class="fld-grp clearfix grpelem" id="widgetu258" data-required="true"><!-- none box -->
       <label class="fld-label actAsDiv clearfix grpelem" id="u261-4" for="widgetu258_input"><!-- content -->
        <span class="actAsPara">Message:</span>
       </label>
-      <span class="fld-textarea actAsDiv clearfix grpelem" id="u259-4"><!-- content --><textarea class="wrapped-input" id="widgetu258_input" name="custom_U258" tabindex="5"></textarea><label class="wrapped-input fld-prompt" id="widgetu258_prompt" for="widgetu258_input"><span class="actAsPara">Enter Your Message</span></label></span>
+      <span class="fld-textarea actAsDiv clearfix grpelem" id="u259-4"><!-- content --><textarea class="wrapped-input" id="widgetu258_input" name="Body" tabindex="5"></textarea><label class="wrapped-input fld-prompt" id="widgetu258_prompt" for="widgetu258_input"><span class="actAsPara">Enter Your Message</span></label></span>
      </div>
      <div class="fld-grp clearfix grpelem" id="widgetu274" data-required="true"><!-- none box -->
       <label class="fld-label actAsDiv clearfix grpelem" id="u275-4" for="widgetu274_input"><!-- content -->
        <span class="actAsPara">From:</span>
       </label>
-      <span class="fld-input NoWrap actAsDiv clearfix grpelem" id="u276-4"><!-- content --><input class="wrapped-input" type="text" id="widgetu274_input" name="custom_U274" tabindex="2"/><label class="wrapped-input fld-prompt" id="widgetu274_prompt" for="widgetu274_input"><span class="actAsPara">Enter Name</span></label></span>
+      <span class="fld-input NoWrap actAsDiv clearfix grpelem" id="u276-4"><!-- content --><input class="wrapped-input" type="text" id="widgetu274_input" name="From" tabindex="2"/><label class="wrapped-input fld-prompt" id="widgetu274_prompt" for="widgetu274_input"><span class="actAsPara">Enter Name</span></label></span>
      </div>
      <div class="fld-grp clearfix grpelem" id="widgetu278" data-required="true"><!-- none box -->
       <label class="fld-label actAsDiv clearfix grpelem" id="u279-4" for="widgetu278_input"><!-- content -->
        <span class="actAsPara">Urgency:</span>
       </label>
-      <span class="fld-input NoWrap actAsDiv clearfix grpelem" id="u280-4"><!-- content --><input class="wrapped-input" type="text" id="widgetu278_input" name="custom_U278" tabindex="4"/><label class="wrapped-input fld-prompt" id="widgetu278_prompt" for="widgetu278_input"><span class="actAsPara">Enter Urgency</span></label></span>
+      <span class="fld-input NoWrap actAsDiv clearfix grpelem" id="u280-4"><!-- content --><input class="wrapped-input" type="text" id="widgetu278_input" name="Urgency" tabindex="4"/><label class="wrapped-input fld-prompt" id="widgetu278_prompt" for="widgetu278_input"><span class="actAsPara">Enter Urgency</span></label></span>
      </div>
     </form>
    </div>
