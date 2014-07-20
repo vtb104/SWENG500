@@ -217,7 +217,7 @@ function sendMessage()
 
 	// get the message
 	var messageData = new Object();
-    messageData.msgTo = "IC"; //or user ID for message
+    messageData.msgTo = ""+currentSearch;
     messageData.msgFrom = ""+userID;
     messageData.msgSubject = "Message from FU id " + userID;
     messageData.msgUrgency = "Medium";
