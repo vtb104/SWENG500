@@ -25,6 +25,7 @@ var currentAreaPoly;
 var areaData;
 var polyStorage = [];
 var areaNameData;
+var workingAreaPointArray = [];
 
 if(readCookie("sar.location.lat") && readCookie("sar.location.lng")){
 	startLat = readCookie("sar.location.lat");
@@ -150,7 +151,7 @@ var initialize = function(){
 	updateSearches();
 	
 	//Pulls all teams
-    updateTeams();
+        updateTeams();
         
 	//Start the timer to get new points
 	getNewPoints();
@@ -180,6 +181,7 @@ function addLatLng(event)
 
     // Add a new marker at the new plotted point on the polyline.
     var styleMaker1 = new StyledMarker({styleIcon:new StyledIcon(StyledIconTypes.MARKER,{color:document.getElementById("area_color").value,text:""+pointCount}),position:event.latLng,map:map});
+    workingAreaPointArray.push(styleMaker1);
     document.getElementById("PointsOfArea").innerHTML += '<input type="radio" name="point' + pointCount + '">Point '+pointCount+'<br>';
     if(document.getElementById("tempMsg") != null)
     {
@@ -203,7 +205,7 @@ function updateAreaSelectMenu()
         dataType: "json",
         success: function(msg){
             //for each area create a select menu item
-            var selectMenu = document.getElementById("AreaEditSelector");
+            var selectMenu = document.getElementById("currentAreas");
             selectMenu.options.length = 0;
             selectMenu.options.add(new Option("Select Area", "Select Area"));
             for(var cnt=0; cnt< msg.length; cnt++)
@@ -247,7 +249,7 @@ function updatePointList()
 //this function is called when "start new area button is clicked
 function startNewArea()
 { 
-    document.getElementById("areaBoxContent").innerHTML = 'Area Name: <input type="text" name="AreaName" id="AreaName" value="Enter an Area Name"><input type="color" id="area_color" value="#00ff00"><br><div id="tempMsg">Please click on the map to create area boundaries.</div><div id="PointsOfArea"></div><button type="button"  onclick="saveAreaButton()">Save</button>';
+    document.getElementById("areaBoxContent").innerHTML = '<h5>Enter An Area Name: </h5><input type="text" name="AreaName" id="AreaName" value="Enter an Area Name"><h5>Select Color for Area:</h5><input type="color" id="area_color" value="#00ff00"><div id="tempMsg"></div><div id="PointsOfArea"></div>';
     //TODO check if listener exists already
     google.maps.event.addListener(map, 'click', addLatLng);
     currentAreaPoly = [];
@@ -319,7 +321,7 @@ function checkArrayForName(inArray, inName)
 //this function is called when "save" is clicked after adding an area
 function saveAreaButton()
 {
-    fillPoly(areaNameData,currentAreaPoly);
+    //fillPoly(areaNameData,currentAreaPoly);
 
     google.maps.event.clearListeners(map, 'click');
     //send area to database
@@ -334,6 +336,7 @@ function saveAreaButton()
 		dataType: "json",
         success: function(msg){ }});
     //reset all data for next area
+    poly.setMap(null);
     currentAreaPoly = [];
     pointCount = 0;
     var polyOptions = 
@@ -345,6 +348,13 @@ function saveAreaButton()
     poly = new google.maps.Polyline(polyOptions);
     poly.setMap(map);
     updateAreaSelectMenu();
+    fillPoly(areaData.name,areaData.points);
+    //clear current points on map
+    for(var cnt=0; cnt <workingAreaPointArray.length; cnt++)
+    {
+        workingAreaPointArray[cnt].setMap(null);
+    }
+    
 }
 var polylineStorage = [];
 var markerStorage = [];

@@ -107,6 +107,22 @@ var testFunction = function (){
                     </td>
                    
                	</tr>
+                 <tr>
+                	<td>
+                    	<span class="optionlabel">Area Listing: </span>
+                    </td>
+                    <td>
+                    	<select id="currentAreas"></select>
+                	</td>
+                </tr>
+                <tr>
+                    <td></td>
+                        <td>
+                    	<button id="newarea">New Area</button>
+                    	<button id="deletearea">Delete Area</button>
+                    </td>
+                   
+               	</tr>
 				<tr>
                		<td>
                     	<span class="optionlabel">Update Interval: </span>
@@ -165,24 +181,21 @@ var testFunction = function (){
         <div id="searchAreaBox">
         	<div align="center" id="showareabox" class="weathercursor">Click to show area control</div>
              <div align="center" id="hideareabox" style="display: none" class="weathercursor" >Click to hide area control</div><br/>
-            <button type="button" onclick="startNewArea()">Start New Area</button><br>
-            <select id="AreaEditSelector" onchange="updatePointList()">
-                <!--Add list of areas for this search-->
-            </select>
-            <button type="button" onclick="deleteArea()">Delete Area</button>
             <hr>
             
             <div>
                 <form>
-                    <div id="areaBoxContent">
-                       <!-- Area Name
-                        <input type="text" name="AreaName" id="AreaName" value="Area 1"><input type="color" id="area_color" value="#00ff00"><br>-->
-                        <div id="PointsOfArea">
-    
-                        </div>
-                        
+                    <div id="areaBoxContent" style="font-size: 14px; margin-left: 10px;">
+                       <!-- SEE startsearch() for div elements-->
+                       
                     </div>
-                    
+                    <div style="font-size: 14px; margin-left: 10px;">
+                        <h5>Assign Area to a team:</h5>
+                        <select id="teamList" style="font-size: 14px;"></select>
+                        <br><br>
+                        Please click on the map to create area boundaries. Once completed click "Save".
+                        <br><button type="button" onclick="saveAreaButton()" style="font-size: 20px; width:100px;">Save</button>
+                    </div>
                 </form>
                 
             </div>
@@ -302,7 +315,7 @@ var testFunction = function (){
          <h2 align="center" style="color: red" id="newteaminfo"></h2>
     </p>
 </div>
- 
+  
 </body>
 <script>
 //Put jQuery button listeners here, don't put too many functions here due to scope issues.
@@ -380,6 +393,7 @@ $(function(){
 		$(this).hide();
 		$("#hideareabox").show();
 		$("#searchAreaBox").animate({bottom: "0px"}, 400, function(){});
+                startNewArea();
 	});
 	
 	$("#hideareabox").click(function(){
@@ -388,7 +402,12 @@ $(function(){
 		$("#searchAreaBox").animate({bottom: "-375px"}, 400, function(){});
 	});
 	
-	
+        $("#newarea").click(function(){
+		$("#showareabox").hide();
+                $("#hideareabox").show();
+		$("#searchAreaBox").animate({bottom: "0px"}, 400, function(){});
+                startNewArea();
+	});
 	$("#searchnow").click(function(){
 		searchNow();
 	});
