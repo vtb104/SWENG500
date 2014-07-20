@@ -211,6 +211,7 @@ function updateAreaSelectMenu()
             for(var cnt=0; cnt< msg.length; cnt++)
             {
                 selectMenu.options.add(new Option(msg[cnt].areaName, msg[cnt].areaName));
+                document.getElementById("assignAreaList").options.add(new Option(msg[cnt].areaName, msg[cnt].areaName));
             }
         }});
 }
@@ -254,6 +255,22 @@ function startNewArea()
     google.maps.event.addListener(map, 'click', addLatLng);
     currentAreaPoly = [];
 }
+//this function is used to assign a team to an area
+function assignArea()
+{
+    var assignmentData = new Object();
+    assignmentData.area = "";
+    assignmentData.team = "";
+     $.ajax({
+        type: "POST",
+        url: "AreaHandler.php",
+        data: {assignArea:assignmentData},//change search ID for multiple searches
+        dataType: "json",
+        success: function(areaData){
+           
+        }});    
+}
+
 //this function deletes the given area
 function deleteArea()
 {

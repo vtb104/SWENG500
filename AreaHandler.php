@@ -29,7 +29,10 @@ if(isset($_POST['getAreaPoints'])){
 if(isset($_POST['deleteArea'])){
         echo $db->delete_area($_POST['deleteArea']);
 };
-
+if(isset($_POST['assignArea'])){
+        //TODO
+    echo "areaAssign";
+};
 /*
  * FU CALLS
  */

@@ -119,6 +119,7 @@ var testFunction = function (){
                     <td></td>
                         <td>
                     	<button id="newarea">New Area</button>
+                        <button rel="#areaassignmentoverlay" id="areaAssign">Assign Area</button>
                     	<button id="deletearea">Delete Area</button>
                     </td>
                    
@@ -315,7 +316,34 @@ var testFunction = function (){
          <h2 align="center" style="color: red" id="newteaminfo"></h2>
     </p>
 </div>
-  
+ 
+ <div class="overlay2" id="areaassignmentoverlay">
+	<span class="close">Close / Cancel</span>
+	<h3 align="center">Assign Team to Area</h3>
+    <br/>
+    <p>
+    	<table id="newteamtable" class="defaulttable">
+        	<tr>
+            	<td>
+                	Team:
+                </td>
+                <td>
+                	<select id="assignTeamList"></select>
+                </td>
+            </tr>
+            <tr>
+            	<td>
+                	Area:
+                </td>
+                <td>
+                	<select id="assignAreaList"></select>
+                </td>
+            </tr>
+         </table><br/>
+         <button id="saveareaassignment" style="float: right">Save Area Assignment</button>
+         <!--<h2 align="center" style="color: red" id="newteaminfo"></h2>-->
+    </p>
+</div> 
 </body>
 <script>
 //Put jQuery button listeners here, don't put too many functions here due to scope issues.
@@ -340,7 +368,6 @@ $(function(){
 	$("#updateInt").change(function(){
 		updateIntervalCaller();
 	});
-	
 	//Start a new search
 	$("#newsearch").click(function(){
 		$(".newsearchclass").val("");
@@ -411,7 +438,9 @@ $(function(){
 	$("#searchnow").click(function(){
 		searchNow();
 	});
-	
+        $("#saveareaassignment").click(function(){
+            assignArea();
+	});
 	$("#testbutton").click(function(){
 		testFunction();
 	});
@@ -422,6 +451,9 @@ $(function(){
     $("#currentTeamNumber").change(function(){
 		updateCurrentTeam();
 	});
+        
+        
+        
 });
 </script>
 </html>

@@ -77,9 +77,11 @@ var updateTeams = function(){
 			teamArray = msg;
 			$("#currentTeamNumber").html("<option value='all'>All Teams</option>");
                         $("#teamList").html("<option value='all'>All Teams</option>");
+                        $("#assignTeamList").html("<option value='all'>All Teams</option>");
 			$.each(teamArray, function(index, value){
 				$("#currentTeamNumber").append("<option value='" + value.teamID + "'>" + value.teamName + "</option>");
 				$("#teamList").append("<option value='" + value.teamID + "'>" + value.teamName + "</option>");
+                                $("#assignTeamList").append("<option value='" + value.teamID + "'>" + value.teamName + "</option>");
 				//Split up the colors for easy reference
 				var tempColors = value.teamInfo.split("&&");
 				teamArray[index].backgroundColor = tempColors[0];
@@ -87,6 +89,7 @@ var updateTeams = function(){
 			});
     		$("#currentTeamNumber").val(currentTeam);
                 $("#teamList").val(currentTeam);
+                $("#assignTeamList").val(currentTeam);
 		}
 	});
 }
