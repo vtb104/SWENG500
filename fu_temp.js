@@ -62,7 +62,6 @@ function initialize()
 	$("#updateLocInt").val(updateLocationInterval);
 	sendPosition();
 	
-	$("#checkMsgInt").val(updateCheckMsgInterval);
 	getMessage();
 	
 	$("#sendLocInt").val(updateSendLocationInterval);
@@ -157,7 +156,7 @@ function sendPosition()
 			{
 				// Failed to find location, do nothing
 			}
-            //Second call to check if there is a new area availible from IC
+            //Second call to check if there is a new area available from IC
             checkForNewAreaFromIC();
 		}
 		else
@@ -183,7 +182,7 @@ function checkForNewAreaFromIC()
 		$.ajax({
             type: "POST",
             url: "AreaHandler.php",
-            data: {checkForArea:"1"},//TODO: replace with actual user ID
+            data: {checkForArea:""+userID},
             success: function(msg)
 			{
                 //alert("msg leng"+msg.length);
@@ -224,7 +223,7 @@ function sendMessage()
 	var dateObject = new Date();
     messageData.msgDate = ""+dateObject.getTime();
     messageData.msgBody = $('textarea').val();
-    console.log("test");
+
     if (messageData.msgBody)
     {
 		if (currentSearch > 0)
@@ -255,14 +254,13 @@ function sendMessage()
 	return result;
 }
 
-getMessage = function()
+function getMessage()
 {
 	if(msgTimer)
 	{
 		window.clearTimeout(msgTimer);
 	}
 	
-	updateCheckMsgInterval = $("#checkMsgInt").val();
 	$("#updateMsgInfo").html("Updating every " + (updateCheckMsgInterval / 1000) + " seconds");
 	msgTimer = setTimeout(function(){getMessage()}, updateCheckMsgInterval);
 	
@@ -280,17 +278,17 @@ getMessage = function()
             alert(JSON.stringify(msg));
 			result = true;
         },
-			error: function(msg){
+		error: function(msg){
 		}
 	});
 	
     return result;
 }
 
+var msgSendCount = 0;
+var sendGeoLocationsResult = false;
 function sendGeoLocations()
 {
-	var result = false;
-
 	// set the global var to stop gathering geo location points
 	uploadingGeoLocation = true;
 	
@@ -302,8 +300,43 @@ function sendGeoLocations()
 	sendLocTimer = setTimeout(function(){sendGeoLocations()}, updateSendLocationInterval);
 	
 	// send all cached geo locations
+	while(arrayGeoLocation.length > 0) 
+	{ 
+		var currentGeoLocation = arrayGeoLocation.shift();
+		var forwardMsg = JSON.stringify(currentGeoLocation);
+				
+		$("#infoLoc").html("Sending location...");
+					
+		$.ajax({
+			type: "POST",
+			url: "messageReceive.php",
+			data: {dataMsg:forwardMsg},
+			success: function(msg)
+			{
+				if(msg){
+					$("#infoLoc").html(msg);
+				}else{
+					$("#infoLoc").html(msg);
+				}
+				// Message was sent
+				sendGeoLocationsResult = true;
+			},
+			error: function(msg){
+				sendGeoLocationsResult = false;
+			}
+		});
+		
+		if (false == sendGeoLocationsResult)
+		{
+			arrayGeoLocation.unshift(currentGeoLocation);
+			break;
+		}
+	}
+	
+	/*
 	for (i = 0; i < arrayGeoLocation.length; i++) 
 	{ 
+		msgSendCount++;
 		var forwardMsg = JSON.stringify(arrayGeoLocation[i]);
 				
 		$("#infoLoc").html("Sending location...");
@@ -319,22 +352,35 @@ function sendGeoLocations()
 				}else{
 					$("#infoLoc").html(msg);
 				}
-				result = true;
+				// Message was sent
+				sendGeoLocationsResult = true;
+			},
+			error: function(msg){
+				sendGeoLocationsResult = false;
 			}
 		});
+		
+		if (false == sendGeoLocationsResult)
+		{
+			break;
+		}
 	}
 
-	// clear array of geo locations
+	// clear array of geo locations up to the point 
 	while(arrayGeoLocation.length > 0)
-	{ 
+	{
 		arrayGeoLocation.pop();
 	}
+	
+	msgSendCount = 0;
+	*/
 	
 	// allow the gathering of geo location points
 	uploadingGeoLocation = false;
 	
-	return result;
+	return sendGeoLocationsResult;
 }
+
 //Either adds the user to a search or removes them
 var joinOrLeave = function(){
 	 var passThis = $("#joinOrLeave").val();

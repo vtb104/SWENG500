@@ -88,7 +88,7 @@
 				<p>Here's our chat data</p>
 			</div>
 			
-			<div id = "sendMessage">
+			<div id = "sendMsg">
 				<textarea rows = "2">Enter your message here...</textarea>
 				<button onclick = "sendMessage()">Send</button>
 			</div>
@@ -127,14 +127,7 @@
                 <option value="30000">30s</option>
 				<option value="60000">1min</option>
             </select>
-			
-			<h4>Check for Message Interval</h4>
-             <select id="checkMsgInt">
-                <option value="5000">5s</option>
-                <option value="10000">10s</option>
-                <option value="30000">30s</option>
-				<option value="60000">30s</option>
-            </select>
+
             <br/>
             <h3 align="center">Join a search</h3>
             <!--Updated via Javascript-->
