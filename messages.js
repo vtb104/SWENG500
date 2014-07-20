@@ -3,9 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-var initialize = function(){
+/*var initialize = function(){
     getNewMessages();
-}
+}*/
 
 var getNewMessage = function(){
 
@@ -29,7 +29,7 @@ requestData = {sentTo: "1", type: "search" }
                         
          },
          error: function(msg){
-             var failedRecipt = new Notice();
+             //var failedRecipt = new Notice();
              $("#floatNote").html("Messages were not retrieved.")
              
          }
@@ -38,14 +38,15 @@ requestData = {sentTo: "1", type: "search" }
 
 var sendNewMessage = function (){
    
-     sendData = {sentTo: "1", from: "3", subject: "Test", urgency: "High", body: "Test"}
+   	 theDate = new Date();
+     sendData = {sentTo: "1", from: "3", subject: "Test", urgency: "High", body: "Test", date: theDate.getTime()}
      
      //Start the AJAX call
      $(id="pamphletu139").html("Sending...");
 	$.ajax({
         type: "POST",
         url: "messageSend.php",
-        data: { ic_message_send:sendData },
+        data: { fu_message_send:sendData },
 		dataType: "json",
         success: function(msg){ 
                         
@@ -56,7 +57,7 @@ var sendNewMessage = function (){
                     },
 
         error: function(msg){
-            var failedMessage = new Notice();
+           // var failedMessage = new Notice();
             $("#floatNote").html("Message was not sent. Try again later.")
             
      

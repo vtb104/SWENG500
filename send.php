@@ -183,6 +183,13 @@ Muse.Utils.fullPage('#page');/* 100% height page */
 Muse.Utils.showWidgetsWhenReady();/* body */
 Muse.Utils.transformMarkupToFixBrowserProblems();/* body */
 } catch(e) { if (e && 'function' == typeof e.notify) e.notify(); else Muse.Assert.fail('Error calling selector function:' + e); }});
+
+$(function(){
+	$("#u263-17").click(function(){
+		sendNewMessage();
+	});
+	
+});
 </script>
    </body>
 </html>

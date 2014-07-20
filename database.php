@@ -532,8 +532,8 @@ class Database
 	 /** Create message
 	 *
 	 */
-	 public function create_message($from, $to, $title, $message, $pointID = 0){
-		 $query = "INSERT INTO Messages (sentfrom, sentto, subject, message) VALUES ('$from', '$to', '$title', '$message')";
+	 public function create_message($from, $to, $title, $message, $date, $pointID = 0){
+		 $query = "INSERT INTO Messages (sentfrom, sentto, subject, message, dateSent) VALUES ('$from', '$to', '$title', '$message', '$date')";
 		 $result = $this->db_obj->query($query);
 		 if($result){
 			return true; 
