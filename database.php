@@ -533,8 +533,13 @@ class Database
 	 *
 	 */
 	 public function create_message($from, $to, $title, $message, $pointID = 0){
-		 
-		 return '<span style="color: red">Fail ' . __LINE__ . '</span>';
+		 $query = "INSERT INTO Messages (sentfrom, sentto, subject, message) VALUES ('$from', '$to', '$title', '$message')";
+		 $result = $this->db_obj->query($query);
+		 if($result){
+			return true; 
+		 }else{
+			 return "Fail " . __LINE__ . " " . __FILE__;
+		 }
 	 }
 	 
 	 /** Fetch messages for a user, team, or search
