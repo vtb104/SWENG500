@@ -212,9 +212,28 @@ function checkForNewAreaFromIC()
 
 function sendMessage(msg)
 {
+    var messageData = new Object();
+    messageData.msgTo = "IC"; //or user ID for message
+    messageData.msgFrom = "4";//from user id
+    messageData.msgSubject = "This is a message";
+    messageData.msgUrgency = "Medium";
+    messageData.msgDate = "";
+    messageData.msgBody = "The message body";
+    console.log("test");
     if (msg)
     {
-        return true;
+        $.ajax({
+        type: "POST",
+        url: "messageSend.php",
+        data: { fu_message_send:messageData },
+		dataType: "json",
+        success: function(msg){ 
+            //VIRGIL ADD HANDLER HERE (messageSend.php will return TRUE if completed) 
+            alert("msg send response: "+msg);
+         },
+         error: function(msg){
+         }
+     });
     }
     else
     {
@@ -235,6 +254,21 @@ function getMessage()
 	$("#updateMsgInfo").html("Updating every " + (updateCheckMsgInterval / 1000) + " seconds");
 	msgTimer = setTimeout(function(){getMessage()}, updateCheckMsgInterval);
 	
+        var messageData = "4"; //replace with current user ID
+        //GET MESSAGE CODE
+        $.ajax({
+        type: "POST",
+        url: "messageReceive.php",
+        data: { fu_message_recieve:messageData },
+		dataType: "json",
+        success: function(msg){ 
+            //VIRGIL ADD HANDLER HERE (messageRecieve.php will return JSON formatted message) 
+            alert(JSON.stringify(msg));
+         },
+         error: function(msg){
+         }});
+        
+        
     msg = "";
 	
 	// use the sendposition as an example of object and ajax call methodology once the server side is setup.

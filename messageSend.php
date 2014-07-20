@@ -103,6 +103,7 @@ if(isset($_POST['ic_message_send'])){
 }
 //This script is used to send a message (places it in database)
 if(isset($_POST['fu_message_send'])){
-    return true;
+    //put msg info in db
+    echo "true";
 }
 ?>

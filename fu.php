@@ -18,6 +18,7 @@
   <script src="https://maps.googleapis.com/maps/api/js?sensor=true"></script>
   <script src="sharedJS.js"></script>
   <script src="fu.js"></script>
+  <script src="fu_temp.js"></script>
 </head> 
 <script>
 <?php
@@ -81,6 +82,8 @@
 
         <div data-role="content">
             <h3>Send and Get Messages</h3>
+            send canned msg <button id="testSendButton">Send MSG</button>
+            <BR><BR>receive canned msg <button id="testReceiveButton">Get MSG</button>
         </div>
 
 		<div data-role="content">
@@ -165,7 +168,12 @@ $(function(){
 		$("#joinOrLeaveStatus").html("");
 		$("#currentSearchNumber").selectmenu('refresh');
 	});
-	
+        $("#testSendButton").click(function(){
+            sendMessage("FILL IN MSG DATA HERE");
+	});
+        $("#testReceiveButton").click(function(){
+            getMessage();
+	});
 });
 </script>
 </html>

@@ -37,15 +37,6 @@ if(isset($_POST['dataMsg'])){
 if(isset($_POST['userRequest'])){
 	echo $db->list_users();
 };
-/*if(isset($_POST['getMessages'])){
-    $testMessage = new stdClass();
-    $testMessage->to = "Deb";
-    $testMessage->from = "Shane";
-    $testMessage->subject = "This is a test message";
-    $testMessage->body = "Hello there";
-    $testMessage->date = time();
-    echo json_encode($testMessage);
-};*/
 if(isset($_POST['ic_msg_recieve'])){
     $testMessage = new stdClass();
     $testMessage->to = "Deb";
@@ -56,7 +47,16 @@ if(isset($_POST['ic_msg_recieve'])){
     $testMessage->date = time();
     echo json_encode($testMessage);
 };
-
+if(isset($_POST['fu_message_recieve'])){
+    $testMessage = new stdClass();
+    $testMessage->to = "Virgil";
+    $testMessage->from = "Shane";
+    $testMessage->subject = "This is a test message";
+    $testMessage->urgency = "medium";
+    $testMessage->body = "Hello there";
+    $testMessage->date = time();
+    echo json_encode($testMessage);
+};
 //This function either adds a user to a search or removes them
 if(isset($_POST['joinOrLeave'])){
 	
