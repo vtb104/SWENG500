@@ -1,16 +1,15 @@
 // Declaration of global vars
 var updateLocationInterval = 5000;
 var updateCheckMsgInterval = 5000;
-var updateSendLocationInterval = 60000;
 
 var locTimer = 0;
 var msgTimer = 0;
-var sendLocTimer = 0;
+var sendLocTimer = 5000;
 
 var firstLoop = true;
 var currentLoc = new google.maps.LatLng(0, 0);
 var arrayGeoLocation = [];
-var uploadingGeoLocation = false;
+var uploadingGeoLocation = true;
 
 var currentSearch = 1;
 
@@ -64,8 +63,7 @@ function initialize()
 	
 	getMessage();
 	
-	$("#sendLocInt").val(updateSendLocationInterval);
-	sendGeoLocations();
+	sendLocations = setInterval(sendGeoLocations, sendLocTimer);
 	
 	var lat = $("#lat").val ();
     var lng = $("#lng").val ();
@@ -92,7 +90,6 @@ function initialize()
 	
     locTimer = setTimeout(function(){sendPosition()}, updateLocationInterval);
 	msgTimer = setTimeout(function(){getMessage()}, updateCheckMsgInterval);
-	sendLocTimer = setTimeout(function(){sendGeoLocations()}, updateSendLocationInterval);
 	
 	marker = new google.maps.Marker({
 		position: latlng,
@@ -110,8 +107,6 @@ function initialize()
 // if geo service is available, send the current location to the server
 function sendPosition()
 {
-	var result = false;
-	
 	if(locTimer)
 	{
 		window.clearTimeout(locTimer);
@@ -121,9 +116,6 @@ function sendPosition()
 	$("#updateLocInfo").html("Updating every " + (updateLocationInterval / 1000) + " seconds");
 	locTimer = setTimeout(function(){sendPosition()}, updateLocationInterval);
 
-	// If the geo location points are being uploaded, then do not collect a new point
-	if (!uploadingGeoLocation)
-	{
 		if ( navigator.geolocation ) 
 		{
 			var geoOptions = {
@@ -139,17 +131,16 @@ function sendPosition()
 				// Location found, update the coords, move the map and the marker.
 				positionCallback(pos);
 				var sendMsg = new Object();
-				sendMsg.user = ""+userID;
+				sendMsg.user = userID;
 				sendMsg.lat = $("#lat").val();
 				sendMsg.lng = $("#lng").val();
 				var dateObject = new Date();
-				sendMsg.time = ""+dateObject.getTime();
+				sendMsg.sentTime = dateObject.getTime();
+				sendMsg.sent = false;
 				
 				arrayGeoLocation.push(sendMsg);
 				
 				$("#infoLoc").html("msg created. timestamp: " + sendMsg.time);
-				
-				result = true;
 			}
 
 			function fail(error) 
@@ -163,12 +154,6 @@ function sendPosition()
 		{
 			$("#info").html("Location not allowed for this application.  Please allow location sharing to enable this feature.");
 		}
-	}
-	else
-	{
-		result = true;
-	}
-	return result;
 }
 
 var cnt=0;
@@ -285,100 +270,29 @@ function getMessage()
     return result;
 }
 
-var msgSendCount = 0;
-var sendGeoLocationsResult = false;
+//Function iterates through the arrayGeoLocation and sends messages that aren't sent yet.
 function sendGeoLocations()
 {
-	// set the global var to stop gathering geo location points
-	uploadingGeoLocation = true;
 	
-	if(sendLocTimer)
-	{
-		window.clearTimeout(sendLocTimer);
-	}
-
-	sendLocTimer = setTimeout(function(){sendGeoLocations()}, updateSendLocationInterval);
-	
-	// send all cached geo locations
-	while(arrayGeoLocation.length > 0) 
-	{ 
-		var currentGeoLocation = arrayGeoLocation.shift();
-		var forwardMsg = JSON.stringify(currentGeoLocation);
-				
-		$("#infoLoc").html("Sending location...");
-					
-		$.ajax({
-			type: "POST",
-			url: "messageReceive.php",
-			data: {dataMsg:forwardMsg},
-			success: function(msg)
-			{
-				if(msg){
-					$("#infoLoc").html(msg);
-				}else{
-					$("#infoLoc").html(msg);
+	// Go through the array and make an AJAX call for each that isn't sent yet.
+	$.each(arrayGeoLocation, function(index, value){
+		if(!value.sent){
+			$.ajax({
+				type: "POST",
+				url: "messageReceive.php",
+				data: {dataMsg: value},
+				dataType: "json",
+				success: function(msg){
+					if(msg && msg !== " "){
+						value.sent = true;	
+					}
+				},
+				error: function(msg){
+					value.sent = false;	
 				}
-				// Message was sent
-				sendGeoLocationsResult = true;
-			},
-			error: function(msg){
-				sendGeoLocationsResult = false;
-			}
-		});
-		
-		if (false == sendGeoLocationsResult)
-		{
-			arrayGeoLocation.unshift(currentGeoLocation);
-			break;
+			})
 		}
-	}
-	
-	/*
-	for (i = 0; i < arrayGeoLocation.length; i++) 
-	{ 
-		msgSendCount++;
-		var forwardMsg = JSON.stringify(arrayGeoLocation[i]);
-				
-		$("#infoLoc").html("Sending location...");
-					
-		$.ajax({
-			type: "POST",
-			url: "messageReceive.php",
-			data: {dataMsg:forwardMsg},
-			success: function(msg)
-			{
-				if(msg){
-					$("#infoLoc").html(msg);
-				}else{
-					$("#infoLoc").html(msg);
-				}
-				// Message was sent
-				sendGeoLocationsResult = true;
-			},
-			error: function(msg){
-				sendGeoLocationsResult = false;
-			}
-		});
-		
-		if (false == sendGeoLocationsResult)
-		{
-			break;
-		}
-	}
-
-	// clear array of geo locations up to the point 
-	while(arrayGeoLocation.length > 0)
-	{
-		arrayGeoLocation.pop();
-	}
-	
-	msgSendCount = 0;
-	*/
-	
-	// allow the gathering of geo location points
-	uploadingGeoLocation = false;
-	
-	return sendGeoLocationsResult;
+	});
 }
 
 //Either adds the user to a search or removes them

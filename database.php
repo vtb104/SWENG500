@@ -545,9 +545,14 @@ class Database
 	 /** Fetch messages for a user, team, or search
 	 *
 	 */
-	 public function fetch_messages($userID = 0, $teamID = 0, $searchID = 0){
-		 
-		 return '<span style="color: red">Fail ' . __LINE__ . '</span>';
+	 public function fetch_messages($userID = 0, $teamID = 0, $searchID = 0, $json = true){
+		 if($userID){
+			 $query = "SELECT * FROM Messages WHERE sentto = '$userID'";
+			 $result = $this->db_obj->query($query);
+			 return $this->return_array($result, $json);
+		 }else{
+			return "Not enabled yet"; 
+		 }
 	 }
 	 
 	 

@@ -29,9 +29,9 @@ class messageReceive  extends message{
 }
 
 if(isset($_POST['dataMsg'])){
-	$handler = new messageReceive;
-	$decode = $handler->decode_json_message($_POST['dataMsg']);
-	echo $db->create_point($decode->user, $decode->lat, $decode->lng, '25', time(), 'From FU');
+	$data = $_POST['dataMsg'];
+	$theTime = $data['sentTime'] / 1000;
+	echo $db->create_point($data['user'], $data['lat'], $data['lng'], '25', $theTime, 'From FU');
 };
 
 if(isset($_POST['userRequest'])){
