@@ -14,11 +14,11 @@ require_once('phpcommon.php');
 if(isset($_POST['createArea'])){
         $handler = new message();
 	$decodedMessage = $handler->decode_json_message($_POST['createArea']);
-        $pointsArray = $decodedMessage->points;
-        for($cnt =0; $cnt < count($pointsArray); $cnt++)
-        {
-            $db->create_area($decodedMessage->name, $pointsArray[$cnt]->k, $pointsArray[$cnt]->B);
-        }
+        //$pointsArray = $decodedMessage->points;
+        //for($cnt =0; $cnt < count($pointsArray); $cnt++)
+        //{
+            $db->create_area($decodedMessage->name, $decodedMessage->points, $decodedMessage->color);
+        //}
 };
 if(isset($_POST['searchID'])){
         echo $db->list_areas($_POST['searchID']);
@@ -31,7 +31,9 @@ if(isset($_POST['deleteArea'])){
 };
 if(isset($_POST['assignArea'])){
         //TODO
-    echo "areaAssign";
+    $handler = new message();
+    $decodedMessage = $handler->decode_json_message($_POST['assignArea']);
+     $db->assign_team_to_area($decodedMessage->area, $decodedMessage->team);
 };
 /*
  * FU CALLS

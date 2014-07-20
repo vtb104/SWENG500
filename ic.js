@@ -182,7 +182,7 @@ function addLatLng(event)
     // Add a new marker at the new plotted point on the polyline.
     var styleMaker1 = new StyledMarker({styleIcon:new StyledIcon(StyledIconTypes.MARKER,{color:document.getElementById("area_color").value,text:""+pointCount}),position:event.latLng,map:map});
     workingAreaPointArray.push(styleMaker1);
-    document.getElementById("PointsOfArea").innerHTML += '<input type="radio" name="point' + pointCount + '">Point '+pointCount+'<br>';
+    //document.getElementById("PointsOfArea").innerHTML += '<input type="radio" name="point' + pointCount + '">Point '+pointCount+'<br>';
     if(document.getElementById("tempMsg") != null)
     {
         document.getElementById("tempMsg").innerHTML = "";
@@ -210,8 +210,8 @@ function updateAreaSelectMenu()
             selectMenu.options.add(new Option("Select Area", "Select Area"));
             for(var cnt=0; cnt< msg.length; cnt++)
             {
-                selectMenu.options.add(new Option(msg[cnt].areaName, msg[cnt].areaName));
-                document.getElementById("assignAreaList").options.add(new Option(msg[cnt].areaName, msg[cnt].areaName));
+                selectMenu.options.add(new Option(msg[cnt].areaName, msg[cnt].areaID));
+                document.getElementById("assignAreaList").options.add(new Option(msg[cnt].areaName, msg[cnt].areaID));
             }
         }});
 }
@@ -259,12 +259,12 @@ function startNewArea()
 function assignArea()
 {
     var assignmentData = new Object();
-    assignmentData.area = "";
-    assignmentData.team = "";
+    assignmentData.area = document.getElementById("assignAreaList").value;
+    assignmentData.team = document.getElementById("assignTeamList").value;
      $.ajax({
         type: "POST",
         url: "AreaHandler.php",
-        data: {assignArea:assignmentData},//change search ID for multiple searches
+        data: {assignArea:JSON.stringify(assignmentData)},//change search ID for multiple searches
         dataType: "json",
         success: function(areaData){
            
@@ -346,6 +346,7 @@ function saveAreaButton()
     areaData.name = document.getElementById("AreaName").value;
     areaData.userID = userID;
     areaData.points = currentAreaPoly;
+    areaData.color = document.getElementById("area_color").value;
     $.ajax({
         type: "POST",
         url: "AreaHandler.php",

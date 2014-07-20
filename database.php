@@ -571,7 +571,7 @@ class Database
           */
          public function list_areas($searchID)
          {
-             $query = 'SELECT DISTINCT areaName FROM areas';
+             $query = 'SELECT areaID, areaName FROM areas';
 		$result = $this->return_array($this->db_obj->query($query));
 		if($result){
 			return $result;	
@@ -595,15 +595,30 @@ class Database
          /** create a new area given a name and a set of points
           * 
           */
-         public function create_area($areaName, $inlat, $inlng)
+         public function create_area($areaName, $areaPoints, $areaColor)
          {
-             $query = 'INSERT INTO areas (areaName, lat, lng) VALUES ("' . $areaName . '","'.$inlat.'","'.$inlng.'")';
+             $areaPoints = json_encode($areaPoints);
+             $query = 'INSERT INTO areas (areaName, areaPoints, areaColor) VALUES ("' . $areaName . '","'.mysql_real_escape_string($areaPoints).'","'.$areaColor.'")';
 		$result = $this->db_obj->query($query);
 		if($result){
 			return TRUE;
 		}else{
 			return FALSE;
 		}
+         }
+        /** assign and area to a team
+          * 
+          */
+         public function assign_team_to_area($areaID, $teamID)
+         {
+            
+            $query = 'INSERT INTO areaassignment (areaID, teamID) VALUES ("' . $areaID . '","'.$teamID.'")';
+            $result = $this->db_obj->query($query);
+            if($result){
+                    echo "Success";
+            }else{
+                    echo "faileD";
+            }
          }
          /** create a new area given a name and a set of points
           * 
