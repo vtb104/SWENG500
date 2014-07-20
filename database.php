@@ -306,12 +306,12 @@ class Database
 	 *	@param $lat/$lng/$dist, if all are default, returns a list of all users
 	 *	@reaturn json array of search names and numbers
 	 */
-	 public function list_users($lat = 0, $lng = 0, $dist = 0){
+	 public function list_users($json = true, $lat = 0, $lng = 0, $dist = 0){
 		
 		if(!$lat && !$lng && !$dist)
 		{
-			$query = 'SELECT userID FROM Users';
-			$result = $this->return_array($this->db_obj->query($query));
+			$query = 'SELECT userID, username FROM Users';
+			$result = $this->return_array($this->db_obj->query($query), $json);
 			if($result){
 				return $result;	
 			}else{

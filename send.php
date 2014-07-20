@@ -1,9 +1,9 @@
 <?php
+	include_once("phpcommon.php");
+	$user = array("username"=> 'Error');
 	if(isset($_SESSION['userid']))
 	{
-		echo "var userID = " . $_SESSION['userid'];
-	}else{
-		echo "var userID = 0";
+		$user = $db->get_user($_SESSION['userid'], false);
 	}	
 ?>
  <head>
@@ -84,6 +84,15 @@ font-family: Gotham, 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 
 	Padding: 3px;
 }
 </style>
+<script>
+<?php if(isset($_SESSION['userid']))
+	{
+		echo "var userID = " . $_SESSION['userid'];
+	}else{
+		echo "var userID = 0";
+	}	
+?>
+</script>
 </head>
 
 <body onLoad="initialize()">
@@ -110,7 +119,16 @@ font-family: Gotham, 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 
       <label class="fld-label actAsDiv clearfix grpelem" id="u265-4" for="widgetu264_input"><!-- content -->
        <span class="actAsPara">To:</span>
       </label>
-      <span class="fld-input NoWrap actAsDiv clearfix grpelem" id="u266-4"><!-- content --><input class="wrapped-input" type="text" spellcheck="false" id="widgetu264_input" name="To" tabindex="1"/><label class="wrapped-input fld-prompt" id="widgetu264_prompt" for="widgetu264_input"><span class="actAsPara">Enter Name</span></label></span>
+      <span class="fld-input NoWrap actAsDiv clearfix grpelem" id="u266-4"><!-- content --><select class="wrapped-input" type="text" spellcheck="false" id="widgetu264_input" name="To" tabindex="1">
+      <?php
+	  		//List all current users for a to field
+			$users = $db->list_users(false);
+			foreach($users as $one){
+				echo "<option value='" . $one['userID'] . "'>" . $one['username'] . "</option>";
+			}
+	  
+	  ?>
+      </select><label class="wrapped-input fld-prompt" id="widgetu264_prompt" for="widgetu264_input"><span class="actAsPara">Enter Name</span></label></span>
      </div>
      <div class="fld-grp clearfix grpelem" id="widgetu268" data-required="true"><!-- none box -->
       <label class="fld-label actAsDiv clearfix grpelem" id="u270-4" for="widgetu268_input"><!-- content -->
@@ -138,7 +156,7 @@ font-family: Gotham, 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 
       <label class="fld-label actAsDiv clearfix grpelem" id="u275-4" for="widgetu274_input"><!-- content -->
        <span class="actAsPara">From:</span>
       </label>
-      <span class="fld-input NoWrap actAsDiv clearfix grpelem" id="u276-4"><!-- content --><input class="wrapped-input" type="text" id="widgetu274_input" name="From" tabindex="2"/><label class="wrapped-input fld-prompt" id="widgetu274_prompt" for="widgetu274_input"><span class="actAsPara">Enter Name</span></label></span>
+      <span class="fld-input NoWrap actAsDiv clearfix grpelem" id="u276-4"><!-- content --><input class="wrapped-input" type="text" id="widgetu274_input" name="From" tabindex="2" value="<?php echo $user [0]['username'];?>"/><label class="wrapped-input fld-prompt" id="widgetu274_prompt" for="widgetu274_input"><span class="actAsPara">Enter Name</span></label></span>
      </div>
      <div class="fld-grp clearfix grpelem" id="widgetu278" data-required="true"><!-- none box -->
       <label class="fld-label actAsDiv clearfix grpelem" id="u279-4" for="widgetu278_input"><!-- content -->
