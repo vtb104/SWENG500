@@ -90,7 +90,7 @@
 			
 			<div id = "sendMessage">
 				<textarea rows = "2">Enter your message here...</textarea>
-				<button onclick = "msgSend()">Send</button>
+				<button onclick = "sendMessage()">Send</button>
 			</div>
 			</div>
 		</div>

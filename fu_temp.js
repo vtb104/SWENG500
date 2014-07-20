@@ -13,6 +13,7 @@ var arrayGeoLocation = [];
 var uploadingGeoLocation = false;
 
 var currentSearch = 1;
+
 if(readCookie("sar.currentSearchFU")){
 	currentSearch = readCookie("sar.currentSearchFU");
 }
@@ -210,40 +211,37 @@ function checkForNewAreaFromIC()
 	return result;
 }
 
-function sendMessage(msg)
+function sendMessage()
 {
-    var messageData = new Object();
+	// get the message
+	var messageData = new Object();
     messageData.msgTo = "IC"; //or user ID for message
-    messageData.msgFrom = "4";//from user id
-    messageData.msgSubject = "This is a message";
+    messageData.msgFrom = ""+userID;
+    messageData.msgSubject = "Message from FU id " + userID;
     messageData.msgUrgency = "Medium";
-    messageData.msgDate = "";
-    messageData.msgBody = "The message body";
+	var dateObject = new Date();
+    messageData.msgDate = ""+dateObject.getTime();
+    messageData.msgBody = $('textarea').val();
     console.log("test");
-    if (msg)
+    if (messageData.msgBody)
     {
-        $.ajax({
-        type: "POST",
-        url: "messageSend.php",
-        data: { fu_message_send:messageData },
-		dataType: "json",
-        success: function(msg){ 
-            //VIRGIL ADD HANDLER HERE (messageSend.php will return TRUE if completed) 
-            alert("msg send response: "+msg);
-         },
-         error: function(msg){
-         }
-     });
-    }
-    else
-    {
-        return false;
-    }
-	
-	// use the sendposition as an example of object and ajax call methodology once the server side is setup.
+		//Start the AJAX call
+		$.ajax({
+			type: "POST",
+			url: "messageSend.php",
+			data: { fu_message_send:messageData },
+			dataType: "json",
+			success: function(msg){ 
+				$('.msgContainer').append('<p>' + messageData.msgBody + '</p>');
+			},
+			error: function(msg){
+				$('.msgContainer').append('<p>Message failed to send...</p>');
+			}
+		});
+	}
 }
 
-function getMessage()
+getMessage = function()
 {
 	if(msgTimer)
 	{
@@ -254,9 +252,10 @@ function getMessage()
 	$("#updateMsgInfo").html("Updating every " + (updateCheckMsgInterval / 1000) + " seconds");
 	msgTimer = setTimeout(function(){getMessage()}, updateCheckMsgInterval);
 	
-        var messageData = "4"; //replace with current user ID
-        //GET MESSAGE CODE
-        $.ajax({
+	var messageData = "4"; //replace with current user ID
+    
+	//GET MESSAGE CODE
+    $.ajax({
         type: "POST",
         url: "messageReceive.php",
         data: { fu_message_recieve:messageData },
@@ -264,14 +263,10 @@ function getMessage()
         success: function(msg){ 
             //VIRGIL ADD HANDLER HERE (messageRecieve.php will return JSON formatted message) 
             alert(JSON.stringify(msg));
-         },
-         error: function(msg){
-         }});
-        
-        
-    msg = "";
-	
-	// use the sendposition as an example of object and ajax call methodology once the server side is setup.
+        },
+        error: function(msg){
+		}
+	});   
     return msg;
 }
 
@@ -337,33 +332,4 @@ var joinOrLeave = function(){
 		}
 	});	
 	
-}
-
-msgSend = function(){
-	// get the message
-	var To = "IC";
-	var From = ""+userID;
-	var Subject = "Message from FU id " + userID;
-	var Urgency = 1;
-	var dateObject = new Date();
-	var Time = ""+dateObject.getTime();
-	var Body = $('textarea').val();
-	
-	// send the message
-     sendData = {sentTo: To, from: From, subject: Subject, urgency: Urgency, date: Time, body: Body}
-     
-     //Start the AJAX call
-	$.ajax({
-        type: "POST",
-        url: "messageSend.php",
-        data: { fu_message_send:sendData },
-		dataType: "json",
-        success: function(msg){ 
-            $('.msgContainer').append('<p>' + Body + '</p>');
-        },
-        error: function(msg){
-			$('.msgContainer').append('<p>Message failed to send...</p>');
-		}
-	});
-
 }

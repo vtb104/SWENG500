@@ -18,7 +18,6 @@
   <script src="https://maps.googleapis.com/maps/api/js?sensor=true"></script>
   <script src="sharedJS.js"></script>
   <script src="fu.js"></script>
-  <script src="fu_temp.js"></script>
 </head> 
 <script>
 <?php
