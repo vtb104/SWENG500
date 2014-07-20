@@ -286,18 +286,27 @@ function sendGeoLocations()
 				success: function(msg){
 					if(msg && msg !== " "){
 						value.sent = true;	
-						cachedPoints--;
+						cachedPoints = cachedPoints - 1;
+					}
+					if(cachedPoints){
+						$(".cachedPoints").html(" <br/>Points cached: " + cachedPoints);
+					}else{
+						$(".cachedPoints").html("");
 					}
 				},
 				error: function(msg){
 					value.sent = false;	
+					if(cachedPoints){
+						$(".cachedPoints").html(" <br/>Points cached: " + cachedPoints);
+					}else{
+						$(".cachedPoints").html("");
+					}
 				}
 			})
 		}
+		
 	});
-	if(cachedPoints){
-		$(".cachedPoints").html(" <br/>Points cached: " + cachedPoints);
-	}
+	
 }
 
 //Either adds the user to a search or removes them
