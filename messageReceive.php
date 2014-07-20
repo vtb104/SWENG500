@@ -29,9 +29,9 @@ class messageReceive  extends message{
 }
 
 if(isset($_POST['dataMsg'])){
-	//$data = $_POST['dataMsg'];
-	//$theTime = $data['sentTime'] / 1000;
-	//echo $db->create_point($data['user'], $data['lat'], $data['lng'], '25', $theTime, 'From FU');
+	$data = $_POST['dataMsg'];
+	$theTime = $data['sentTime'] / 1000;
+	echo $db->create_point($data['user'], $data['lat'], $data['lng'], '25', $theTime, 'From FU');
 };
 
 if(isset($_POST['userRequest'])){
