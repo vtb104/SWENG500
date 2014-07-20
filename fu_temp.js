@@ -213,6 +213,8 @@ function checkForNewAreaFromIC()
 
 function sendMessage()
 {
+	var result = false;
+
 	// get the message
 	var messageData = new Object();
     messageData.msgTo = "IC"; //or user ID for message
@@ -225,20 +227,32 @@ function sendMessage()
     console.log("test");
     if (messageData.msgBody)
     {
-		//Start the AJAX call
-		$.ajax({
-			type: "POST",
-			url: "messageSend.php",
-			data: { fu_message_send:messageData },
-			dataType: "json",
-			success: function(msg){ 
-				$('.msgContainer').append('<p>' + messageData.msgBody + '</p>');
-			},
-			error: function(msg){
-				$('.msgContainer').append('<p>Message failed to send...</p>');
-			}
-		});
+		if (currentSearch > 0)
+		{
+			//Start the AJAX call
+			$.ajax({
+				type: "POST",
+				url: "messageSend.php",
+				data: { fu_message_send:messageData },
+				dataType: "json",
+				success: function(msg){ 
+					$('.msgContainer').append('<p>' + messageData.msgBody + '</p>');
+					result = true;
+				},
+				error: function(msg){
+					$('.msgContainer').append('<p>Message failed to send...</p>');
+					result = false;
+				}
+			});
+		}
+		else
+		{
+			$('.msgContainer').append('<p>You must be part of a search to send a message</p>');
+			result = false;
+		}
 	}
+	
+	return result;
 }
 
 getMessage = function()
@@ -252,22 +266,25 @@ getMessage = function()
 	$("#updateMsgInfo").html("Updating every " + (updateCheckMsgInterval / 1000) + " seconds");
 	msgTimer = setTimeout(function(){getMessage()}, updateCheckMsgInterval);
 	
-	var messageData = "4"; //replace with current user ID
+	var result = false;
+	var messageData = ""+userID;
     
 	//GET MESSAGE CODE
     $.ajax({
         type: "POST",
         url: "messageReceive.php",
-        data: { fu_message_recieve:messageData },
+        data: { fu_message_receive:messageData },
 		dataType: "json",
         success: function(msg){ 
             //VIRGIL ADD HANDLER HERE (messageRecieve.php will return JSON formatted message) 
             alert(JSON.stringify(msg));
+			result = true;
         },
-        error: function(msg){
+			error: function(msg){
 		}
-	});   
-    return msg;
+	});
+	
+    return result;
 }
 
 function sendGeoLocations()
