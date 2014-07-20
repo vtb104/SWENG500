@@ -20,7 +20,11 @@
   <script src="sharedJS.js"></script>
   <script src="fu_temp.js"></script>
   <script src="messages.js"></script>
-</head> 
+<style>
+	.cachedPoints{
+		font-size: 8px;	
+	}
+</style>
 <script>
 <?php
 	if(isset($_SESSION['userid']))
@@ -30,11 +34,13 @@
 ?>
 
 </script>
+</head> 
 <body onLoad="initialize()">
 <div data-role=page id=geoMap>
         <div data-role=header>
             <a href="#geoMapHelp" class="ui-btn ui-btn-inline ui-corner-all ui-shadow">Help</a><a href="logout.php">Logout</a>
             <h1>Geo Location Map</h1>
+            
         </div>
     
         <div data-role="panel" id="geoMapHelp"> 
@@ -63,7 +69,7 @@
                 <ul>
                     <li><a href="#geoMap">Map</a></li>
                     <li><a href="#message">Messages</a></li>
-                    <li><a href="#configure" class=".configure">Configure</a></li>
+                    <li><a href="#configure" class=".configure">Configure<span class="cachedPoints"></a></li>
                 </ul>
             </div>
         </div>
@@ -100,7 +106,7 @@
                 <ul>
                     <li><a href="#geoMap">Map</a></li>
                     <li><a href="#message">Messages</a></li>
-                    <li><a href="#configure" class=".configure">Configure</a></li>
+                    <li><a href="#configure" class=".configure">Configure<span class="cachedPoints"></a></li>
                 </ul>
             </div>
         </div>
@@ -110,6 +116,7 @@
         <div data-role="header">
             <a href="#confHelp" class="ui-btn ui-btn-inline ui-corner-all ui-shadow">Help</a><a href="logout.php">Logout</a>
             <h1>Configure</h1>
+            
 		</div>
         <div data-role="panel" id="confHelp"> 
             <h2>Configuration Help</h2>
@@ -145,7 +152,7 @@
                 <ul>
                     <li><a href="#geoMap">Map</a></li>
                     <li><a href="#message">Messages</a></li>
-                    <li><a href="#configure" class=".configure">Configure</a></li>
+                    <li><a href="#configure" class=".configure">Configure<span class="cachedPoints"></span></a></li>
                 </ul>
             </div>
         </div>

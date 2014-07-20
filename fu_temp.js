@@ -9,7 +9,7 @@ var sendLocTimer = 5000;
 var firstLoop = true;
 var currentLoc = new google.maps.LatLng(0, 0);
 var arrayGeoLocation = [];
-var uploadingGeoLocation = true;
+var cachedPoints = 0;
 
 var currentSearch = 1;
 
@@ -273,10 +273,11 @@ function getMessage()
 //Function iterates through the arrayGeoLocation and sends messages that aren't sent yet.
 function sendGeoLocations()
 {
-	
+	cachedPoints = 0;
 	// Go through the array and make an AJAX call for each that isn't sent yet.
 	$.each(arrayGeoLocation, function(index, value){
 		if(!value.sent){
+			cachedPoints++;
 			$.ajax({
 				type: "POST",
 				url: "messageReceive.php",
@@ -285,6 +286,7 @@ function sendGeoLocations()
 				success: function(msg){
 					if(msg && msg !== " "){
 						value.sent = true;	
+						cachedPoints--;
 					}
 				},
 				error: function(msg){
@@ -293,6 +295,9 @@ function sendGeoLocations()
 			})
 		}
 	});
+	if(cachedPoints){
+		$(".cachedPoints").html(" <br/>Points cached: " + cachedPoints);
+	}
 }
 
 //Either adds the user to a search or removes them
