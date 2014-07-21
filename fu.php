@@ -96,7 +96,7 @@
 			
 			<div id = "sendMsg">
 				<textarea rows = "2">Enter your message here...</textarea>
-				<button onclick = "sendMessage()">Send</button>
+				<button id="messageSend">Send</button>
 			</div>
 			</div>
 		</div>
@@ -173,7 +173,9 @@ $(function(){
 		$("#joinOrLeaveStatus").html("");
 		$("#currentSearchNumber").selectmenu('refresh');
 	});
-	
+        $("#messageSend").click(function(){
+		sendMessage();
+	});
 });
 </script>
 </html>
