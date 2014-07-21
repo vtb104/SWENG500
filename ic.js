@@ -675,7 +675,10 @@ function Person(input){
 		this.userColor = colors.backgroundColor;
 		this.fontColor = colors.fontColor;	
 	}
-	
+	if(input.userID == null)
+        {
+            input.userID = "00";
+        }
 	this.styleOptions = new StyledIcon(StyledIconTypes.MARKER,{color:this.userColor,text:input.userID});
 	this.currentMarker = new StyledMarker({styleIcon:this.styleOptions,map:map});
 	
