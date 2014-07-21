@@ -97,12 +97,9 @@ if(isset($_POST['leaveTeam'])){
 if(isset($_POST['deleteTeam'])){
 	echo $db->delete_team($_POST['deleteTeam']);	
 }
+
 //This script is used to send a message (places it in database)
-if(isset($_POST['ic_message_send'])){
-    return true;
-}
-//This script is used to send a message (places it in database)
-if(isset($_POST['fu_message_send'])){
+if(isset($_POST['message_send'])){
     $data = $_POST['fu_message_send'];
 	$date = $data['date'] / 1000;
 	echo $db->create_message($data['from'], $data['sentTo'], $data['subject'], $data['body'], $date);

@@ -250,13 +250,13 @@ function getMessage()
 	msgTimer = setTimeout(function(){getMessage()}, updateCheckMsgInterval);
 	
 	var result = false;
-	var messageData = ""+userID;
+	var messageData = {sentTo: userID};
     
 	//GET MESSAGE CODE
     $.ajax({
         type: "POST",
         url: "messageReceive.php",
-        data: { fu_message_receive:messageData },
+        data: {message_receive:messageData },
 		dataType: "json",
         success: function(msg){ 
             //VIRGIL ADD HANDLER HERE (messageRecieve.php will return JSON formatted message) 

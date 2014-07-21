@@ -16,7 +16,7 @@ requestData = {sentTo: "1", type: "search" }
 	$.ajax({
         type: "POST",
         url: "messageReceive.php",
-        data: { ic_msg_recieve:requestData },
+        data: { msg_recieve:requestData },
 		dataType: "json",
         success: function(msg){ 
                         alert(JSON.stringify(msg));
@@ -46,7 +46,7 @@ var sendNewMessage = function (){
 	$.ajax({
         type: "POST",
         url: "messageSend.php",
-        data: { fu_message_send:sendData },
+        data: { message_send:sendData },
 		dataType: "json",
         success: function(msg){ 
                         
