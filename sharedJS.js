@@ -83,9 +83,17 @@ var updateTeams = function(){
 				$("#teamList").append("<option value='" + value.teamID + "'>" + value.teamName + "</option>");
                                 $("#assignTeamList").append("<option value='" + value.teamID + "'>" + value.teamName + "</option>");
 				//Split up the colors for easy reference
-				var tempColors = value.teamInfo.split("&&");
-				teamArray[index].backgroundColor = tempColors[0];
-				teamArray[index].fontColor = tempColors[1];
+                                if(tempColors != null)
+                                {
+                                    var tempColors = value.teamInfo.split("&&");
+                                    teamArray[index].backgroundColor = tempColors[0];
+                                    teamArray[index].fontColor = tempColors[1];
+                                }
+                                else
+                                {
+                                    teamArray[index].backgroundColor = "#FFF";
+                                    teamArray[index].fontColor = "#000";
+                                }
 			});
     		$("#currentTeamNumber").val(currentTeam);
                 $("#teamList").val(currentTeam);
