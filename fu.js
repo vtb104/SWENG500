@@ -140,7 +140,7 @@ function sendPosition()
 				
 				arrayGeoLocation.push(sendMsg);
 				
-				$("#infoLoc").html("msg created. timestamp: " + sendMsg.time);
+				$("#infoLoc").html("msg created. timestamp: " + sendMsg.sentTime);
 			}
 
 			function fail(error) 
