@@ -587,9 +587,9 @@ class Database
 	/** get points for a given area 
           * 
           */
-         public function list_points_in_area($areaName)
+         public function list_points_in_area($areaID)
          {
-            $query = "SELECT areaName,lat,lng FROM areas WHERE areaName='".$areaName."'";
+            $query = "SELECT areaName,areaPoints FROM areas WHERE areaID='".$areaID."'";
             $result = $this->return_array($this->db_obj->query($query));
             if($result){
                     return $result;	
@@ -628,14 +628,14 @@ class Database
          /** create a new area given a name and a set of points
           * 
           */
-         public function delete_area($areaName)
+         public function delete_area($areaID)
          {
-             $query = 'DELETE FROM areas WHERE areaName="'.$areaName.'"';
+             $query = 'DELETE FROM areas WHERE areaID="'.$areaID.'"';
 		$result = $this->db_obj->query($query);
 		if($result){
-			return TRUE;
+			echo TRUE;
 		}else{
-			return FALSE;
+			echo FALSE;
 		}
          }
 	/***********************************************************************/

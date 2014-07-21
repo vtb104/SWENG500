@@ -118,6 +118,7 @@ var testFunction = function (){
                 <tr>
                     <td></td>
                         <td>
+                            <div id="areaOptionsDiv"></div>
                     	<button id="newarea">New Area</button>
                         <button rel="#areaassignmentoverlay" id="areaAssign">Assign Area</button>
                     	<button id="deletearea">Delete Area</button>
@@ -400,7 +401,10 @@ $(function(){
 	$("#deleteteam").click(function(){
 		deleteTeam();
 	});
-	
+        //Delete an area
+	$("#deletearea").click(function(){
+		deleteArea();
+	});
 	//Show and hide the weather box
 	$("#showweather").click(function(){
 		$(this).hide();
@@ -451,8 +455,11 @@ $(function(){
     $("#currentTeamNumber").change(function(){
 		updateCurrentTeam();
 	});
-        
-        
+        $("#currentAreas").change(function(){
+            updatePointList();
+            addAreaOptions();
+	});
+
         
 });
 </script>

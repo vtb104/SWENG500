@@ -24,7 +24,7 @@ var areaArray = [];
 var currentAreaPoly;
 var areaData;
 var polyStorage = [];
-var areaNameData;
+var areaIDData;
 var workingAreaPointArray = [];
 
 if(readCookie("sar.location.lat") && readCookie("sar.location.lng")){
@@ -220,8 +220,8 @@ function udpateAreaObjectMenu(areaName)
     //TODO: get points of area
     //update area name
     var areaName = document.getElementById("AreaName");
-    var pointsDiv = document.getElementById("PointsOfArea");
-    pointsDiv.innerHTML = "";
+    //var pointsDiv = document.getElementById("PointsOfArea");
+    //pointsDiv.innerHTML = "";
 }
 //this function is called when the user selects a different area
 function updatePointList()
@@ -230,21 +230,19 @@ function updatePointList()
      $.ajax({
         type: "POST",
         url: "AreaHandler.php",
-        data: {getAreaPoints:document.getElementById("AreaEditSelector").value},//change search ID for multiple searches
+        data: {getAreaPoints:document.getElementById("currentAreas").value},//change search ID for multiple searches
         dataType: "json",
         success: function(areaData){
             pointArray = [];
-            areaNameData = areaData[0].areaName;
-            document.getElementById("areaBoxContent").innerHTML = "";
-            document.getElementById("areaBoxContent").innerHTML += 'Area Name: <b><label id="AreaName">'+areaData[0].areaName+' </b></label><input type="color" id="area_color" value="#00ff00"><br>';
-            for(var cnt=0; cnt < areaData.length; cnt++)
+            areaIDData = areaData[0].areaName;
+            var tempPointsArray = JSON.parse(areaData[0].areaPoints);
+            for(var cnt=0; cnt < tempPointsArray.length; cnt++)
             {
-                document.getElementById("areaBoxContent").innerHTML += 'Point '+cnt+':Lat '+areaData[cnt].lat+' | Lng: '+areaData[cnt].lng+'<br>';
-                pointArray.push(new google.maps.LatLng(areaData[cnt].lat,areaData[cnt].lng));
+                //gotta split up JSON string
+                
+                //alert(dataObj[0].k);
+                pointArray.push(new google.maps.LatLng(tempPointsArray[cnt].k,tempPointsArray[cnt].B));
             }
-            document.getElementById("areaBoxContent").innerHTML += '<div id="PointsOfArea"></div><button type="button" onclick="showAreaOnMap()">Show Area On Map</button><button type="button" onclick="removeAreaFromMap()">Remove Area From Map</button>';
-            //fillPoly(pointsArray);
-            //alert(JSON.stringify(areaData[0]));
         }});
 }
 //this function is called when "start new area button is clicked
@@ -270,14 +268,18 @@ function assignArea()
            
         }});    
 }
-
+//adds the show area on map and remove area from map buttons
+function addAreaOptions()
+{
+    document.getElementById("areaOptionsDiv").innerHTML = '<button onclick="showAreaOnMap()">Show Area On Map</button><button onclick="removeAreaFromMap()">Remove Area From Map</button>';
+}
 //this function deletes the given area
 function deleteArea()
 {
      $.ajax({
         type: "POST",
         url: "AreaHandler.php",
-        data: {deleteArea:document.getElementById("AreaEditSelector").value},
+        data: {deleteArea:document.getElementById("currentAreas").value},
         dataType: "json",
         success: function(areaData){
            //remove area from list
@@ -289,11 +291,11 @@ function deleteArea()
 //this function is called to show the area on the map
 function showAreaOnMap()
 {
-    fillPoly(areaNameData,pointArray);
+    fillPoly(areaIDData,pointArray);
 }
 function removeAreaFromMap()
 {
-    var areaIndex = checkArrayForName(polyStorage, areaNameData);
+    var areaIndex = checkArrayForName(polyStorage, areaIDData);
     if(areaIndex >= 0)
     {
         polyStorage[areaIndex].area.setMap(null);
@@ -301,27 +303,31 @@ function removeAreaFromMap()
     }
 }
 //fills the poly and completes last border
-function fillPoly(areaName, arrayOfPoints)
+function fillPoly(areaID, arrayOfPoints)
 {
     //check if area exists on map
-    if(checkArrayForName(polyStorage, areaName) == -1)
+    if(checkArrayForName(polyStorage, areaID) == -1)
     {
         //create the "fill polygon"
         var polyObj = new Object();
+        var tempColor = "#00ff00";
+        if(document.getElementById("area_color") != null)
+        {
+            tempColor = document.getElementById("area_color").value;
+        }
         var areaFill = new google.maps.Polygon(
         {
             paths: arrayOfPoints,
-            strokeColor: document.getElementById("area_color").value,
+            strokeColor: tempColor,
             strokeOpacity: 0.8,
             strokeWeight: 3,
-            fillColor: document.getElementById("area_color").value,
+            fillColor: tempColor,
             fillOpacity: 0.35
         });
         areaFill.setMap(map);
-        polyObj.name = areaName;
+        polyObj.name = areaID;
         polyObj.area = areaFill;
         polyStorage.push(polyObj);
-        document.getElementById("PointsOfArea").innerHTML += "Area is: "+google.maps.geometry.spherical.computeArea(areaFill.getPath())/4046.86+" acres";
     }
 }
 function checkArrayForName(inArray, inName)
