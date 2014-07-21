@@ -1,6 +1,5 @@
 <?php
     require_once('phpcommon.php');
-	require_once("messageSend.php");
     if(!$auth->authenticate()){
  	header("location: login.php"); 
     }
@@ -18,13 +17,8 @@
   <script src="https://code.jquery.com/mobile/1.4.2/jquery.mobile-1.4.2.min.js"></script>
   <script src="https://maps.googleapis.com/maps/api/js?sensor=true"></script>
   <script src="sharedJS.js"></script>
-  <script src="fu_temp.js"></script>
-  <script src="messages.js"></script>
-<style>
-	.cachedPoints{
-		font-size: 8px;	
-	}
-</style>
+  <script src="fu.js"></script>
+</head> 
 <script>
 <?php
 	if(isset($_SESSION['userid']))
@@ -34,13 +28,11 @@
 ?>
 
 </script>
-</head> 
 <body onLoad="initialize()">
 <div data-role=page id=geoMap>
         <div data-role=header>
             <a href="#geoMapHelp" class="ui-btn ui-btn-inline ui-corner-all ui-shadow">Help</a><a href="logout.php">Logout</a>
             <h1>Geo Location Map</h1>
-            
         </div>
     
         <div data-role="panel" id="geoMapHelp"> 
@@ -69,7 +61,7 @@
                 <ul>
                     <li><a href="#geoMap">Map</a></li>
                     <li><a href="#message">Messages</a></li>
-                    <li><a href="#configure" class=".configure">Configure<span class="cachedPoints"></a></li>
+                    <li><a href="#configure" class=".configure">Configure</a></li>
                 </ul>
             </div>
         </div>
@@ -81,32 +73,28 @@
             <h1>Messages</h1>
         </div>
 
-        <div data-role="panel" id="msgHelp">
+        <div data-role="panel" id="msgHelp"> 
             <h2>Message Help</h2>
             <p>You can close the help panel by clicking outside the panel, pressing the Esc key or by swiping.</p>
-            <p>Only the last ten messages are displayed. This holds true for sent and received messages.</p>
-            <span id="updateMsgInfo"></span>
+            <p>insert help text here</p>
         </div> 
 
+        <div data-role="content">
+            <h3>Send and Get Messages</h3>
+            send canned msg <button id="testSendButton">Send MSG</button>
+            <BR><BR>receive canned msg <button id="testReceiveButton">Get MSG</button>
+        </div>
+
 		<div data-role="content">
-			<div role="main" class="ui-content" id="container">
-			<div class = "msgContainer" id="msgWindow">
-				<p>Here's our chat data</p>
-			</div>
-			
-			<div id = "sendMsg">
-				<textarea rows = "2">Enter your message here...</textarea>
-				<button onclick = "sendMessage()">Send</button>
-			</div>
-			</div>
-		</div>
+            <span id="updateMsgInfo"></span>
+        </div>
 		
         <div data-role="footer" data-position="fixed">
             <div data-role="navbar">
                 <ul>
                     <li><a href="#geoMap">Map</a></li>
                     <li><a href="#message">Messages</a></li>
-                    <li><a href="#configure" class=".configure">Configure<span class="cachedPoints"></a></li>
+                    <li><a href="#configure" class=".configure">Configure</a></li>
                 </ul>
             </div>
         </div>
@@ -116,7 +104,6 @@
         <div data-role="header">
             <a href="#confHelp" class="ui-btn ui-btn-inline ui-corner-all ui-shadow">Help</a><a href="logout.php">Logout</a>
             <h1>Configure</h1>
-            
 		</div>
         <div data-role="panel" id="confHelp"> 
             <h2>Configuration Help</h2>
@@ -134,7 +121,14 @@
                 <option value="30000">30s</option>
 				<option value="60000">1min</option>
             </select>
-
+			
+			<h4>Check for Message Interval</h4>
+             <select id="checkMsgInt">
+                <option value="5000">5s</option>
+                <option value="10000">10s</option>
+                <option value="30000">30s</option>
+				<option value="60000">30s</option>
+            </select>
             <br/>
             <h3 align="center">Join a search</h3>
             <!--Updated via Javascript-->
@@ -152,7 +146,7 @@
                 <ul>
                     <li><a href="#geoMap">Map</a></li>
                     <li><a href="#message">Messages</a></li>
-                    <li><a href="#configure" class=".configure">Configure<span class="cachedPoints"></span></a></li>
+                    <li><a href="#configure" class=".configure">Configure</a></li>
                 </ul>
             </div>
         </div>
@@ -173,7 +167,12 @@ $(function(){
 		$("#joinOrLeaveStatus").html("");
 		$("#currentSearchNumber").selectmenu('refresh');
 	});
-	
+        $("#testSendButton").click(function(){
+            sendMessage("FILL IN MSG DATA HERE");
+	});
+        $("#testReceiveButton").click(function(){
+            getMessage();
+	});
 });
 </script>
 </html>

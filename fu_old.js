@@ -1,18 +1,18 @@
 // Declaration of global vars
 var updateLocationInterval = 5000;
 var updateCheckMsgInterval = 5000;
+var updateSendLocationInterval = 60000;
 
 var locTimer = 0;
 var msgTimer = 0;
-var sendLocTimer = 5000;
+var sendLocTimer = 0;
 
 var firstLoop = true;
 var currentLoc = new google.maps.LatLng(0, 0);
 var arrayGeoLocation = [];
-var cachedPoints = 0;
+var uploadingGeoLocation = false;
 
 var currentSearch = 1;
-
 if(readCookie("sar.currentSearchFU")){
 	currentSearch = readCookie("sar.currentSearchFU");
 }
@@ -61,9 +61,11 @@ function initialize()
 	$("#updateLocInt").val(updateLocationInterval);
 	sendPosition();
 	
+	$("#checkMsgInt").val(updateCheckMsgInterval);
 	getMessage();
 	
-	sendLocations = setInterval(sendGeoLocations, sendLocTimer);
+	$("#sendLocInt").val(updateSendLocationInterval);
+	sendGeoLocations();
 	
 	var lat = $("#lat").val ();
     var lng = $("#lng").val ();
@@ -90,6 +92,7 @@ function initialize()
 	
     locTimer = setTimeout(function(){sendPosition()}, updateLocationInterval);
 	msgTimer = setTimeout(function(){getMessage()}, updateCheckMsgInterval);
+	sendLocTimer = setTimeout(function(){sendGeoLocations()}, updateSendLocationInterval);
 	
 	marker = new google.maps.Marker({
 		position: latlng,
@@ -107,6 +110,8 @@ function initialize()
 // if geo service is available, send the current location to the server
 function sendPosition()
 {
+	var result = false;
+	
 	if(locTimer)
 	{
 		window.clearTimeout(locTimer);
@@ -116,6 +121,9 @@ function sendPosition()
 	$("#updateLocInfo").html("Updating every " + (updateLocationInterval / 1000) + " seconds");
 	locTimer = setTimeout(function(){sendPosition()}, updateLocationInterval);
 
+	// If the geo location points are being uploaded, then do not collect a new point
+	if (!uploadingGeoLocation)
+	{
 		if ( navigator.geolocation ) 
 		{
 			var geoOptions = {
@@ -131,29 +139,36 @@ function sendPosition()
 				// Location found, update the coords, move the map and the marker.
 				positionCallback(pos);
 				var sendMsg = new Object();
-				sendMsg.user = userID;
+				sendMsg.user = ""+userID;
 				sendMsg.lat = $("#lat").val();
 				sendMsg.lng = $("#lng").val();
 				var dateObject = new Date();
-				sendMsg.sentTime = dateObject.getTime();
-				sendMsg.sent = false;
+				sendMsg.time = ""+dateObject.getTime();
 				
 				arrayGeoLocation.push(sendMsg);
 				
 				$("#infoLoc").html("msg created. timestamp: " + sendMsg.time);
+				
+				result = true;
 			}
 
 			function fail(error) 
 			{
 				// Failed to find location, do nothing
 			}
-            //Second call to check if there is a new area available from IC
+            //Second call to check if there is a new area availible from IC
             checkForNewAreaFromIC();
 		}
 		else
 		{
 			$("#info").html("Location not allowed for this application.  Please allow location sharing to enable this feature.");
 		}
+	}
+	else
+	{
+		result = true;
+	}
+	return result;
 }
 
 var cnt=0;
@@ -167,7 +182,7 @@ function checkForNewAreaFromIC()
 		$.ajax({
             type: "POST",
             url: "AreaHandler.php",
-            data: {checkForArea:""+userID},
+            data: {checkForArea:"1"},//TODO: replace with actual user ID
             success: function(msg)
 			{
                 //alert("msg leng"+msg.length);
@@ -195,48 +210,18 @@ function checkForNewAreaFromIC()
 	return result;
 }
 
-function sendMessage()
+function sendMessage(msg)
 {
-	var result = false;
-
-	// get the message
-	var messageData = new Object();
-    messageData.msgTo = ""+currentSearch;
-    messageData.msgFrom = ""+userID;
-    messageData.msgSubject = "Message from FU id " + userID;
-    messageData.msgUrgency = "Medium";
-	var dateObject = new Date();
-    messageData.msgDate = ""+dateObject.getTime();
-    messageData.msgBody = $('textarea').val();
-
-    if (messageData.msgBody)
+    if (msg)
     {
-		if (currentSearch > 0)
-		{
-			//Start the AJAX call
-			$.ajax({
-				type: "POST",
-				url: "messageSend.php",
-				data: { fu_message_send:messageData },
-				dataType: "json",
-				success: function(msg){ 
-					$('.msgContainer').append('<p>' + messageData.msgBody + '</p>');
-					result = true;
-				},
-				error: function(msg){
-					$('.msgContainer').append('<p>Message failed to send...</p>');
-					result = false;
-				}
-			});
-		}
-		else
-		{
-			$('.msgContainer').append('<p>You must be part of a search to send a message</p>');
-			result = false;
-		}
-	}
+        return true;
+    }
+    else
+    {
+        return false;
+    }
 	
-	return result;
+	// use the sendposition as an example of object and ajax call methodology once the server side is setup.
 }
 
 function getMessage()
@@ -246,69 +231,64 @@ function getMessage()
 		window.clearTimeout(msgTimer);
 	}
 	
+	updateCheckMsgInterval = $("#checkMsgInt").val();
 	$("#updateMsgInfo").html("Updating every " + (updateCheckMsgInterval / 1000) + " seconds");
 	msgTimer = setTimeout(function(){getMessage()}, updateCheckMsgInterval);
 	
-	var result = false;
-	var messageData = {sentTo: userID};
-    
-	//GET MESSAGE CODE
-    $.ajax({
-        type: "POST",
-        url: "messageReceive.php",
-        data: {message_receive:messageData },
-		dataType: "json",
-        success: function(msg){ 
-            //VIRGIL ADD HANDLER HERE (messageRecieve.php will return JSON formatted message) 
-            alert(JSON.stringify(msg));
-			result = true;
-        },
-		error: function(msg){
-		}
-	});
+    msg = "";
 	
-    return result;
+	// use the sendposition as an example of object and ajax call methodology once the server side is setup.
+    return msg;
 }
 
-//Function iterates through the arrayGeoLocation and sends messages that aren't sent yet.
 function sendGeoLocations()
 {
-	cachedPoints = 0;
-	// Go through the array and make an AJAX call for each that isn't sent yet.
-	$.each(arrayGeoLocation, function(index, value){
-		if(!value.sent){
-			cachedPoints++;
-			$.ajax({
-				type: "POST",
-				url: "messageReceive.php",
-				data: {dataMsg: value},
-				dataType: "json",
-				success: function(msg){
-					if(msg && msg !== " "){
-						value.sent = true;	
-						cachedPoints = cachedPoints - 1;
-					}
-					if(cachedPoints){
-						$(".cachedPoints").html(" <br/>Points cached: " + cachedPoints);
-					}else{
-						$(".cachedPoints").html("");
-					}
-				},
-				error: function(msg){
-					value.sent = false;	
-					if(cachedPoints){
-						$(".cachedPoints").html(" <br/>Points cached: " + cachedPoints);
-					}else{
-						$(".cachedPoints").html("");
-					}
-				}
-			})
-		}
-		
-	});
-	
-}
+	var result = false;
 
+	// set the global var to stop gathering geo location points
+	uploadingGeoLocation = true;
+	
+	if(sendLocTimer)
+	{
+		window.clearTimeout(sendLocTimer);
+	}
+
+	sendLocTimer = setTimeout(function(){sendGeoLocations()}, updateSendLocationInterval);
+	
+	// send all cached geo locations
+	for (i = 0; i < arrayGeoLocation.length; i++) 
+	{ 
+		var forwardMsg = JSON.stringify(arrayGeoLocation[i]);
+				
+		$("#infoLoc").html("Sending location...");
+					
+		$.ajax({
+			type: "POST",
+			url: "messageReceive.php",
+			data: {dataMsg:forwardMsg},
+			success: function(msg)
+			{
+				if(msg){
+					$("#infoLoc").html(msg);
+				}else{
+					$("#infoLoc").html(msg);
+				}
+				result = true;
+			}
+		});
+	}
+
+	// clear array of geo locations
+	while(arrayGeoLocation.length > 0)
+	{ 
+		arrayGeoLocation.pop();
+	}
+	
+	// allow the gathering of geo location points
+	uploadingGeoLocation = false;
+	
+	return result;
+}
 //Either adds the user to a search or removes them
 var joinOrLeave = function(){
 	 var passThis = $("#joinOrLeave").val();
