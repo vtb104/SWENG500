@@ -1,4 +1,4 @@
-var map;
+	var map;
 
 //Used to halt timers and fetchers for other actions.
 var goVar = true;
@@ -14,8 +14,6 @@ var timer = 0;
 var usaCoord = new google.maps.LatLng(39.57, -99.10);
 var startLat = 39.57;  //America
 var startLng = -100;
-
-var colorArray = {1: "FF5511", 2: "55FF22", 3: "6633DD", 4 : "338833"};
 
 var poly;
 var pointCount = 0;
