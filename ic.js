@@ -324,6 +324,7 @@ function fillPoly(areaID, arrayOfPoints)
             fillColor: tempColor,
             fillOpacity: 0.35
         });
+        map.panTo(new google.maps.LatLng(arrayOfPoints[0].k,arrayOfPoints[0].B));
         areaFill.setMap(map);
         polyObj.name = areaID;
         polyObj.area = areaFill;
