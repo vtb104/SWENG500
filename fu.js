@@ -3,7 +3,6 @@ var updateLocationInterval = 5000;
 var updateCheckMsgInterval = 5000;
 
 var locTimer = 0;
-var msgTimer = 0;
 var sendLocTimer = 5000;
 
 var firstLoop = true;
@@ -61,9 +60,8 @@ function initialize()
 	$("#updateLocInt").val(updateLocationInterval);
 	sendPosition();
 	
-	getMessage();
-	
-	sendLocations = setInterval(sendGeoLocations, sendLocTimer);
+	sendLocations = setInterval(sendGeoLocations,   sendLocTimer);
+	msgTimer =      setInterval(function(){getMessage(userID)}, sendLocTimer);
 	
 	var lat = $("#lat").val ();
     var lng = $("#lng").val ();
@@ -89,7 +87,6 @@ function initialize()
     positionMarker.setMap(map);
 	
     locTimer = setTimeout(function(){sendPosition()}, updateLocationInterval);
-	msgTimer = setTimeout(function(){getMessage()}, updateCheckMsgInterval);
 	
 	marker = new google.maps.Marker({
 		position: latlng,
@@ -148,7 +145,7 @@ function sendPosition()
 				// Failed to find location, do nothing
 			}
             //Second call to check if there is a new area available from IC
-            checkForNewAreaFromIC();
+            //checkForNewAreaFromIC();
 		}
 		else
 		{
@@ -193,81 +190,6 @@ function checkForNewAreaFromIC()
 		});
     }
 	return result;
-}
-
-function sendMessage()
-{
-	var result = false;
-
-	// get the message
-	var messageData = new Object();
-    messageData.msgTo = ""+currentSearch;
-    messageData.msgFrom = ""+userID;
-    messageData.msgSubject = "Message from FU id " + userID;
-    messageData.msgUrgency = "Medium";
-	var dateObject = new Date();
-    messageData.msgDate = ""+dateObject.getTime();
-    messageData.msgBody = $('textarea').val();
-
-    if (messageData.msgBody)
-    {
-		if (currentSearch > 0)
-		{
-			//Start the AJAX call
-			$.ajax({
-				type: "POST",
-				url: "messageSend.php",
-				data: { message_send:messageData },
-				dataType: "json",
-				success: function(msg){ 
-					$('.msgContainer').append('<p>' + messageData.msgBody + '</p>');
-					result = true;
-				},
-				error: function(msg){
-					$('.msgContainer').append('<p>Message failed to send...</p>');
-					result = false;
-				}
-			});
-		}
-		else
-		{
-			$('.msgContainer').append('<p>You must be part of a search to send a message</p>');
-			result = false;
-		}
-	}
-	
-	return result;
-}
-
-function getMessage()
-{
-	if(msgTimer)
-	{
-		window.clearTimeout(msgTimer);
-	}
-	
-	$("#updateMsgInfo").html("Updating every " + (updateCheckMsgInterval / 1000) + " seconds");
-	msgTimer = setTimeout(function(){getMessage()}, updateCheckMsgInterval);
-	
-	var result = false;
-	var messageData = {sentTo: userID};
-    
-	//GET MESSAGE CODE
-    $.ajax({
-        type: "POST",
-        url: "messageReceive.php",
-        data: {message_receive:messageData },
-		dataType: "json",
-        success: function(msg){ 
-            //VIRGIL ADD HANDLER HERE (messageRecieve.php will return JSON formatted message) 
-            alert(JSON.stringify(msg));
-			result = true;
-        },
-		error: function(msg){
-		}
-	});
-	
-    return result;
 }
 
 //Function iterates through the arrayGeoLocation and sends messages that aren't sent yet.
@@ -323,4 +245,20 @@ var joinOrLeave = function(){
 		}
 	});	
 	
+}
+
+//Handles the messages when the AJAX calls finish
+var messageSendHandler = function(msg){
+	alert(JSON.stringify(msg)); 
+}
+
+var messageGetHandler = function(msg){
+	var tempTime = Date();
+	if(msg){
+		$("#msgWindow").html(JSON.stringify(msg) + "<br/><br/>Current at " + tempTime.toString());
+	}else{
+		
+		$("#msgWindow").html("No");
+		$("#msgWindow").html("No messages at " + tempTime.toString() );	
+	}
 }

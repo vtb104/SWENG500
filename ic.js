@@ -1015,6 +1015,18 @@ var deleteTeam = function(){
 		});
 	}
 }
+var messageSendHandler = function(msg){
+	if(msg){
+		$("#floatNote").html("Message Sent");	
+	}else{
+		$("#floatNote").html("Message not sent: " + JSON.stringify(msg));	
+	}
+}
+
+var messageGetHandler = function(msg){
+	alert(JSON.stringify(msg));
+	$(id="u403").html(objectCount + "New Messages" + "| From:" + msg.from + "| Subject:" + msg.Subject + "| Urgency: " + msg.Level + "| Received:" + msg.Time + "| Message:" + msg.Body); 
+}
 
 
 //Searches using the Google search function

@@ -19,16 +19,28 @@
   <link rel="stylesheet" type="text/css" href="css/index.css?291268769" id="pagesheet"/>
   <!-- Other scripts -->
   <script type="text/javascript">
-   document.documentElement.className += ' js';
+   //ocument.documentElement.className += ' js';
    </script>
 
 
 <!-- Page JavaScript -->
+<script type="text/javascript" src="https://maps.google.com/maps/api/js?sensor=true&libraries=weather"></script>
 <script src="sharedJS.js"></script>
 <script src="ic.js"></script>
 <script src="messages.js"></script>
-<script src="cookies.js"></script>
+<script>
+<?php if(isset($_SESSION['userid']))
+	{
+		echo "var userID = " . $_SESSION['userid'] . ";";
+	}else{
+		echo "var userID = 0";
+	}	
+?>
+var doFirst = function(){
+	getMessage(userID);
+};
 
+</script>
 
 <style>
 
@@ -106,7 +118,7 @@ font-family: Gotham, 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 
 </style>
 </head>
 
-<body onLoad="initialize()">
+<body onLoad="doFirst()">
 <div id="pagewrapper">
     <div id="main"></div>
     <div id="menubar">

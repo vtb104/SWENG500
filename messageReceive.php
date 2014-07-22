@@ -39,8 +39,8 @@ if(isset($_POST['userRequest'])){
 };
 
 //Function returns messages for the user passed.
-if(isset($_POST['msg_receive'])){
-	$data = $_POST['msg_receive'];
+if(isset($_POST['message_receive'])){
+	$data = $_POST['message_receive'];
 	echo $db->fetch_messages($data['sentTo']);
 };
 

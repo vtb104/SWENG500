@@ -78,21 +78,23 @@ font-family: Gotham, 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 
 
 #floatNote{
 	position: fixed;
-	right: 0px;
-	bottom: 0px;
+	left: 40%;
+	top: 0px;
 	color: red;	
 	z-Index: 50;
 	Padding: 3px;
+	font-size: 20px;
 }
 </style>
 <script>
 <?php if(isset($_SESSION['userid']))
 	{
-		echo "var userID = " . $_SESSION['userid'];
+		echo "var userID = " . $_SESSION['userid'] . ";";
 	}else{
 		echo "var userID = 0";
 	}	
 ?>
+
 </script>
 </head>
 
@@ -178,6 +180,7 @@ font-family: Gotham, 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 
    <img class="preload" src="images/u263-17-m.png" alt=""/>
    <img class="preload" src="images/u263-17-fs.png" alt=""/>
   </div>
+  <div id="floatNote"></div>
   <!-- JS includes -->
   <script type="text/javascript">
    if (document.location.protocol != 'https:') document.write('\x3Cscript src="http://musecdn2.businesscatalyst.com/scripts/4.0/jquery-1.8.3.min.js" type="text/javascript">\x3C/script>');
@@ -205,7 +208,7 @@ Muse.Utils.transformMarkupToFixBrowserProblems();/* body */
 
 $(function(){
 	$("#u263-17").click(function(){
-		sendNewMessage();
+		sendMessage($("#widgetu264_input").val(), userID, $("#widgetu268_input").val(), $("#widgetu258_input").val(), $("#widgetu278_input").val());
 	});
 	
 });

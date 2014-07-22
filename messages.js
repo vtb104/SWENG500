@@ -1,66 +1,44 @@
-/* 
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-/*var initialize = function(){
-    getNewMessages();
-}*/
+//Send and receive message functions, handlers are in ic.js and fu.js for return calls when AJAX completes
 
-var getNewMessage = function(){
+var sendMessage = function(sentTo, sentFrom, subject, message, urgency)
+{
 
-requestData = {sentTo: "1", type: "search" }
-	
-	//Start the AJAX call
-	$(id="pamphletu139").html("Refreshing...");
+	var messageData = new Object();
+    messageData.msgTo = sentTo;
+    messageData.msgFrom = sentFrom;
+    messageData.msgSubject = subject;
+    messageData.msgUrgency = urgency;
+	var dateObject = new Date();
+    messageData.msgDate = dateObject.getTime();
+    messageData.msgBody = message;
+
 	$.ajax({
+		type: "POST",
+		url: "messageSend.php",
+		data: { message_send:messageData },
+		dataType: "json",
+		success: function(msg){ 
+			messageSendHandler(msg);
+		},
+		error: function(msg){
+			messageSendHandler(msg);
+		}
+	});
+	
+}
+
+var getMessage = function(inputID){
+	var messageData = {sentTo: inputID};
+    $.ajax({
         type: "POST",
         url: "messageReceive.php",
-        data: { msg_recieve:requestData },
+        data: {message_receive:messageData },
 		dataType: "json",
         success: function(msg){ 
-                        alert(JSON.stringify(msg));
-			  var newMessages = new Refresh();
-                               if (success){
-			$(id="u403").html(objectCount + "New Messages" + "| From:" + msg.from + "| Subject:" + msg.Subject + "| Urgency: " + msg.Level + "| Received:" + msg.Time + "| Message:" + msg.Body); }
-                               else{
-                                   $("#floatNote").html("Messages were not retrieved.")
-                               }
-                        
-         },
-         error: function(msg){
-             //var failedRecipt = new Notice();
-             $("#floatNote").html("Messages were not retrieved.")
-             
-         }
-     });
-};
-
-var sendNewMessage = function (){
-   
-   	 theDate = new Date();
-     sendData = {sentTo: "1", from: "3", subject: "Test", urgency: "High", body: "Test", date: theDate.getTime()}
-     
-     //Start the AJAX call
-     $(id="pamphletu139").html("Sending...");
-	$.ajax({
-        type: "POST",
-        url: "messageSend.php",
-        data: { message_send:sendData },
-		dataType: "json",
-        success: function(msg){ 
-                        
-                    alert(JSON.stringify(msg));	
-                        var sentMessage = new Refresh();
-                        $("#floatNote").html("Message sent.")
-                        
-                    },
-
-        error: function(msg){
-           // var failedMessage = new Notice();
-            $("#floatNote").html("Message was not sent. Try again later.")
-            
-     
- }
-});
-};
+            messageGetHandler(msg);
+        },
+		error: function(msg){
+			messageGetHandler(msg);
+		}
+	});
+}
