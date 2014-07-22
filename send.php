@@ -23,9 +23,10 @@
    document.documentElement.className += ' js';
 </script>
 <!-- Page JavaScript -->
+<script type="text/javascript" src="https://maps.google.com/maps/api/js?sensor=true&libraries=weather"></script>
+<script src="sharedJS.js"></script>
 <script src="ic.js"></script>
 <script src="messages.js"></script>
-<script src="cookies.js"></script>
 
 
 <style>
@@ -95,7 +96,7 @@ font-family: Gotham, 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 
 </script>
 </head>
 
-<body onLoad="initialize()">
+<body>
 <div id="pagewrapper">
     <div id="main"></div>
     <div id="menubar">
