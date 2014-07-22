@@ -145,7 +145,7 @@ font-family: Gotham, 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 
      <div class="clearfix grpelem" id="u273-4"><!-- content -->
       <p>Form received.</p>
      </div>
-     <input class="submit-btn NoWrap grpelem" id="u263-17" type="submit" value="" tabindex="6" on-click="sendNewMessage()"/><!-- state-based BG images -->
+     <input class="submit-btn NoWrap grpelem" id="u263-17"  tabindex="6"/><!-- state-based BG images -->
      <div class="fld-grp clearfix grpelem" id="widgetu258" data-required="true"><!-- none box -->
       <label class="fld-label actAsDiv clearfix grpelem" id="u261-4" for="widgetu258_input"><!-- content -->
        <span class="actAsPara">Message:</span>
