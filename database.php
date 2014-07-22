@@ -536,9 +536,9 @@ class Database
 		 $query = "INSERT INTO Messages (sentfrom, sentto, subject, message, dateSent) VALUES ('$from', '$to', '$title', '$message', '$date')";
 		 $result = $this->db_obj->query($query);
 		 if($result){
-			return true; 
+			echo true; 
 		 }else{
-			 return "Fail " . __LINE__ . " " . __FILE__;
+			echo "Fail " . __LINE__ . " " . __FILE__;
 		 }
 	 }
 	 
@@ -606,9 +606,9 @@ class Database
              $query = 'INSERT INTO areas (areaName, areaPoints, areaColor) VALUES ("' . $areaName . '","'.mysql_real_escape_string($areaPoints).'","'.$areaColor.'")';
 		$result = $this->db_obj->query($query);
 		if($result){
-			return TRUE;
+			echo $this->get_last_id();
 		}else{
-			return FALSE;
+			echo "failed";
 		}
          }
         /** assign and area to a team

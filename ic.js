@@ -251,18 +251,18 @@ function startNewArea()
     currentAreaPoly = [];
 }
 //this function is used to assign a team to an area
-function assignArea()
+function assignArea(inArea, inTeam)
 {
     var assignmentData = new Object();
-    assignmentData.area = document.getElementById("assignAreaList").value;
-    assignmentData.team = document.getElementById("assignTeamList").value;
+    assignmentData.area = inArea;
+    assignmentData.team = ""+inTeam;
      $.ajax({
         type: "POST",
         url: "AreaHandler.php",
         data: {assignArea:JSON.stringify(assignmentData)},//change search ID for multiple searches
         dataType: "json",
         success: function(areaData){
-           
+           //TODO handle successful assignment
         }});    
 }
 //adds the show area on map and remove area from map buttons
@@ -351,12 +351,21 @@ function saveAreaButton()
     areaData.userID = userID;
     areaData.points = currentAreaPoly;
     areaData.color = document.getElementById("area_color").value;
+    
+    var returnedAreaID = 0;
     $.ajax({
         type: "POST",
         url: "AreaHandler.php",
         data: { createArea:JSON.stringify(areaData) },
 		dataType: "json",
-        success: function(msg){ }});
+        success: function(msg){ returnedAreaID = parseInt(msg);  //check if team was assigned to area
+    if(document.getElementById("teamList").value != "all")
+    {   
+        assignArea(returnedAreaID,document.getElementById("teamList").value); 
+    }}});
+    
+     
+    
     //reset all data for next area
     poly.setMap(null);
     currentAreaPoly = [];
@@ -376,6 +385,8 @@ function saveAreaButton()
     {
         workingAreaPointArray[cnt].setMap(null);
     }
+  
+
     
 }
 var polylineStorage = [];

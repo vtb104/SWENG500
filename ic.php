@@ -443,7 +443,7 @@ $(function(){
 		searchNow();
 	});
         $("#saveareaassignment").click(function(){
-            assignArea();
+            assignArea(document.getElementById("assignAreaList").value, document.getElementById("assignTeamList").value);
 	});
 	$("#testbutton").click(function(){
 		testFunction();
