@@ -24,6 +24,7 @@
 
 
 <!-- Page JavaScript -->
+<script src="sharedJS.js"></script>
 <script src="ic.js"></script>
 <script src="messages.js"></script>
 <script src="cookies.js"></script>

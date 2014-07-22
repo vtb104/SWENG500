@@ -11,7 +11,6 @@ var pointsShowing = 0;
 
 var timer = 0;
 
-var usaCoord = new google.maps.LatLng(39.57, -99.10);
 var startLat = 39.57;  //America
 var startLng = -100;
 
