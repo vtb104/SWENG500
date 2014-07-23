@@ -58,120 +58,120 @@ var testFunction = function (){
 <body onLoad="initialize()">
 <div id="pagewrapper">
     <div id="main">
+        <div id="menubar">
+            <a class="button1" href="searchertest.php" target="_blank">Searcher Test</a>
+            <a class="button1"href="Messages.php">Messages</a>
+            <a class="button1"href="fu.php" target="_blank">Field Unit</a>
+            <a class="button1" id="logoutbutton" href="logout.php">Log Out</a>
+        </div>
         
+        <div id="title">
+          <h1>Search and Rescue</h1>
+          <h2>Incident Command</h2>
+          <br/>
+          <button class="button1 sbutton" id="optionbuttonshow"><-Show Search Option Panel</button>
+          <button class="button1 sbutton" id="optionbuttonhide" style="display: none" >-> Hide Search Option Panel</button>
     
-    
-    <div id="menubar">
-    	<a href="searchertest.php" target="_blank">Searcher Test</a>
-    	<a href="Messages.php">Messages</a>
-    	<a href="fu.php" target="_blank">Field Unit</a>
-        <a id="logoutbutton" href="logout.php">Log Out</a>
-    </div>
-    
-      <div id="content">
-          <h1 style="text-align: center;">Search and Rescue</h1>
-          <h2 style="text-align: center;">Incident Command</h2>
-			<div id="optiondiv">
-            	<table class="defaulttable" id="pointoptionstable">
-            	<tr>
-                	<td>
-                    	<span class="optionlabel">Select a Search to View: </span>
-                    </td>
-                    <td>
-                    <!--Populated by function updateSearches-->
-                    <select id="currentSearchNumber"></select>
-                    </td>
-               </tr>
-               <tr>
-               		<td>
-                    	
-                    </td>
-                    <td>
-                    	<button rel="#newsearchoverlay" id="newsearch">New Search</button>
-                    	<button id="deletesearch">Delete Search</button>
-                    </td>
-               </tr>
-                <tr>
-                	<td>
-                    	<span class="optionlabel">Team Listing: </span>
-                    </td>
-                    <td>
-                    	<select id="currentTeamNumber"></select>
-                	</td>
-                </tr>
-                <tr>
-                    <td></td>
-                        <td>
-                    	<button rel="#newteamoverlay" id="newteam">New Team</button>
-                    	<button id="deleteteam">Delete Team</button>
-                    </td>
-                   
-               	</tr>
-                 <tr>
-                	<td>
-                    	<span class="optionlabel">Area Listing: </span>
-                    </td>
-                    <td>
-                    	<select id="currentAreas"></select>
-                	</td>
-                </tr>
-                <tr>
-                    <td></td>
-                        <td>
-                            <div id="areaOptionsDiv"></div>
-                    	<button id="newarea">New Area</button>
-                        <button rel="#areaassignmentoverlay" id="areaAssign">Assign Area</button>
-                    	<button id="deletearea">Delete Area</button>
-                    </td>
-                   
-               	</tr>
-				<tr>
-               		<td>
-                    	<span class="optionlabel">Update Interval: </span>
-                    </td>
-                    <td>
-                        <select id="updateInt">
-                            <option value="5000">5s</option>
-                            <option value="10000">10s</option>
-                            <option value="10000">30s</option>
-                            <option value="60000">1 min</option>
-                        </select>
-                    </td>
-                </tr>
-                <tr>
-                	<td>
-                    	Track History Start Date:
-                    </td>
-                    <td>
-                    	<input id="trackDate" class="datepicker dateSince" type="text"/><br/>
-                    </td>
-                </tr>
-                <tr>
-                	<td>
-                    	Track History Start Time:
-                    </td>
-                    <td>
-                    	<input type="time" id="trackTime" class="dateSince" value="12:00"/>
-                    </td>
-                </tr>
-           </table><!--<div id="testTime">Here</div> -->
-           	</div>
-           	           
+        </div>
         <!--Where all the users are displayed-->
         <div id="searcherwrapper">
         	<h4 align="center">List of searchers</h4>
         	<div id="searcherlist"></div>
 		</div>
-        <div style="position: fixed; bottom: 0px; right: 500px;">    
-            <div id="testOutput">Test Code Here</div>
+        <div style="position: fixed; bottom: 0px; right: 500px; height: 32px;">    
             <button id="testbutton">Test Button</button>
         </div>
-	</div>  <!-- Content Div-->    
-
-    <!--Items below this line are absolute or fixed, and not in line with the rest of the document-->
+	</div>  <!-- Main Div-->    
+        
+    <!-- Pop out menu for search options-->
+    <div id="optiondiv">
+        <table class="defaulttable" id="pointoptionstable">
+            <tr>
+                <td>
+                    <span class="optionlabel">Select a Search to View </span>
+                </td>
+                <td>
+                <!--Populated by function updateSearches-->
+                <select id="currentSearchNumber"></select>
+                </td>
+           </tr>
+           <tr class="newline">
+                <td>
+                    
+                </td>
+                <td>
+                    <button class="button1" rel="#newsearchoverlay" id="newsearch">New Search</button>
+                    <button class="button1" id="deletesearch">Delete Search</button>
+                </td>
+           </tr>
+            <tr>
+                <td>
+                    <span class="optionlabel">Team Listing </span>
+                </td>
+                <td>
+                    <select id="currentTeamNumber"></select>
+                </td>
+            </tr>
+            <tr>
+                <td></td>
+                    <td>
+                    <button class="button1" rel="#newteamoverlay" id="newteam">New Team</button>
+                    <button class="button1" id="deleteteam">Delete Team</button>
+                </td>
+               
+            </tr>
+             <tr>
+                <td>
+                    <span class="optionlabel">Area Listing </span>
+                </td>
+                <td>
+                    <select id="currentAreas"></select>
+                </td>
+            </tr>
+            <tr class="newline">
+                <td></td>
+                    <td>
+                        <div id="areaOptionsDiv"></div>
+                    <button class="button1" id="newarea">New Area</button>
+                    <button class="button1"  rel="#areaassignmentoverlay" id="areaAssign">Assign Area</button>
+                    <button class="button1" id="deletearea">Delete Area</button>
+                </td>
+               
+            </tr>
+            <tr class="newline">
+                <td>
+                    <span class="optionlabel">Update Interval </span>
+                </td>
+                <td>
+                    <select id="updateInt">
+                        <option value="5000">5s</option>
+                        <option value="10000">10s</option>
+                        <option value="10000">30s</option>
+                        <option value="60000">1 min</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Track History Start Date
+                </td>
+                <td>
+                    <input id="trackDate" class="datepicker dateSince" type="text"/><br/>
+                </td>
+            </tr>
+            <tr >
+                <td>
+                    Track History Start Time
+                </td>
+                <td>
+                    <input type="time" id="trackTime" class="dateSince" value="12:00"/>
+                </td>
+            </tr>
+  		</table>
+    </div>
         
         <div id="info" style="color: white; z-index: 10000;">Info Here</div>
-        <div id="outer_weather_box">
+        <div id="outer_weather_box" class="bottompopups">
             <div align="center" id="showweather" class="weathercursor">Click to show weather</div>
             <div align="center"	id="hideweather" style="display: none" class="weathercursor" >Click to hide weather</div>
             <div class="weathershow" id="weather_box" style="width:145px; height:400px; background-color:#232323; border:1px solid black; float: left;">Weather Box</div>
@@ -180,7 +180,7 @@ var testFunction = function (){
                                         
         </div>
         
-        <div id="searchAreaBox">
+        <div id="searchAreaBox" class="bottompopups">
         	<div align="center" id="showareabox" class="weathercursor">Click to show area control</div>
              <div align="center" id="hideareabox" style="display: none" class="weathercursor" >Click to hide area control</div><br/>
             <hr>
@@ -196,7 +196,7 @@ var testFunction = function (){
                         <select id="teamList" style="font-size: 14px;"></select>
                         <br><br>
                         Please click on the map to create area boundaries. Once completed click "Save".
-                        <br><button type="button" onclick="saveAreaButton()" style="font-size: 20px; width:100px;">Save</button>
+                        <br><button class="button1" type="button" onclick="saveAreaButton()" style="font-size: 20px; width:100px;">Save</button>
                     </div>
                 </form>
                 
@@ -214,11 +214,14 @@ var testFunction = function (){
     <div id="searchform" action="#"><input type="text" id="searchbox"/><button id="searchnow">Map Search</button></div>
     <div id="map_canvas"></div>
     <div id="cursorLocation">Cursor Location</div>
-	<div id="floatNote">Test</div>
     <div id="pointsLoaded" class="pointData">Points Loaded: <span id="pointsLoadedData">0</span></div>
     <div id="pointsShowing" class="pointData">Points Showing: <span id="pointsShowingData">0</span></div>
 
 </div><!-- Page Wrapper-->
+ 
+ 
+ 
+ 
  
  <!--Overlays-->
  
@@ -261,7 +264,7 @@ var testFunction = function (){
                 <td>
             </tr>
         </table><br/>
-         <button id="savenewsearch" style="float: right">Save New Search</button>
+         <button class="button1" id="savenewsearch" style="float: right">Save New Search</button>
          <h2 align="center" style="color: red" id="newsearchinfo"></h2>
     </p>
 </div>
@@ -313,7 +316,7 @@ var testFunction = function (){
                 </td>
             </tr>
         </table><br/>
-         <button id="savenewteam" style="float: right">Save New Team</button>
+         <button class="button1" id="savenewteam" style="float: right">Save New Team</button>
          <h2 align="center" style="color: red" id="newteaminfo"></h2>
     </p>
 </div>
@@ -341,7 +344,7 @@ var testFunction = function (){
                 </td>
             </tr>
          </table><br/>
-         <button id="saveareaassignment" style="float: right">Save Area Assignment</button>
+         <button class="button1" id="saveareaassignment" style="float: right">Save Area Assignment</button>
          <!--<h2 align="center" style="color: red" id="newteaminfo"></h2>-->
     </p>
 </div> 
@@ -458,6 +461,16 @@ $(function(){
         $("#currentAreas").change(function(){
             updatePointList();
             addAreaOptions();
+	});
+	$("#optionbuttonshow").click(function(){
+		$(this).hide();
+		$("#optionbuttonhide").show();
+		$("#optiondiv").animate({width: "400px"}, 400, function(){}).show();
+	});
+	$("#optionbuttonhide").click(function(){
+		$(this).hide();
+		$("#optionbuttonshow").show();
+		$("#optiondiv").animate({width: "0px"}, 400, function(){});
 	});
 
         

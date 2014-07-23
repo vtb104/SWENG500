@@ -60,6 +60,7 @@ if(readCookie("sar.currentTeamIC")){
 var updateCurrentSearch = function(){
 	currentSearch = $("#currentSearchNumber").val();
 	writeCookie("sar.currentSearchIC", currentSearch, cookieDuration);
+	getNewPoints();
 }
 var updateCurrentTeam = function(){
 	currentTeam = $("#currentTeamNumber").val();
@@ -152,8 +153,9 @@ var initialize = function(){
         
 	//Start the timer to get new points
 	getNewPoints();
-        //this event listener will be used for area creation <<<< Start Shane Edit
-        var polyOptions = 
+	
+    //this event listener will be used for area creation 
+    var polyOptions = 
 	{
 		strokeColor: "#00ff00",
 		strokeOpacity: 1.0,
@@ -589,7 +591,7 @@ Users.prototype.drawUserButtons = function(){
 			 });// $(this).animate({height: "100px"}, 100, function(){})});
 		//Close
 		$(".searcherexpand").on("mouseout", function(e){
-			goVar = true; });//$(this).animate({height: "20px"}, 100, function(){})});
+			goVar = true; $("#floatNote").html("");});//$(this).animate({height: "20px"}, 100, function(){})});
 		
 	});
 	
