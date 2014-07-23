@@ -97,22 +97,12 @@ font-family: Gotham, 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 
 	z-Index: 50;
 	Padding: 3px;
     }
-#messageHeaderTable{
-       	background-color: black;
-	font-family: Georgia, Palatino, Palatino Linotype, Times, Times New Roman, serif;
-	position: fixed;
-	left: 25px;
-	top: 200px;
-        right: 600px;
-        border-spacing: 5px;
-        border: 1px solid black;
-        border-collapse: collapse;
-     }
+
 #messageView{
         position: fixed;
-        right: 25px;
         top: 200px;
-        left: 700px;
+        left: 200px;
+        right: 200px;
         background-color: #F2F2F2
     }
 </style>
@@ -125,7 +115,6 @@ font-family: Gotham, 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 
         <a href="ic.php">Home</a>
     	<a href="fu.php">Field Unit</a>
         <a id="logoutbutton" href="logout.php">Log Out</a>
-        <button onclick="getNewMessage()">TEST GET MSGS</button>
     </div>
     
     
@@ -133,7 +122,7 @@ font-family: Gotham, 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 
           <h1 style="text-align: center;">Search and Rescue</h1>
 
   <div class="clearfix" id="page"><!-- group -->
-      <a class="nonblock nontext Button ButtonSelected rounded-corners clearfix grpelem" id="buttonu160" href="Messages.php"><!-- container box --><div class="clearfix grpelem" id="u161-4"><!-- content --><p>View Messages</p></div></a>
+      <a class="nonblock nontext Button ButtonSelected rounded-corners clearfix grpelem" id="buttonu160" href="Messages.php"><!-- container box --><div class="clearfix grpelem" id="u161-4"><!-- content --><p>Check Messages</p></div></a>
 
       <div class="clearfix grpelem" id="pu159-4"><!-- column -->
     <div class="clearfix colelem" id="u159-4"><!-- content -->
@@ -147,19 +136,9 @@ font-family: Gotham, 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 
    <div class="verticalspacer"></div>
   </div>
           
-    <div id="messageHeaderTable">
-        <table style="width:700px">  
-            <tr>
-                <th>From</th>
-                <th>Subject</th>
-                <th>Urgency</th>
-                <th>Date</th>
-            </tr>
-        </table>
-    </div>
-          
+           
     <div id="messageView">
-        <textarea placeholder="View Message Here" id="messageWindow" name="viewMessages"></textarea>
+        <textarea placeholder="View Messages Here" id="messageWindow" name="viewMessages"></textarea>
     </div>
           
   <!-- JS includes -->

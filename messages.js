@@ -1,14 +1,13 @@
 //Send and receive message functions, handlers are in ic.js and fu.js for return calls when AJAX completes
 
-var sendMessage = function(sentTo, sentFrom, subject, message, urgency)
+var sendMessage = function(sentTo, sentFrom, subject, message)
 {
 
 	var messageData = new Object();
     messageData.msgTo = sentTo;
     messageData.msgFrom = sentFrom;
     messageData.msgSubject = subject;
-    messageData.msgUrgency = urgency;
-	var dateObject = new Date();
+    	var dateObject = new Date();
     messageData.msgDate = dateObject.getTime();
     messageData.msgBody = message;
 
@@ -41,4 +40,18 @@ var getMessage = function(inputID){
 			messageGetHandler(msg);
 		}
 	});
-}
+};
+
+//set message delivery criteria
+var lastRefresh = new Date();
+var newMessageQueue = 0;
+
+//pull new messages from server
+var messageQueue = function(){
+
+    if(newMessageQueue > 0){
+		var newerThan = Math.round(lastRefresh.getTime()/ 1000);
+                };
+               getMessages;
+        };
+        
