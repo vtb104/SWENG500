@@ -7,7 +7,7 @@ var sendMessage = function(sentTo, sentFrom, subject, message)
     messageData.msgTo = sentTo;
     messageData.msgFrom = sentFrom;
     messageData.msgSubject = subject;
-    	var dateObject = new Date();
+    var dateObject = new Date();
     messageData.msgDate = dateObject.getTime();
     messageData.msgBody = message;
 
@@ -17,10 +17,10 @@ var sendMessage = function(sentTo, sentFrom, subject, message)
 		data: { message_send:messageData },
 		dataType: "json",
 		success: function(msg){ 
-			messageSendHandler(msg);
+			messageSendHandler(msg, messageData);
 		},
 		error: function(msg){
-			messageSendHandler(msg);
+			messageSendHandler(msg, messageData);
 		}
 	});
 	

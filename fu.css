@@ -15,5 +15,14 @@ and open the template in the editor.
 	z-index: 10;
     margin: 0;
     padding: 0;
-}
+} 
 
+	#msgContainer{
+    border: 1px solid #a1a1a1;
+    padding: 1px 1px; 
+    background: #dddddd;
+	height: 300px;
+    width: 100%;
+    border-radius: 5px;
+	overflow:scroll;
+}

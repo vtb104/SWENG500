@@ -248,17 +248,21 @@ var joinOrLeave = function(){
 }
 
 //Handles the messages when the AJAX calls finish
-var messageSendHandler = function(msg){
-	alert(JSON.stringify(msg)); 
+var messageSendHandler = function(msg, messageData){
+	if ( "1" != msg){
+		alert(JSON.stringify("Message failed to be received by server."));
+	}else{
+		$("#msgContainer").append('<p style="color:black" align="left">' + messageData.msgBody + '</p>');
+	}
 }
 
 var messageGetHandler = function(msg){
 	var tempTime = Date();
 	if(msg){
-		$("#msgWindow").html(JSON.stringify(msg) + "<br/><br/>Current at " + tempTime.toString());
+		$("#msgStatus").html("Current at " + tempTime.toString());
+		$("#msgContainer").append('<p style="color:blue" align="right">' + tempTime.toString() + '</p>');
+//		$("#msgStatus").html(JSON.stringify(msg) + "<br/><br/>Current at " + tempTime.toString());
 	}else{
-		
-		$("#msgWindow").html("No");
-		$("#msgWindow").html("No messages at " + tempTime.toString() );	
+		$("#msgStatus").html("No messages at " + tempTime.toString() );	
 	}
 }

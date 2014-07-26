@@ -90,10 +90,12 @@
 
 		<div data-role="content">
 			<div role="main" class="ui-content" id="container">
-			<div class = "msgContainer" id="msgWindow">
-				<p>Here's our chat data</p>
+			<div id = "msgStatus">
+				<p>Last time server was checked for messages...</p>
 			</div>
-			
+			<div id = "msgContainer">
+				<p>test</p>
+			</div>
 			<div id = "sendMsg">
 				<textarea rows = "2" id="messageBody">Enter your message here...</textarea>
 				<button id="messageSend">Send</button>
