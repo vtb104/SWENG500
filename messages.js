@@ -44,12 +44,15 @@ var getMessage = function(inputID){
 
 //set message delivery criteria
 var lastRefresh = new Date();
-var newMessageQueue = 0;
+var messageCount = 0;
+var updateInterval = 5000;
+var timer = 0;
 
-//pull new messages from server
+//pull new messages from server automatically
 var messageQueue = function(){
-
-    if(newMessageQueue > 0){
+    timer = refresh(function(){messageQueue()}, updateInterval);
+    requestData = { messageCount: Total };
+    if(messageCount > 0){
 		var newerThan = Math.round(lastRefresh.getTime()/ 1000);
                 };
                getMessages;

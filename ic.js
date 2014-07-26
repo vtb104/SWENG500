@@ -1037,8 +1037,9 @@ var messageSendHandler = function(msg){
 }
 
 var messageGetHandler = function(msg){
-	alert(JSON.stringify(msg));
-	$(id="u403").html(objectCount + "New Messages" + "| From:" + msg.from + "| Subject:" + msg.Subject + "| Urgency: " + msg.Level + "| Received:" + msg.Time + "| Message:" + msg.Body); 
+    //*********I DON'T THINK THIS IS NEEDED ANYLONGER HOWEVER I DIDN'T WANT TO REMOVE IT INCASE IT IS********  
+    //alert(JSON.stringify(msg)) 
+       	$("#messageWindow").html("From: " + msg.from + "    |    Subject: " + msg.Subject + "    |    Received: " + msg.Time + "    |   Message: " + msg.Body); 
 }
 
 

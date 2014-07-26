@@ -100,11 +100,13 @@ font-family: Gotham, 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 
 
 #messageView{
         position: fixed;
+        font-size: 14;
         top: 200px;
         left: 200px;
         right: 200px;
+        bottom: 200px;
         background-color: #F2F2F2
-    }
+    }    
 </style>
 </head>
 
