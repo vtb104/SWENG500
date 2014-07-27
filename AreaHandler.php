@@ -41,17 +41,24 @@ if(isset($_POST['assignArea'])){
 //call for FU to check if new area has been assigned
 if(isset($_POST['checkForArea'])){
         $userIDForArea = $_POST['checkForArea'];
-        //TODO: get area asigned to user ID
-        //some code that sets $areaName = area assigned to user (now is is hard coded)
-        $areaName = "erie";
-        //return that area
-        if($db->list_points_in_area($areaName))
+        $teamAssigned = $db->user_team($userIDForArea);
+        //check is user has team
+        if($teamAssigned)
         {
-            echo $db->list_points_in_area($areaName);
+            $areaAssigned = $db->get_area_team_assignments($teamAssigned);
+            //if user has team show area asigned to that team
+            if($areaAssigned)
+            {
+                echo $areaAssigned;
+            }
+            else
+            {
+               // echo "no areas";
+            }
         }
         else
         {
-            echo "no areas";
+            echo "no team";
         }
 };
 ?>

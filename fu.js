@@ -151,47 +151,83 @@ function sendPosition()
 		{
 			$("#info").html("Location not allowed for this application.  Please allow location sharing to enable this feature.");
 		}
+                
+                checkForNewAreaFromIC();
 }
 
 var cnt=0;
+pointArray = new Array();
+polyStorage = new Array();
 function checkForNewAreaFromIC()
 {
-	var result = false;
-
-    if(cnt < 150)
-    {
-        cnt++;
-		$.ajax({
-            type: "POST",
-            url: "AreaHandler.php",
-            data: {checkForArea:""+userID},
-            success: function(msg)
-			{
-                //alert("msg leng"+msg.length);
-                if(msg.length > 3)
-                {
-                    var pointArray = [];
-                    var dataObj = JSON.parse(msg);
-                    //create array of points
-                    for(var cnt=0; cnt < dataObj.length; cnt++)
-                    {
-                        pointArray.push(new google.maps.LatLng(dataObj[cnt].lat,dataObj[cnt].lng));
-                    }
-                    fillPoly(msg.areaName, pointArray);
-                }
-                else
-                {
-                    //no areas for user
-                    removeAllPolysFromMap();
-                }
-				
-				result = true;
+    removeAllAreasOnMap();
+    $.ajax({
+        type: "POST",
+        url: "AreaHandler.php",
+        data: {checkForArea:""+userID},
+        success: function(msg)
+        {
+            var areasAssigned = JSON.parse(msg);
+            for(var cnt = 0; cnt < areasAssigned.length; cnt++)
+            {
+                getAreaPoints(areasAssigned[cnt].areaID);
             }
-		});
-    }
-	return result;
+            //alert(areasAssigned[0].areaID);
+        }
+    });
+    
 }
-
+function getAreaPoints(areaID)
+{
+//load area selected points
+     $.ajax({
+        type: "POST",
+        url: "AreaHandler.php",
+        data: {getAreaPoints:areaID},//change search ID for multiple searches
+        dataType: "json",
+        success: function(areaData){
+            pointArray = [];
+            var tempPointsArray = JSON.parse(areaData[0].areaPoints);
+            for(var cnt=0; cnt < tempPointsArray.length; cnt++)
+            {
+                pointArray.push(new google.maps.LatLng(tempPointsArray[cnt].k,tempPointsArray[cnt].B));
+            }
+            fillPoly(areaID, pointArray);
+        }});
+}
+//fills the poly and completes last border
+function fillPoly(areaID, arrayOfPoints)
+{
+    //check if area exists on map
+    if(checkArrayForName(polyStorage, areaID) == -1)
+    {
+        //create the "fill polygon"
+        var polyObj = new Object();
+        var tempColor = "#00ff00";
+        var areaFill = new google.maps.Polygon(
+        {
+            paths: arrayOfPoints,
+            strokeColor: tempColor,
+            strokeOpacity: 0.8,
+            strokeWeight: 3,
+            fillColor: tempColor,
+            fillOpacity: 0.35
+        });
+        areaFill.setMap(map);
+        polyObj.name = areaID;
+        polyObj.area = areaFill;
+        polyStorage.push(polyObj);
+    }
+}
+//removes all areas on map
+function removeAllAreasOnMap()
+{
+    for(var cnt = 0; cnt < polyStorage.length; cnt++)
+    {
+        polyStorage[cnt].area.setMap(null);
+    }
+    polyStorage = [];
+}
 //Function iterates through the arrayGeoLocation and sends messages that aren't sent yet.
 function sendGeoLocations()
 {

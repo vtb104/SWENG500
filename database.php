@@ -625,6 +625,19 @@ class Database
                     echo "faileD";
             }
          }
+                 /** assign and area to a team
+          * 
+          */
+         public function get_area_team_assignments($teamID)
+         {
+            $query = "SELECT areaID FROM areaassignment WHERE teamID='".$teamID."'";
+            $result = $this->return_array($this->db_obj->query($query));
+            if($result){
+                    return $result;	
+            }else{
+                    return false;	
+            }
+         }
          /** create a new area given a name and a set of points
           * 
           */
