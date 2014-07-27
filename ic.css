@@ -182,8 +182,8 @@ button{
 /*Fixed items*/
 #info{
 	position: fixed;
-	right: 400px;
-	bottom: 0px;	
+	left: 500px;
+	top: 5px;	
 }
 
 #floatNote{

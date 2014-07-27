@@ -42,6 +42,35 @@ var getMessage = function(inputID){
 	});
 };
 
+//Function sends a notification to mark the new message as read
+var markAsRead = function(messageID){
+    $.ajax({
+        type: "POST",
+        url: "messageReceive.php",
+        data: "messageread=" + messageID,
+        success: function(msg){ 
+			if(msg){
+				$("#floatNote").html("Message read");	
+			}
+		}
+	});
+}
+
+//Function checks for messages and returns an integer for the number of new messages for the user.
+
+var checkMessages = function(userID){
+	$.ajax({
+        type: "POST",
+        url: "messageReceive.php",
+        data: "messagecheck=1&userID=" + userID,
+        success: function(result){ 
+			checkMessageHandler($.trim(result));
+		}
+	});
+	
+}
+
+
 //set message delivery criteria
 var lastRefresh = new Date();
 var messageCount = 0;

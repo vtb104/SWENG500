@@ -547,12 +547,37 @@ class Database
 	 */
 	 public function fetch_messages($userID = 0, $teamID = 0, $searchID = 0, $json = true){
 		 if($userID){
-			 $query = "SELECT * FROM Messages WHERE sentto = '$userID'";
+			 $query = "SELECT * FROM Messages WHERE sentto = '$userID' ORDER BY dateSent DESC";
 			 $result = $this->db_obj->query($query);
 			 return $this->return_array($result, $json);
 		 }else{
 			return "Not enabled yet"; 
 		 }
+	 }
+	 
+	 //Mark a message as read
+	 public function message_read($messageID){
+		$query = "UPDATE Messages  SET status=1 WHERE messageID='$messageID'";
+		$result = $this->db_obj->query($query);
+		if($result){
+			return true;	
+		}else{
+			return false;	
+		}
+		 
+	 }
+	 
+	 //Checks for new messages from a user
+	 public function message_check($userID){
+		$query = "SELECT * FROM Messages WHERE sentto = '$userID' and status = '0'";
+		$result = $this->db_obj->query($query);
+		
+		if($result){
+			$resultcount = $this->return_array($result, false);
+			return count($resultcount);
+		}else{
+			return 0;	
+		}
 	 }
 	 
 	 

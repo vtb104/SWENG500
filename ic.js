@@ -114,9 +114,9 @@ var initialize = function(){
 	google.maps.event.addListener(map, 'idle', function() {updateWeather('weather_box','radar_box');} );
 	
 	//Updates the cursor location for grabbing coords
-	google.maps.event.addListener(map, 'mousemove', function(event) {
-		$("#cursorLocation").html("Lat: " + Math.round4(event.latLng.lat()) + " Lng: " + Math.round4(event.latLng.lng()))
-	});
+	//google.maps.event.addListener(map, 'mousemove', function(event) {
+		//$("#cursorLocation").html("Lat: " + Math.round4(event.latLng.lat()) + " Lng: " + Math.round4(event.latLng.lng()))
+	//});
 	
 	//Adds listeners for cookie creation
 	google.maps.event.addListener(map, "center_changed", function(){
@@ -132,6 +132,9 @@ var initialize = function(){
 	
 	//Draw an initial weather box
 	updateWeather('weather_box','radar_box');
+	
+	//Start testing for new messages
+	newMessageTimer = setInterval(function(){checkMessages(userID);}, 1000);
 	
 	//This is the timer that runs the getNewPoint function
 	$("#floatNote").html("Connecting...");
@@ -1037,10 +1040,40 @@ var messageSendHandler = function(msg){
 }
 
 var messageGetHandler = function(msg){
-	$("#info").html("Message count: " + msg.count);
+	var rightNow = new Date();
+	$("#messageoutput").html("<tr style='color: #0FF; border-bottom: 1px #0FF solid;'><th>New</th><th>From</th><th>To</th><th>Subject</th><th>Date Sent</th><th>Message</th></tr>");
+	//$("#testoutput").html("<br/><br/>Raw message data: <br/><br/>" + JSON.stringify(msg));
 	$.each(msg, function(index, value){
-		$("#messageoutput").append("<tr><td>Here</td><td>Here2</td><td>Here3</td><td>Here 4</td><td>Message</td><tr>");
+		
+		//First check to see if the message has been read
+		if(value.status === "1"){
+			ifNew = "";
+		}else{
+			ifNew = "<span style='color: #F00'>!</span>";
+		}
+		var theDate = new Date(value.dateSent * 1000);
+		var tempMessage = value.message.substring(0, 20) + "...";
+		
+		$("#messageoutput").append("<tr id='" + value.messageID + "' class='onemessage'><td class='msg1' id='newmessage" + value.messageID + "'>" + ifNew + "</td><td class='msg2'>" + value.sentuser[0].username + "</td><td class='msg3'>" + value.touser[0].username + "</td><td class='msg4'>" + value.subject + "</td><td class='msg5'>" + theDate.toDateString() + " " + leadingZero(theDate.getHours()) + ":" + leadingZero(theDate.getMinutes()) + "</td><td><span id='shortmessagebodyid" + value.messageID + "'>" + tempMessage + "</span><span id='fullmessagebodyid" + value.messageID + "' style='display: none'>" + value.message + "</span></td></tr>");
 	});
+	
+	$(".onemessage").on("click", function(){
+		var id = $(this).prop("id");
+		$("#shortmessagebodyid" + id).toggle();
+		$("#fullmessagebodyid" + id).toggle();
+		$("#newmessage" + id).html("");
+		markAsRead(id);
+	});
+	
+}
+
+var checkMessageHandler = function(result){
+	if(result !== "0"){
+		$("#info").html("<span style='color: #F00'>You have new messages");
+		getMessage(userID);
+	}else{
+		$("#info").html("");	
+	}
 }
 
 

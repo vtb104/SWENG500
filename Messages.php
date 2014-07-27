@@ -31,12 +31,13 @@
 <script>
 <?php if(isset($_SESSION['userid']))
 	{
-		echo "var userID = " . $_SESSION['userid'] . ";";
+		echo "userID = " . $_SESSION['userid'] . ";";
 	}else{
-		echo "var userID = 0";
+		echo "userID = 0";
 	}	
 ?>
 var doFirst = function(){
+	timer = setInterval(function(){checkMessages(userID);}, 1000);
 	getMessage(userID);
 };
 
@@ -121,12 +122,23 @@ font-family: Gotham, 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 
 .messageunread{
 	background-coolor: #555;	
 }
-.messageclass td{
+#messageoutput td{
     padding-left: 2px;
 	padding-right: 2px;
 	padding-top: 4px;
 	padding-bottom: 4px;
+	height: 40px;
 }
+#messageoutput tr:hover{
+	cursor: pointer;
+	background-color: #555;	
+}
+
+.msg1{width: 40px; text-align: center;}
+.msg2{width: 110px;}	
+.msg3{width: 110px;}
+.msg4{width: 220px;}
+.msg5{width: 172px;}
 
 </style>
 </head>
@@ -155,33 +167,18 @@ font-family: Gotham, 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 
      				<p>Received Messages</p>
     			</div>
                 <div id="messageHeaderTable">
-                <div id="info">Info Here</div>
-                	<table style="width: 100%">  
-                    	<tr>
-                        	<th>New</th>
-                        	<th>From</th>
-                        	<th>To</th>
-                        	<th>Subject</th>
-                        	<th>Date Sent</th>
-                        	<th>Message</th>
-                    	</tr>
-                        <tr id="messageoutput">
+                <div id="info"> </div>
+                	<table style="width: 100%" id="messageoutput">  
+                    	
                         
-                        </tr>
-                        <tr class="messageclass messageread">
-                        <td>!</td><td>Here</td><td>Here2</td><td>Here3</td><td>Here 4</td><td>Message</td>
-                        </tr>
-                        <tr class="messageclass messageunread">
-                        <td>!</td><td>Here</td><td>Here2</td><td>Here3</td><td>Here 4</td><td>Message</td>
-                        </tr>
-                        <tr>
-                        
-                        
-                        </tr>
                 	</table>
+                    <br/>
+                    <div id="testline"></div>
+                    <br/>
+                   	<div id="testoutput"></div>
             	</div>
    			</div>
-   			<div class="verticalspacer"></div>
+ 
   		</div><!-- Page -->
 	</div><!-- Content -->
 </div><!-- Page wrapper -->

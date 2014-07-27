@@ -105,7 +105,6 @@ font-family: Gotham, 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 
         <a href="ic.php">Home</a>
     	<a href="fu.php">Field Unit</a>
         <a id="logoutbutton" href="logout.php">Log Out</a>
-        <button onclick="sendNewMessage()">TEST GET MSGS</button>
     </div>
     
       <div id="content">
@@ -161,12 +160,7 @@ font-family: Gotham, 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 
       </label>
       <span class="fld-input NoWrap actAsDiv clearfix grpelem" id="u276-4"><!-- content --><input class="wrapped-input" type="text" id="widgetu274_input" name="From" tabindex="2" value="<?php echo $user [0]['username'];?>"/><label class="wrapped-input fld-prompt" id="widgetu274_prompt" for="widgetu274_input"><span class="actAsPara">Enter Name</span></label></span>
      </div>
-     <div class="fld-grp clearfix grpelem" id="widgetu278" data-required="true"><!-- none box -->
-      <label class="fld-label actAsDiv clearfix grpelem" id="u279-4" for="widgetu278_input"><!-- content -->
-       <span class="actAsPara">Urgency:</span>
-      </label>
-      <span class="fld-input NoWrap actAsDiv clearfix grpelem" id="u280-4"><!-- content --><input class="wrapped-input" type="text" id="widgetu278_input" name="Urgency" tabindex="4"/><label class="wrapped-input fld-prompt" id="widgetu278_prompt" for="widgetu278_input"><span class="actAsPara">Enter Urgency</span></label></span>
-     </div>
+     
     </form>
    </div>
    <div class="clearfix grpelem" id="u143-4"><!-- content -->

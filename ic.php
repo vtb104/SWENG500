@@ -170,7 +170,7 @@ var testFunction = function (){
   		</table>
     </div>
         
-        <div id="info" style="color: white; z-index: 10000;">Info Here</div>
+        <div id="info" style="color: white; z-index: 10000;"></div>
         <div id="outer_weather_box" class="bottompopups">
             <div align="center" id="showweather" class="weathercursor">Click to show weather</div>
             <div align="center"	id="hideweather" style="display: none" class="weathercursor" >Click to hide weather</div>
@@ -213,7 +213,7 @@ var testFunction = function (){
     <img id="logo" src="images/med_logo.png" />
     <div id="searchform" action="#"><input type="text" id="searchbox"/><button id="searchnow">Map Search</button></div>
     <div id="map_canvas"></div>
-    <div id="cursorLocation">Cursor Location</div>
+    <div id="cursorLocation"></div>
     <div id="pointsLoaded" class="pointData">Points Loaded: <span id="pointsLoadedData">0</span></div>
     <div id="pointsShowing" class="pointData">Points Showing: <span id="pointsShowingData">0</span></div>
 

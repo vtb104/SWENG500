@@ -41,9 +41,29 @@ if(isset($_POST['userRequest'])){
 //Function returns messages for the user passed.
 if(isset($_POST['message_receive'])){
 	$data = $_POST['message_receive'];
-	echo $db->fetch_messages($data['sentTo']);
+	$result = array();
+	$result = $db->fetch_messages($data['sentTo'], 0 , 0, 0, false);
+	for($i = 0; $i < count($result); $i++){
+		$result[$i]["sentuser"] = $db->get_user($result[$i]["sentfrom"], false);
+		$result[$i]["touser"] = $db->get_user($result[$i]["sentto"], false);
+	}
+	echo json_encode($result);
 };
 
+//Function marks messages as read
+if(isset($_POST['messageread'])){
+	if($db->message_read($_POST['messageread'])){
+		echo true;	
+	}else{
+		echo false;
+	}
+	die();
+}
+
+//Function checks for new messages for a user
+if(isset($_POST['messagecheck'])){
+	echo $db->message_check($_POST['userID']);	
+}
 
 //This function either adds a user to a search or removes them
 if(isset($_POST['joinOrLeave'])){
