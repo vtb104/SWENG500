@@ -97,6 +97,7 @@ font-family: Gotham, 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 
 	z-Index: 50;
 	Padding: 3px;
     }
+
 #messageHeaderTable{
 	position: absolute;
     background-color: black;
@@ -126,6 +127,7 @@ font-family: Gotham, 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 
 	padding-top: 4px;
 	padding-bottom: 4px;
 }
+
 </style>
 </head>
 
@@ -183,8 +185,6 @@ font-family: Gotham, 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 
   		</div><!-- Page -->
 	</div><!-- Content -->
 </div><!-- Page wrapper -->
-          
-
           
   <!-- JS includes -->
   <script type="text/javascript">
