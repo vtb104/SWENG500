@@ -98,69 +98,93 @@ font-family: Gotham, 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 
 	Padding: 3px;
     }
 #messageHeaderTable{
-       	background-color: black;
+	position: absolute;
+    background-color: black;
 	font-family: Georgia, Palatino, Palatino Linotype, Times, Times New Roman, serif;
-	position: fixed;
 	left: 25px;
 	top: 200px;
-        right: 600px;
-        border-spacing: 5px;
-        border: 1px solid black;
-        border-collapse: collapse;
+	right: 25px;;
+	min-width: 600px;
+	border-spacing: px;
+	border: 1px solid black;
+	border-collapse: collapse;
      }
-#messageView{
-        position: fixed;
-        right: 25px;
-        top: 200px;
-        left: 700px;
-        background-color: #F2F2F2
-    }
+	 
+.messageclass{
+	margin-top: 2px;
+	margin-bottom: 2px;
+}
+.messageread{
+	background-coolor: #222;	
+}
+.messageunread{
+	background-coolor: #555;	
+}
+.messageclass td{
+    padding-left: 2px;
+	padding-right: 2px;
+	padding-top: 4px;
+	padding-bottom: 4px;
+}
 </style>
 </head>
 
 <body onLoad="doFirst()">
 <div id="pagewrapper">
-    <div id="main"></div>
     <div id="menubar">
         <a href="ic.php">Home</a>
     	<a href="fu.php">Field Unit</a>
         <a id="logoutbutton" href="logout.php">Log Out</a>
-        <button onclick="getNewMessage()">TEST GET MSGS</button>
     </div>
     
-    
-      <div id="content">
-          <h1 style="text-align: center;">Search and Rescue</h1>
+    <div id="content">
+    	<h1 style="text-align: center;">Search and Rescue</h1>
 
-  <div class="clearfix" id="page"><!-- group -->
-      <a class="nonblock nontext Button ButtonSelected rounded-corners clearfix grpelem" id="buttonu160" href="Messages.php"><!-- container box --><div class="clearfix grpelem" id="u161-4"><!-- content --><p>View Messages</p></div></a>
+  		<div class="clearfix" id="page"><!-- group -->
+      		<a class="nonblock nontext Button ButtonSelected rounded-corners clearfix grpelem" id="buttonu160" href="Messages.php"><!-- container box --><div class="clearfix grpelem" id="u161-4"><!-- content --><p>Fetch Messages</p></div></a>
+			<a class="nonblock nontext Button rounded-corners clearfix grpelem" id="buttonu162" href="send.php"><!-- container box --><div class="clearfix grpelem" id="u163-4"><!-- content --><p>Compose Message</p></div></a>
 
-      <div class="clearfix grpelem" id="pu159-4"><!-- column -->
-    <div class="clearfix colelem" id="u159-4"><!-- content -->
-     <p>Message Center</p>
-    </div>
-    <div class="clearfix colelem" id="u164-4"><!-- content -->
-     <p>Received Messages</p>
-    </div>
-   </div>
-      <a class="nonblock nontext Button rounded-corners clearfix grpelem" id="buttonu162" href="send.php"><!-- container box --><div class="clearfix grpelem" id="u163-4"><!-- content --><p>Compose Message</p></div></a>
-   <div class="verticalspacer"></div>
-  </div>
+
+      		<div class="clearfix grpelem" id="pu159-4"><!-- column -->
+    			<div class="clearfix colelem" id="u159-4"><!-- content -->
+     				<p>Message Center</p>
+    			</div>
+    			<div class="clearfix colelem" id="u164-4"><!-- content -->
+     				<p>Received Messages</p>
+    			</div>
+                <div id="messageHeaderTable">
+                <div id="info">Info Here</div>
+                	<table style="width: 100%">  
+                    	<tr>
+                        	<th>New</th>
+                        	<th>From</th>
+                        	<th>To</th>
+                        	<th>Subject</th>
+                        	<th>Date Sent</th>
+                        	<th>Message</th>
+                    	</tr>
+                        <tr id="messageoutput">
+                        
+                        </tr>
+                        <tr class="messageclass messageread">
+                        <td>!</td><td>Here</td><td>Here2</td><td>Here3</td><td>Here 4</td><td>Message</td>
+                        </tr>
+                        <tr class="messageclass messageunread">
+                        <td>!</td><td>Here</td><td>Here2</td><td>Here3</td><td>Here 4</td><td>Message</td>
+                        </tr>
+                        <tr>
+                        
+                        
+                        </tr>
+                	</table>
+            	</div>
+   			</div>
+   			<div class="verticalspacer"></div>
+  		</div><!-- Page -->
+	</div><!-- Content -->
+</div><!-- Page wrapper -->
           
-    <div id="messageHeaderTable">
-        <table style="width:700px">  
-            <tr>
-                <th>From</th>
-                <th>Subject</th>
-                <th>Urgency</th>
-                <th>Date</th>
-            </tr>
-        </table>
-    </div>
-          
-    <div id="messageView">
-        <textarea placeholder="View Message Here" id="messageWindow" name="viewMessages"></textarea>
-    </div>
+
           
   <!-- JS includes -->
   <script type="text/javascript">

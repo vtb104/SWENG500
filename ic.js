@@ -1037,8 +1037,10 @@ var messageSendHandler = function(msg){
 }
 
 var messageGetHandler = function(msg){
-	alert(JSON.stringify(msg));
-	$(id="u403").html(objectCount + "New Messages" + "| From:" + msg.from + "| Subject:" + msg.Subject + "| Urgency: " + msg.Level + "| Received:" + msg.Time + "| Message:" + msg.Body); 
+	$("#info").html("Message count: " + msg.count);
+	$.each(msg, function(index, value){
+		$("#messageoutput").append("<tr><td>Here</td><td>Here2</td><td>Here3</td><td>Here 4</td><td>Message</td><tr>");
+	});
 }
 
 
