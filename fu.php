@@ -176,7 +176,9 @@ $(function(){
 		$("#currentSearchNumber").selectmenu('refresh');
 	});
     $("#messageSend").click(function(){
-		sendMessage(currentSearch, userID, 'From FU', $("#messageBody").val(), '1');
+		// interface to match is in messages.js and is as follows:
+		// var sendMessage = function(sentTo, sentFrom, subject, message)
+		sendMessage(currentSearch, userID, 'From FU', $("#messageBody").val());
 	});
 });
 </script>

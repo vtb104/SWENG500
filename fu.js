@@ -10,6 +10,8 @@ var currentLoc = new google.maps.LatLng(0, 0);
 var arrayGeoLocation = [];
 var cachedPoints = 0;
 
+// The FU is part of a search if it is a value > 0.
+// For DEBUG purposes only, set it to a value > 0, otherwise set it to 0.
 var currentSearch = 1;
 
 if(readCookie("sar.currentSearchFU")){
@@ -296,8 +298,9 @@ var messageGetHandler = function(msg){
 	var tempTime = Date();
 	if(msg){
 		$("#msgStatus").html("Current at " + tempTime.toString());
+		// For now, just display the current time when the handler is invoked.
+		// Instead, though, we need to add the messages received.
 		$("#msgContainer").append('<p style="color:blue" align="right">' + tempTime.toString() + '</p>');
-//		$("#msgStatus").html(JSON.stringify(msg) + "<br/><br/>Current at " + tempTime.toString());
 	}else{
 		$("#msgStatus").html("No messages at " + tempTime.toString() );	
 	}
