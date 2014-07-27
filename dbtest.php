@@ -47,16 +47,36 @@ if(!$auth->authenticate()){
     <h3>Call: get_user(<?php echo $usernumber;?>)</h3>
     User Info:  <?php echo $db->get_user($usernumber);?>
  </p>
- <p>
-	<h2>Change a user's password</h2>
+<p>
+	<h2>Returns a user's number off an e-mail address, used for login and fogot e-mails</h2>
+    <h3>Call: check_email($email)</h3>
+      <?php echo $db->check_email('this@email.com');?>
+</p>
+<p>
+	<h2>Returns the user key for fogotten e-mails and registration</h2>
+    <h3>Call: check_userKey($userID)</h3>
+      <?php echo $db->check_userKey($usernumber);?>
+</p>
+<p>
+    <h2>Change a user's password</h2>
     <h3>Call: $db->change_password(<?php echo $usernumber;?>, 'Change password')</h3>
-    Password changed: <?php echo $db->change_password($usernumber, 'Change password');;?>
- </p>
+    Password changed: <?php echo $db->change_password($usernumber, 'Change password');?>
+</p>
+<p>
+    <h2>Updates a variable to ensure the use has updated their password</h2>
+    <h3>Call: user_verify($userID, $verify)</h3>
+    <?php echo $db->user_verify($usernumber, true);?>
+</p>
 <p>
 	<h2>Create a point</h2>
     <h3>Call: $db->create_point(<?php echo $usernumber;?>, '36.22','128.35','400', time(), 'demo');</h3>
     Point Created with ID: <?php echo $db->create_point($usernumber, '36.22','128.35','400', time(), 'Demo Point');?>
  </p>
+<p>
+	<h2>Database point dump of points made within the last hour</h2>
+	<h3>Call:  $db->get_points(time() - 3600);</h3>
+    <h3>Return:</h3> <?php echo $db->get_points(time() - 3600); ?><br/>
+</p>
 <p>
 	<h2>Latest "Team 1" location</h2>
     <h3>Call: $db->latest_team_location(1);</h3>
@@ -68,9 +88,9 @@ if(!$auth->authenticate()){
     <h3>Return:</h3><?php echo json_encode($db->latest_user_location($usernumber));?><br/>
 </p>
 <p>
-	<h2>Database point dump of points made within the last hour</h2>
-	<h3>Call:  $db->get_points(time() - 3600);</h3>
-    <h3>Return:</h3> <?php echo $db->get_points(time() - 3600); ?><br/>
+	<h2>List teams</h2>
+	<h3>Call:  $db->list_teams($lat, $lng, $dist) (Optional coords for location listing within a distance) </h3>
+    <h3>Return: </h3> <?php echo $db->list_teams(); ?><br/>
 </p>
 <p>
 	<h2>Create a search</h2>
@@ -81,11 +101,6 @@ if(!$auth->authenticate()){
 	<h2>Create a Team</h2>
 	<h3>Call:  $db->create_team(<?php echo $usernumber;?>, 'Test Team', '', 'Test Team Info', <?php echo $searchNumber;?>)</h3>
     <h3>Return: </h3> <?php $teamnumber = $db->create_team($usernumber, 'Test Team' , '' , 'Test Team Info', $searchNumber); echo $teamnumber;?><br/>
-</p>
-<p>
-	<h2>List teams</h2>
-	<h3>Call:  $db->list_teams($lat, $lng, $dist) (Optional coords for location listing within a distance) </h3>
-    <h3>Return: </h3> <?php echo $db->list_teams(); ?><br/>
 </p>
 <p>
 	<h2>List searches</h2>
@@ -119,8 +134,8 @@ if(!$auth->authenticate()){
 </p>
 <p>
 	<h2>User joins a search</h2>
-	<h3>Call:  $db->user_join_search(<?php echo $searchNumber . "," . $usernumber;?>)</h3>
-    <h3>Return: </h3> <?php echo $db->user_join_search($searchNumber, $usernumber); ?><br/>
+	<h3>Call:  $db->user_join_search(<?php echo $usernumber . "," . $searchNumber;?>)</h3>
+    <h3>Return: </h3> <?php echo $db->user_join_search($usernumber, $searchNumber); ?><br/>
 </p>
 <p>
 	<h2>User joins a team</h2>
@@ -128,29 +143,9 @@ if(!$auth->authenticate()){
     <h3>Return: </h3> <?php echo $db->user_join_team($usernumber, $teamnumber); ?><br/>
 </p>
 <p>
-	<h2>A team joins a search</h2>
-	<h3>Call:  $db->team_join_search(<?php echo $teamnumber . "," . $searchNumber;?>)</h3>
-    <h3>Return: </h3> <?php echo $db->team_join_search($teamnumber, $searchNumber); ?><br/>
-</p>
-<p>
 	<h2>User leaves a search</h2>
 	<h3>Call:  $db->user_leave_search(<?php echo $usernumber . "," . $searchNumber;?>)</h3>
     <h3>Return: </h3> <?php echo $db->user_leave_search($usernumber, $searchNumber); ?><br/>
-</p>
-<p>
-	<h2>User leaves a team</h2>
-	<h3>Call:  $db->user_leave_team(<?php echo $usernumber . "," . $teamnumber;?>)</h3>
-    <h3>Return: </h3> <?php echo $db->user_leave_team($usernumber, $teamnumber); ?><br/>
-</p>
-<p>
-	<h2>Team leaves a search</h2>
-	<h3>Call:  $db->team_leave_search(<?php echo $teamnumber . "," . $searchNumber;?>)</h3>
-    <h3>Return: </h3> <?php echo $db->team_leave_search($teamnumber, $searchNumber); ?><br/>
-</p>
-<p>
-	<h2>Team owner disbands a team</h2>
-	<h3>Call:  $db->team_disband(<?php echo $usernumber . "," . $teamnumber;?>)</h3>
-    <h3>Return: </h3> <?php echo $db->team_disband($usernumber, $teamnumber); ?><br/>
 </p>
 <p>
 	<h2>Create a message</h2>
@@ -164,12 +159,12 @@ if(!$auth->authenticate()){
 </p>
 <p>
 	<h2>Update team info</h2>
-	<h3>Call:  $db->update_team_info(2, "We found the person!")</h3>
-    <h3>Return: </h3> <?php echo $db->update_team_info(2, "We found the person!"); ?><br/>
+	<h3>Call:  $db->update_team_info(2, teamInfo, "We found the person!")</h3>
+    <h3>Return: </h3> <?php echo $db->update_team_info($teamnumber, 'teamInfo', "We found the person!"); ?><br/>
 <p>
 	<h2>Fetch team info</h2>
 	<h3>Call:  $db->fetch_team_info($teamID)</h3>
-    <h3>Return: </h3> <?php echo $db->fetch_team_info(2); ?><br/>
+    <h3>Return: </h3> <?php echo $db->fetch_team_info($teamnumber, true); ?><br/>
 </p>
 <p>
 	<h2>Delete a user</h2>

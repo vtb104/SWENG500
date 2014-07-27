@@ -37,9 +37,6 @@ class Database
 		//This is the insecure code:
 		$query = "INSERT INTO Users (username, fname, lname, email, password, userKey, role) VALUES ('$username', '$fname', '$lname', '$email', '$password', '$userKey', '$role')";
 		$result = $this->db_obj->query($query);
-
-
-
 		if($result){
 			return $this->get_last_id();
 		}else{
@@ -102,7 +99,7 @@ class Database
 
 
 	public function update_userKey($userID, $userKey){
-		$query = $this->db_obj->prepare('INSERT INTO Users (userKey) VALUES (?) WHERE userId = ?');
+		$query = $this->db_obj->prepare('INSERT INTO Users (userKey) VALUES (?) WHERE userID = ?');
 		$query->bind_param('ss', $userID, $userKey);
 		$query->execute();
 		$query->bind_result($result);
@@ -374,8 +371,13 @@ class Database
 	  */
 	  
 	  public function update_user_info($userID, $dataname, $datavalue){
-		
-		return '<span style="color: red">Fail ' . __LINE__ . '</span>';  
+		  $query = "UPDATE Users SET $dataname='$datavalue' WHERE userID = '$userID'";
+		  $result = $this->db_obj->query($query);
+		  if($result){
+			return true;  
+		  }else{
+			return false;  
+		  }
 	  }
 	  
 	/** User joins search
@@ -464,23 +466,6 @@ class Database
 			}
 	 }
 	 
-	 /** Team joins a search
-	 *
-	 */
-	 public function team_join_search($teamID, $searchID){
-		 
-		 $result = $this->db_obj->query("UPDATE Teams SET searchID = '$searchID' WHERE teamID = '$teamID'");
-		 return $result;
-		 if($result)
-		 {
-			 return true;
-		 }
-		 else
-		 {
-			 return "Fail " . __LINE__ . " " . __FILE__;
-		 }
-	 }
-	 
 	/** User leaves search
 	 *
 	 */
@@ -512,22 +497,6 @@ class Database
 			 return "Fail " . __LINE__ . " " . __FILE__;
 		 }
 	 }
-	 
-	 /** Team leaves a search
-	 *
-	 */
-	 public function team_leave_search($teamID, $searchID){
-		 
-		 return '<span style="color: red">Fail ' . __LINE__ . '</span>';
-	 }
-	 
-	 /** Team owner disbands the team
-	  *
-	  */
-	public function team_disband($userID, $teamID){
-		
-		return '<span style="color: red">Fail ' . __LINE__ . '</span>';
-	}
 	 
 	 /** Create message
 	 *
@@ -584,17 +553,27 @@ class Database
 	 /** Update team notes
 	 *
 	 */
-	 public function update_team_info($teamID, $notes){
-		 
-		 return '<span style="color: red">Fail ' . __LINE__ . '</span>';
+	 public function update_team_info($teamID, $dataname, $datavalue){
+	 		$query = "UPDATE Teams SET $dataname='$datavalue' WHERE teamID = '$teamID'";
+		  $result = $this->db_obj->query($query);
+		  if($result){
+			return true;  
+		  }else{
+			return false;  
+		  }	 
 	 }
 
 	 /** View team notes
 	 *
 	 */
-	 public function fetch_team_info($teamID){
-		 
-		 return '<span style="color: red">Fail ' . __LINE__ . '</span>';
+	 public function fetch_team_info($teamID, $json = true){
+		 $query = "SELECT * FROM Teams WHERE teamID = '$teamID'";
+		 $result = $this->db_obj->query($query);
+		 if($result){
+			 return $this->return_array($result, $json);
+		 }else{
+			return false; 
+		 }
 	 }
 	/** get areas for a given search id 
           * 
