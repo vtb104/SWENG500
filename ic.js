@@ -267,7 +267,14 @@ function assignArea(inArea, inTeam)
         data: {assignArea:JSON.stringify(assignmentData)},//change search ID for multiple searches
         dataType: "json",
         success: function(areaData){
-           //TODO handle successful assignment
+           if(areaData)
+           {
+               
+           }
+           else
+           {
+               
+           }
         }});    
 }
 //adds the show area on map and remove area from map buttons
@@ -347,49 +354,60 @@ function checkArrayForName(inArray, inName)
 //this function is called when "save" is clicked after adding an area
 function saveAreaButton()
 {
-    //fillPoly(areaNameData,currentAreaPoly);
+    if(currentAreaPoly.length >= 3)
+    {
+        google.maps.event.clearListeners(map, 'click');
+        //send area to database
+        areaData = new Object();
+        areaData.name = document.getElementById("AreaName").value;
+        areaData.userID = userID;
+        areaData.points = currentAreaPoly;
+        areaData.color = document.getElementById("area_color").value;
 
-    google.maps.event.clearListeners(map, 'click');
-    //send area to database
-    areaData = new Object();
-    areaData.name = document.getElementById("AreaName").value;
-    areaData.userID = userID;
-    areaData.points = currentAreaPoly;
-    areaData.color = document.getElementById("area_color").value;
-    
-    var returnedAreaID = 0;
-    $.ajax({
-        type: "POST",
-        url: "AreaHandler.php",
-        data: { createArea:JSON.stringify(areaData) },
-		dataType: "json",
-        success: function(msg){ returnedAreaID = parseInt(msg);  //check if team was assigned to area
-    if(document.getElementById("teamList").value != "all")
-    {   
-        assignArea(returnedAreaID,document.getElementById("teamList").value); 
-    }}});
-    
-     
-    
-    //reset all data for next area
-    poly.setMap(null);
-    currentAreaPoly = [];
-    pointCount = 0;
-    var polyOptions = 
-    {
-            strokeColor: document.getElementById("area_color").value,
-            strokeOpacity: 1.0,
-            strokeWeight: 3
-    };
-    poly = new google.maps.Polyline(polyOptions);
-    poly.setMap(map);
-    updateAreaSelectMenu();
-    fillPoly(areaData.name,areaData.points);
-    //clear current points on map
-    for(var cnt=0; cnt <workingAreaPointArray.length; cnt++)
-    {
-        workingAreaPointArray[cnt].setMap(null);
+        var returnedAreaID = 0;
+        $.ajax({
+            type: "POST",
+            url: "AreaHandler.php",
+            data: { createArea:JSON.stringify(areaData) },
+                    dataType: "json",
+            success: function(msg){ returnedAreaID = parseInt(msg);  //check if team was assigned to area
+        if(document.getElementById("teamList").value != "all")
+        {   
+            assignArea(returnedAreaID,document.getElementById("teamList").value); 
+        }}});
+
+
+
+        //reset all data for next area
+        poly.setMap(null);
+        currentAreaPoly = [];
+        pointCount = 0;
+        var polyOptions = 
+        {
+                strokeColor: document.getElementById("area_color").value,
+                strokeOpacity: 1.0,
+                strokeWeight: 3
+        };
+        poly = new google.maps.Polyline(polyOptions);
+        poly.setMap(map);
+        updateAreaSelectMenu();
+        fillPoly(areaData.name,areaData.points);
+        //clear current points on map
+        for(var cnt=0; cnt <workingAreaPointArray.length; cnt++)
+        {
+            workingAreaPointArray[cnt].setMap(null);
+        }
+        document.getElementById("alertMessageText").style.color = "#FFFFFF";
+        document.getElementById("alertMessageText").style.fontWeight = "bold";
+        document.getElementById("alertMessageText").innerHTML = "Area created!";
     }
+    else
+    {
+        document.getElementById("alertMessageText").style.color = "#FF0000";
+        document.getElementById("alertMessageText").style.fontWeight = "bold";
+        document.getElementById("alertMessageText").innerHTML = "You must have 3 or more points on the maps to create an area.";
+    }
+    
   
 
     

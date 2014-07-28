@@ -196,7 +196,7 @@ var testFunction = function (){
                         <select id="teamList" style="font-size: 14px;"></select>
                         <br><br>
                         Please click on the map to create area boundaries. Once completed click "Save".
-                        <br><button class="button1" type="button" onclick="saveAreaButton()" style="font-size: 20px; width:100px;">Save</button>
+                        <br><button class="button1" type="button" onclick="saveAreaButton()" style="font-size: 20px; width:100px;" rel="#alertOverlay">Save</button>
                     </div>
                 </form>
                 
@@ -345,6 +345,25 @@ var testFunction = function (){
             </tr>
          </table><br/>
          <button class="button1" id="saveareaassignment" style="float: right">Save Area Assignment</button>
+         <!--<h2 align="center" style="color: red" id="newteaminfo"></h2>-->
+    </p>
+</div> 
+ <div class="alertOverlay" id="alertOverlay">
+	
+	<h3 align="center">Message</h3>
+    <br/>
+    <p>
+    	<table id="newteamtable" class="defaulttable">
+        	<tr>
+            	<td>
+                    <div id="alertMessageText">Test message!</div>
+                </td>
+                <td>
+                	
+                </td>
+            </tr>
+         </table><br/>
+         <span class="close">Ok</span>
          <!--<h2 align="center" style="color: red" id="newteaminfo"></h2>-->
     </p>
 </div> 

@@ -33,7 +33,14 @@ if(isset($_POST['assignArea'])){
         //TODO
     $handler = new message();
     $decodedMessage = $handler->decode_json_message($_POST['assignArea']);
-     $db->assign_team_to_area($decodedMessage->area, $decodedMessage->team);
+    if($db->assign_team_to_area($decodedMessage->area, $decodedMessage->team))
+    {
+        echo true;
+    }
+    else
+    {
+        echo false;
+    }
 };
 /*
  * FU CALLS

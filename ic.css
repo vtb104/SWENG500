@@ -107,7 +107,19 @@ button{
 	color: #fff;
 	font-family:Consolas, "Andale Mono", "Lucida Console", "Lucida Sans Typewriter", Monaco, "Courier New", monospace;
 }
-
+.alertButton{
+	padding: 4px;
+        min-width: 100px;
+        text-align: center;
+        margin-left: 250px;
+	background-color: #494242;	
+	border: 1px solid #847272;
+	border-radius: 3px;
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	color: #fff;
+	font-family:Consolas, "Andale Mono", "Lucida Console", "Lucida Sans Typewriter", Monaco, "Courier New", monospace;
+}
 .button1:hover{
 	background-color: #ccc;
 }
@@ -335,5 +347,30 @@ button{
 	padding: 3px;
 	border: 2px solid #fff;
 	float: right;
+	cursor: pointer;	
+}
+.alertOverlay {
+	left: 30%;
+	display:none;
+	z-index:10000;
+	width:675px;	
+	min-height:125px;
+	padding: 10px;
+	background-color: #555;
+	color: white;
+	border: 3px solid #ddd;
+
+	/* CSS3 styling for latest browsers */
+	-moz-box-shadow:0 0 90px 5px #333;
+	-webkit-box-shadow: 0 0 90px #333;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	border-radius: 3px;	
+}
+
+.alertOverlay .close{
+	padding: 3px;
+	border: 2px solid #fff;
+        margin-left: 49%;
 	cursor: pointer;	
 }

@@ -624,9 +624,9 @@ class Database
             $query = 'INSERT INTO areaassignment (areaID, teamID) VALUES ("' . $areaID . '","'.$teamID.'")';
             $result = $this->db_obj->query($query);
             if($result){
-                    echo "Success";
+                    return true;
             }else{
-                    echo "faileD";
+                    return false;
             }
          }
                  /** assign and area to a team
