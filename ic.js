@@ -257,7 +257,7 @@ function startNewArea()
 }
 //this function is used to assign a team to an area
 function assignArea(inArea, inTeam)
-{
+{   
     var assignmentData = new Object();
     assignmentData.area = inArea;
     assignmentData.team = ""+inTeam;
@@ -269,11 +269,12 @@ function assignArea(inArea, inTeam)
         success: function(areaData){
            if(areaData)
            {
-               
+                //TODO make these alert message customized
+                alert("Area has been successfully assigned");
            }
            else
            {
-               
+                alert("Area Assignment Failed");
            }
         }});    
 }
