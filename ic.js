@@ -281,7 +281,7 @@ function assignArea(inArea, inTeam)
 //adds the show area on map and remove area from map buttons
 function addAreaOptions()
 {
-    document.getElementById("areaOptionsDiv").innerHTML = '<button onclick="showAreaOnMap()">Show Area On Map</button><button onclick="removeAreaFromMap()">Remove Area From Map</button>';
+    document.getElementById("areaOptionsDiv").innerHTML = '<button class="button1" onclick="showAreaOnMap()">Show Area On Map</button><button class="button1" onclick="removeAreaFromMap()">Remove Area From Map</button>';
 }
 //this function deletes the given area
 function deleteArea()
