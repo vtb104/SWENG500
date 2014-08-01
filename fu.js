@@ -10,6 +10,8 @@ var currentLoc = new google.maps.LatLng(0, 0);
 var arrayGeoLocation = [];
 var cachedPoints = 0;
 
+var newMessages = '';
+
 // The FU is part of a search if it is a value > 0.
 // For DEBUG purposes only, set it to a value > 0, otherwise set it to 0.
 var currentSearch = 1;
@@ -63,7 +65,9 @@ function initialize()
 	sendPosition();
 	
 	sendLocations = setInterval(sendGeoLocations,   sendLocTimer);
-	msgTimer =      setInterval(function(){getMessage(userID)}, sendLocTimer);
+
+	//Start testing for new messages
+	newMessageTimer = setInterval(function(){checkMessages(userID);}, 1000);
 	
 	var lat = $("#lat").val ();
     var lng = $("#lng").val ();
@@ -287,21 +291,79 @@ var joinOrLeave = function(){
 
 //Handles the messages when the AJAX calls finish
 var messageSendHandler = function(msg, messageData){
-	if ( "1" != msg){
-		alert(JSON.stringify("Message failed to be received by server."));
-	}else{
-		$("#msgContainer").append('<p style="color:black" align="left">' + messageData.msgBody + '</p>');
-	}
+	$("#msgStatus").html("Message sent");
+	var timer = setTimeout(function(){$("#msgStatus").html("");}, 2000);
 }
 
 var messageGetHandler = function(msg){
-	var tempTime = Date();
+	
 	if(msg){
-		$("#msgStatus").html("Current at " + tempTime.toString());
-		// For now, just display the current time when the handler is invoked.
-		// Instead, though, we need to add the messages received.
-		$("#msgContainer").append('<p style="color:blue" align="right">' + tempTime.toString() + '</p>');
-	}else{
-		$("#msgStatus").html("No messages at " + tempTime.toString() );	
+		$("#msgContainer").html("");
+		$.each(msg, function(index, value){
+			
+			//First check to see if the message has been read
+			if(value.status === "1"){
+				ifNew = "<span id='newMsg"+ value.messageID +"' style='color: #F00'></span>";
+			}else{
+				ifNew = "<span id='newMsg"+ value.messageID +"' style='color: #F00'>New </span>";
+			}
+			
+			var theDate = new Date(value.dateSent * 1000);
+			$("#msgContainer").append('<div id="msgID' + value.messageID + '" msgID="'+value.messageID+'" class="onemessage" data-role="content"><span style="float: left">From: '+ value.sentuser[0].username +'</span><div align="center">"'+ ifNew + value.subject +'"</div>Sent: '+theDate.toDateString() + " " + leadingZero(theDate.getHours()) + ":" + leadingZero(theDate.getMinutes())+'<div id="msgBox' + value.messageID + '" style="display: none"><br/><div id="fullMsg'+ value.messageID+'">'+value.message+'</div><div delMsg="' + value.messageID + '" style="float: right" class="msgdel msgButton">Delete</div><div replyUser="' + value.sentfrom + '" msgID="' + value.messageID + '" style="float: right;" class="msgReply msgButton">Reply</div></div></div>');	
+		})
+		
+		$(".onemessage").on("click", function(){
+			var msgID =  $(this).attr("msgID");
+			$("#msgBox" + msgID).toggle();
+			
+			var newCheck = $("#newMsg" + msgID).html();
+			if(newCheck){
+				markAsRead(msgID);
+				newMessages--;
+			}
+			$("#newMsg" + msgID).html("");
+		});
+		
+		$(".msgdel").on("click", function(){
+			var msgID = $(this).attr("delMsg");
+			$("#msgID" + msgID).html("Deleted");
+			setTimeout(function(){
+				$("#msgID" + msgID).hide("slow");
+				deleteMessage(msgID);
+				}, 1000);
+			
+		});
+		
+		$(".msgReply").on("click", function(){
+			var replyTo = $(this).attr("replyUser");
+			var msgID = $(this).attr("msgID");
+			$("#sendTo").val(replyTo).selectmenu("refresh", true);
+			$("#messageBody").val("\n Original Message:\n" + $("#fullMsg" + msgID).html()).focus();
+		});
+		
 	}
+	
 }
+
+var checkMessageHandler = function(result){
+	if(result != newMessages){
+		getMessage(userID);
+	}
+	if(result !== "0"){
+		$(".newMsg").html(" New Mail");
+	}else{
+		$(".newMsg").html("");
+	}
+	newMessages = result;
+}
+
+var deleteMessageHandler = function(result){
+	//$("#msgStatus").html("Message deleted");	
+	getMessage(userID);
+}
+
+
+
+
+
+

@@ -24,6 +24,8 @@ var polyStorage = [];
 var areaIDData;
 var workingAreaPointArray = [];
 
+var newMessages = 0;
+
 if(readCookie("sar.location.lat") && readCookie("sar.location.lng")){
 	startLat = readCookie("sar.location.lat");
 	startLng = readCookie("sar.location.lng");
@@ -1066,33 +1068,82 @@ var messageGetHandler = function(msg){
 		
 		//First check to see if the message has been read
 		if(value.status === "1"){
-			ifNew = "";
+			ifNew = "<span id='newMsg" + value.messageID + "'style='color: #F00'></span>";
 		}else{
-			ifNew = "<span style='color: #F00'>!</span>";
+			ifNew = "<span id='newMsg" + value.messageID + "'style='color: #F00'>!</span>";
 		}
 		var theDate = new Date(value.dateSent * 1000);
 		var tempMessage = value.message.substring(0, 20) + "...";
 		
-		$("#messageoutput").append("<tr id='" + value.messageID + "' class='onemessage'><td class='msg1' id='newmessage" + value.messageID + "'>" + ifNew + "</td><td class='msg2'>" + value.sentuser[0].username + "</td><td class='msg3'>" + value.touser[0].username + "</td><td class='msg4'>" + value.subject + "</td><td class='msg5'>" + theDate.toDateString() + " " + leadingZero(theDate.getHours()) + ":" + leadingZero(theDate.getMinutes()) + "</td><td><span id='shortmessagebodyid" + value.messageID + "'>" + tempMessage + "</span><span id='fullmessagebodyid" + value.messageID + "' style='display: none'>" + value.message + "</span></td></tr>");
+		$("#messageoutput").append("<tr id='" + value.messageID + "' class='onemessage'><td class='msg1' id='newmessage" + value.messageID + "'>" + ifNew + "</td><td class='msg2'>" + value.sentuser[0].username + "</td><td class='msg3'>" + value.touser[0].username + "</td><td class='msg4'>" + value.subject + "</td><td class='msg5'>" + theDate.toDateString() + " " + leadingZero(theDate.getHours()) + ":" + leadingZero(theDate.getMinutes()) + "</td><td><span id='shortmessagebodyid" + value.messageID + "'>" + tempMessage + "</span><span id='fullmessagebodyid" + value.messageID + "' style='display: none'><div id='msgText" + value.messageID + "'>" + value.message + "</div><div delMsg='" + value.messageID + "' style='float: right' class='msgdel msgButton'>Delete</div><div replyUser='" + value.sentfrom + "' msgID='" + value.messageID + "' style='float: right;' class='msgReply msgButton'>Reply</div></span></td></tr>");
 	});
 	
 	$(".onemessage").on("click", function(){
-		var id = $(this).prop("id");
-		$("#shortmessagebodyid" + id).toggle();
-		$("#fullmessagebodyid" + id).toggle();
-		$("#newmessage" + id).html("");
-		markAsRead(id);
+		var msgID = $(this).prop("id");
+		$("#shortmessagebodyid" + msgID).toggle();
+		$("#fullmessagebodyid" + msgID).toggle();
+		var newCheck = $("#newMsg" + msgID).html();
+		if(newCheck){
+			markAsRead(msgID);
+			newMessages--;
+		}
+		$("#newMsg" + msgID).html("");
+	});
+	
+	$(".msgdel").on("click", function(){
+		var msgID = $(this).attr("delMsg");
+		$("#" + msgID).hide();
+		deleteMessage(msgID);
+	});
+	
+	$(".msgReply").on("click", function(){
+		var replyTo = $(this).attr("replyUser");
+		var msgID = $(this).attr("msgID");
+		//Reply
+		//alert("Reply to: " + replyTo + " MessageID " + msgID + " Message text: " + $("#msgText" + msgID).html());
+		replySender(replyTo, msgID, $("#msgText" + msgID).html());
 	});
 	
 }
 
+//This ajax call sets session variables for a reply page to be set.
+var replySender = function(to, msgID, messageText){
+	
+	var msg = new Object();
+	msg.to = to;
+	msg.msgID = msgID;
+	msg.text = messageText;
+	msg.from = userID;
+	
+	$.ajax({
+		type: "POST",
+		url: "messageReceive.php",
+		data: {messageReply: msg},
+		dataType: "json",
+		success: function(e){ 
+			window.location = "send.php";	
+		},
+		error: function(e){
+			window.location = "send.php";	
+		}
+	});
+}
+
 var checkMessageHandler = function(result){
+	if(result != newMessages){
+		getMessage(userID);
+	}
 	if(result !== "0"){
 		$("#info").html("<span style='color: #F00'>You have new messages");
-		getMessage(userID);
 	}else{
-		$("#info").html("");	
+		$("#info").html("");
 	}
+	newMessages = result;
+}
+
+var deleteMessageHandler = function(result){
+	//$("#msgStatus").html("Message deleted");	
+	getMessage(userID);
 }
 
 

@@ -50,7 +50,7 @@ var markAsRead = function(messageID){
         data: "messageread=" + messageID,
         success: function(msg){ 
 			if(msg){
-				$("#floatNote").html("Message read");	
+				//$("#floatNote").html("Message read");	
 			}
 		}
 	});
@@ -70,20 +70,16 @@ var checkMessages = function(userID){
 	
 }
 
+//Function deletes a message on the server by marking the status to 2
+var deleteMessage = function(messageID){
+	$.ajax({
+        type: "POST",
+        url: "messageReceive.php",
+        data: "deleteMessage=" + messageID,
+        success: function(result){ 
+			deleteMessageHandler(result);
+		}
+	});	
+}
 
-//set message delivery criteria
-var lastRefresh = new Date();
-var messageCount = 0;
-var updateInterval = 5000;
-var timer = 0;
-
-//pull new messages from server automatically
-var messageQueue = function(){
-    timer = refresh(function(){messageQueue()}, updateInterval);
-    requestData = { messageCount: Total };
-    if(messageCount > 0){
-		var newerThan = Math.round(lastRefresh.getTime()/ 1000);
-                };
-               getMessages;
-        };
         

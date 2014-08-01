@@ -140,6 +140,20 @@ font-family: Gotham, 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 
 .msg4{width: 220px;}
 .msg5{width: 172px;}
 
+.msgButton{
+	background-color: #bbb;	
+	padding: 2px;
+	text-size: 12px;
+	border-radius: 2px;
+	-webkit-border-radius: 2px;
+	-moz-border-radius: 2px;
+	margin-left: 2px;
+	margin-right: 2px;
+}
+.msgButton:hover{
+	background-color: #ccc;	
+}
+
 </style>
 </head>
 

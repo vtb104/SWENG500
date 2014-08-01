@@ -32,10 +32,12 @@ if(isset($_POST['dataMsg'])){
 	$data = $_POST['dataMsg'];
 	$theTime = $data['sentTime'] / 1000;
 	echo $db->create_point($data['user'], $data['lat'], $data['lng'], '25', $theTime, 'From FU');
+	die();
 };
 
 if(isset($_POST['userRequest'])){
 	echo $db->list_users();
+	die();
 };
 
 //Function returns messages for the user passed.
@@ -48,6 +50,7 @@ if(isset($_POST['message_receive'])){
 		$result[$i]["touser"] = $db->get_user($result[$i]["sentto"], false);
 	}
 	echo json_encode($result);
+	die();
 };
 
 //Function marks messages as read
@@ -60,9 +63,26 @@ if(isset($_POST['messageread'])){
 	die();
 }
 
+//Function deletes a message
+if(isset($_POST['deleteMessage'])){
+	echo $db->delete_message($_POST['deleteMessage']);
+	die();	
+}
+
 //Function checks for new messages for a user
 if(isset($_POST['messagecheck'])){
 	echo $db->message_check($_POST['userID']);	
+	die();
+}
+
+//Sets session varialbes for the IC to reply to a message:
+if(isset($_POST['messageReply'])){
+	$data = $_POST['messageReply'];
+	$_SESSION['messageTo'] = $data['to'];
+	$_SESSION['messageFrom'] = $data['userID'];
+	$_SESSION['messageID'] = $data['msgID'];
+	echo json_encode("Good");
+	die();	
 }
 
 //This function either adds a user to a search or removes them

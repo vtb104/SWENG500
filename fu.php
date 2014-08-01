@@ -68,8 +68,8 @@
             <div data-role="navbar">
                 <ul>
                     <li><a href="#geoMap">Map</a></li>
-                    <li><a href="#message">Messages</a></li>
-                    <li><a href="#configure" class=".configure">Configure<span class="cachedPoints"></a></li>
+                    <li><a href="#message">Messages<span class='newMsg'></span></a></li>
+                    <li><a href="#configure" class=".configure">Configure<span class="cachedPoints"></span></a></li>
                 </ul>
             </div>
         </div>
@@ -90,16 +90,30 @@
 
 		<div data-role="content">
 			<div role="main" class="ui-content" id="container">
-			<div id = "msgStatus">
-				<p>Last time server was checked for messages...</p>
-			</div>
-			<div id = "msgContainer">
-				<p>test</p>
-			</div>
-			<div id = "sendMsg">
-				<textarea rows = "2" id="messageBody">Enter your message here...</textarea>
+			<h3 id = "msgStatus" align="center" style="color: red"></h3>
+			
+            <h3 align="center">Create New Message</h3>
+            Send Message To:
+            <select id="sendTo">
+            	<!--<option value="currentSearch">Current Search Owner</option>-->
+				 <?php
+                //List all current users for a to field
+                    $users = $db->list_users(false);
+                    foreach($users as $one){
+                        echo "<option value='" . $one['userID'] . "'>" . $one['username'] . "</option>";
+                    }
+                    
+                ?>
+            
+            </select>
+			<div id = "sendMsg" style="border-bottom: 1px solid #ccc;">
+				<textarea rows = "2" id="messageBody" placeholder="Enter message here..."></textarea>
 				<button id="messageSend">Send</button>
+                <br/>
 			</div>
+            <h3 align="center">Messages</h3>
+            <div id = "msgContainer">
+				Loading Messages...
 			</div>
 		</div>
 		
@@ -107,8 +121,8 @@
             <div data-role="navbar">
                 <ul>
                     <li><a href="#geoMap">Map</a></li>
-                    <li><a href="#message">Messages</a></li>
-                    <li><a href="#configure" class=".configure">Configure<span class="cachedPoints"></a></li>
+                    <li><a href="#message">Messages<span class='newMsg'></span></a></li>
+                    <li><a href="#configure" class=".configure">Configure<span class="cachedPoints"></span></a></li>
                 </ul>
             </div>
         </div>
@@ -153,7 +167,7 @@
             <div data-role="navbar">
                 <ul>
                     <li><a href="#geoMap">Map</a></li>
-                    <li><a href="#message">Messages</a></li>
+                    <li><a href="#message">Messages<span class='newMsg'></span></a></li>
                     <li><a href="#configure" class=".configure">Configure<span class="cachedPoints"></span></a></li>
                 </ul>
             </div>
@@ -176,9 +190,17 @@ $(function(){
 		$("#currentSearchNumber").selectmenu('refresh');
 	});
     $("#messageSend").click(function(){
-		// interface to match is in messages.js and is as follows:
-		// var sendMessage = function(sentTo, sentFrom, subject, message)
-		sendMessage(currentSearch, userID, 'From FU', $("#messageBody").val());
+		var sendTo = $("#sendTo").val();
+		if($("#messageBody").val()){
+			if(sendTo == "currentSearch"){
+				sendMessage(currentSearch, userID, 'From FU', $("#messageBody").val());
+			}else{
+				sendMessage(sendTo, userID, 'From FU', $("#messageBody").val());	
+			}
+		}else{
+			$("#msgStatus").html("Please enter a message");
+			setTimeout(function(){$("#msgStatus").html("")}, 2000);
+		}
 	});
 });
 </script>

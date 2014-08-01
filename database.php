@@ -516,12 +516,23 @@ class Database
 	 */
 	 public function fetch_messages($userID = 0, $teamID = 0, $searchID = 0, $json = true){
 		 if($userID){
-			 $query = "SELECT * FROM Messages WHERE sentto = '$userID' ORDER BY dateSent DESC";
+			 $query = "SELECT * FROM Messages WHERE sentto = '$userID' AND status != '2' ORDER BY dateSent DESC ";
 			 $result = $this->db_obj->query($query);
 			 return $this->return_array($result, $json);
 		 }else{
 			return "Not enabled yet"; 
 		 }
+	 }
+	 
+	 //Fetch one message
+	 public function message_fetch($messageID, $json = true){
+		$query = "SELECT * FROM Messages WHERE messageID = '$messageID'"; 
+		$result = $this->db_obj->query($query);
+		if($result){
+			return $this->return_array($result, $json);
+		}else{
+			return false;	
+		}
 	 }
 	 
 	 //Mark a message as read
@@ -546,6 +557,17 @@ class Database
 			return count($resultcount);
 		}else{
 			return 0;	
+		}
+	 }
+	 
+	 //Checks "deletes" a message by setting the status to 2
+	 public function delete_message($messageID){
+		$query = "UPDATE Messages SET status='2' WHERE messageID = '$messageID'";
+		$result = $this->db_obj->query($query);
+		if($result){
+			return true;
+		}else{
+			return false;	
 		}
 	 }
 	 

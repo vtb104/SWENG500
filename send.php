@@ -4,7 +4,10 @@
 	if(isset($_SESSION['userid']))
 	{
 		$user = $db->get_user($_SESSION['userid'], false);
-	}	
+	}
+	
+	//var_dump($db->message_fetch($_SESSION['messageID'], false));
+	//die();
 ?>
  <head>
 
@@ -95,10 +98,30 @@ font-family: Gotham, 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 
 	}	
 ?>
 
+var messageFiller = function(){
+	<?php 
+	
+	//If there is a message to reply to, then fill the form with the data in the session
+	//Sloppy...but it will work for now.
+	if(isset($_SESSION['messageTo'])){
+		$to = $_SESSION['messageTo'];
+		$msg = $db->message_fetch($_SESSION['messageID'], false);
+		echo "
+			$('#widgetu264_input').val('$to');
+			$('#widgetu268_input').val('Reply: " . $msg[0]['subject'] . "');
+			$('#widgetu258_input').val('Original Message: " . $msg[0]['subject'] . "');
+		
+		
+		";
+		
+	}
+	?>	
+}
+
 </script>
 </head>
 
-<body>
+<body onLoad="messageFiller()">
 <div id="pagewrapper">
     <div id="main"></div>
     <div id="menubar">
@@ -136,7 +159,7 @@ font-family: Gotham, 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 
       <label class="fld-label actAsDiv clearfix grpelem" id="u270-4" for="widgetu268_input"><!-- content -->
        <span class="actAsPara">Subject:</span>
       </label>
-      <span class="fld-input NoWrap actAsDiv clearfix grpelem" id="u271-4"><!-- content --><input class="wrapped-input" type="text" spellcheck="false" id="widgetu268_input" name="Subject" tabindex="3"/><label class="wrapped-input fld-prompt" id="widgetu268_prompt" for="widgetu268_input"><span class="actAsPara">Enter Subject</span></label></span>
+      <span class="fld-input NoWrap actAsDiv clearfix grpelem" id="u271-4"><!-- content --><input class="wrapped-input" type="text" spellcheck="false" id="widgetu268_input" name="Subject" tabindex="3"/></span>
      </div>
      <div class="clearfix grpelem" id="u272-4"><!-- content -->
       <p>Submitting Form...</p>
@@ -152,7 +175,7 @@ font-family: Gotham, 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 
       <label class="fld-label actAsDiv clearfix grpelem" id="u261-4" for="widgetu258_input"><!-- content -->
        <span class="actAsPara">Message:</span>
       </label>
-      <span class="fld-textarea actAsDiv clearfix grpelem" id="u259-4"><!-- content --><textarea class="wrapped-input" id="widgetu258_input" name="Body" tabindex="5"></textarea><label class="wrapped-input fld-prompt" id="widgetu258_prompt" for="widgetu258_input"><span class="actAsPara">Enter Your Message</span></label></span>
+      <span class="fld-textarea actAsDiv clearfix grpelem" id="u259-4"><!-- content --><textarea class="wrapped-input" id="widgetu258_input" name="Body" tabindex="5" placeholder="Enter message"></textarea></span>
      </div>
      <div class="fld-grp clearfix grpelem" id="widgetu274" data-required="true"><!-- none box -->
       <label class="fld-label actAsDiv clearfix grpelem" id="u275-4" for="widgetu274_input"><!-- content -->

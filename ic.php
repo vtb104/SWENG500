@@ -484,12 +484,12 @@ $(function(){
 	$("#optionbuttonshow").click(function(){
 		$(this).hide();
 		$("#optionbuttonhide").show();
-		$("#optiondiv").animate({width: "400px"}, 400, function(){}).show();
+		$("#optiondiv").animate({right: "400px"}, 400, function(){}).show();
 	});
 	$("#optionbuttonhide").click(function(){
 		$(this).hide();
 		$("#optionbuttonshow").show();
-		$("#optiondiv").animate({width: "0px"}, 400, function(){});
+		$("#optiondiv").animate({right: "0px"}, 400, function(){});
 	});
 
         

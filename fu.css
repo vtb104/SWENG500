@@ -17,12 +17,35 @@ and open the template in the editor.
     padding: 0;
 } 
 
-	#msgContainer{
-    border: 1px solid #a1a1a1;
-    padding: 1px 1px; 
-    background: #dddddd;
-	height: 300px;
-    width: 100%;
-    border-radius: 5px;
-	overflow:scroll;
+#msgContainer{
+    
+}
+
+.onemessage{
+	border: 2px solid #ccc;
+	border-radius: 3px;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	overflow: hidden;;
+	margin-bottom: 4px;
+	padding: 2px;
+}
+.onemessage:hover{
+	cursor: pointer;
+}
+.msgButton{
+	background-color: #bbb;	
+	padding: 2px;
+	text-size: 16px;
+	border-radius: 2px;
+	-webkit-border-radius: 2px;
+	-moz-border-radius: 2px;
+	margin-left: 3px;
+	margin-right: 3px;
+}
+.msgButton:hover{
+	background-color: #ccc;	
+}
+.newMsg{
+	color: red;
 }
