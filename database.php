@@ -207,6 +207,18 @@ class Database
 			return false;	
 		}
 	}
+        	/** Get latest location for a user
+	 *  @return a point in json format	
+	*/
+	public function latest_user_location_simplified($userID){
+		$query = "SELECT userID,lat,lng FROM Points WHERE userID = '".$userID."' ORDER BY dateCreated DESC LIMIT 1";
+		$result = $this->db_obj->query($query);
+		if($result){
+			return $result;
+		}else{
+			return false;	
+		}
+	}
 	
 	
 	 /** List teams

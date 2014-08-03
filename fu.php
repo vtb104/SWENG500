@@ -20,6 +20,7 @@
   <script src="sharedJS.js"></script>
   <script src="fu.js"></script>
   <script src="messages.js"></script>
+  <script type="text/javascript" src="StyledMarker.js"></script>
 <style>
 	.cachedPoints{
 		font-size: 8px;	

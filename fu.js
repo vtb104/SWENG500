@@ -270,7 +270,7 @@ function sendGeoLocations()
 		}
 		
 	});
-	
+	showNearbyUsers();
 }
 
 //Either adds the user to a search or removes them
@@ -362,8 +362,30 @@ var deleteMessageHandler = function(result){
 	getMessage(userID);
 }
 
-
-
-
-
-
+var nearByUsersIconArray = new Array();
+function showNearbyUsers()
+{
+    var userList = new Array();
+    //to do add functionality to have a max distance from person
+    var maxDistance = 1;
+    //get users
+     $.ajax({
+        type: "POST",
+        url: "AreaHandler.php",
+        data: {getNearbyUsers:maxDistance},//change search ID for multiple searches
+        dataType: "json",
+        success: function(usersData){
+            
+            nearByUsersIconArray = new Array();
+            for(var cnt = 0; cnt < usersData.length; cnt++)
+            {
+              //create new iconJSON.parse(usersData[0]).userID
+              var tempPos = new google.maps.LatLng(JSON.parse(usersData[cnt]).lat,JSON.parse(usersData[cnt]).lng);
+              nearByUsersIconArray[cnt] = new StyledMarker({styleIcon:new StyledIcon(StyledIconTypes.MARKER,{color:"#99FF66",text:""+JSON.parse(usersData[cnt]).userID}),position:tempPos,map:map});
+            }
+            //get each users current location
+                       
+        }});
+    
+    
+}

@@ -68,4 +68,24 @@ if(isset($_POST['checkForArea'])){
             echo "no team";
         }
 };
+//get all users nearby for FU
+if(isset($_POST['getNearbyUsers']))
+{
+    $returnArray = array();
+    $userList = $db->list_users(false);
+    for($cnt = 0; $cnt < count($userList); $cnt++)
+    {
+        $userLocation = $db->latest_user_location_simplified($userList[$cnt]['userID']);
+        $tempUL = $userLocation->fetch_assoc();
+        $tempObj = new stdClass();
+        $tempObj->userID = $tempUL['userID'];
+        $tempObj->lat = $tempUL['lat'];
+        $tempObj->lng = $tempUL['lng'];
+        array_push($returnArray, json_encode($tempObj));
+    }
+ 
+    echo json_encode($returnArray);
+   // echo $userList;
+}
+
 ?>
