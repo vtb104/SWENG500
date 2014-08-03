@@ -3,10 +3,6 @@ var cookieDuration = 24 * 30;	//30 days
 teamArray = [];
 
 /*************************Specific Functions for search stuff********************************/
-function testShared()
-{
-    alert("Shared works!");
-}
 var polyStorage = [];
 function fillPoly(areaName, arrayOfPoints)
 {
@@ -101,6 +97,25 @@ var updateTeams = function(){
 		}
 	});
 }
+
+//This is an Ajax request for search info
+var getSearchInfo = function(searchID){
+	data = new Object();
+	data = {currentSearch: searchID};
+	$.ajax({
+		type: "POST",
+		url: "messageSend.php",
+		data: {currentSearchInfo: data},
+		dataType:"json",
+		success: function(msg){
+			getSearchInfoHandler(msg);
+		},
+		error: function(msg){
+			errorHandler(msg);	
+		}
+	});
+}
+
 
 /***************************************Generic functions for any site*****************/
 

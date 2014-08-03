@@ -250,6 +250,17 @@ class Database
 		}
 	 }
 	 
+	 //Returns current search info
+	 public function get_search_info($searchID, $json = true){
+		$query = "SELECT * FROM Searches WHERE searchID = '$searchID'";
+		$result = $this->db_obj->query($query);
+		if($result){
+			return $this->return_array($result, $json);
+		}else{
+			return false;
+		}
+	 }
+	 
 	 //Delete a search
 	 public function delete_search($searchID){
 		$query = "DELETE FROM Searching WHERE searchID = '$searchID'";

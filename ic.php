@@ -50,8 +50,8 @@
 ?>
 
 var testFunction = function (){
-	$("#testOutput").html(users.userArray[0].userID);
-	users.userArray[0].changeColor("#FFF");
+	$("#test").html("Running...");
+	getSearchInfo(currentSearch);
 };
 </script>
 </head>
@@ -78,7 +78,7 @@ var testFunction = function (){
         	<h4 align="center">List of searchers</h4>
         	<div id="searcherlist"></div>
 		</div>
-        <div style="position: fixed; bottom: 0px; right: 500px; height: 32px;">    
+        <div style="position: fixed; bottom: 0px; right: 200px; height: 32px;">    
             <button id="testbutton">Test Button</button>
         </div>
 	</div>  <!-- Main Div-->    
@@ -95,7 +95,7 @@ var testFunction = function (){
                 <select id="currentSearchNumber"></select>
                 </td>
            </tr>
-           <tr class="newline">
+           <tr>
                 <td>
                     
                 </td>
@@ -104,6 +104,14 @@ var testFunction = function (){
                     <button class="button1" id="deletesearch">Delete Search</button>
                 </td>
            </tr>
+           <tr class="newline">
+           		<td>
+                	Search Info
+                </td>
+               	<td>
+                	<div id="currentSearchInfo">
+                    </div>
+                </td>
             <tr>
                 <td>
                     <span class="optionlabel">Team Listing </span>
@@ -252,7 +260,7 @@ var testFunction = function (){
                 	Search Start Time:
                 </td>
                 <td>
-                	<input id="newsearchtime" class="newsearchclass" type="time" val="0900"/>
+                	<input id="newsearchtime" class="newsearchclass" type="time" value="09:00"/>
                 </td>
             </tr>
             <tr>
@@ -367,6 +375,8 @@ var testFunction = function (){
          <!--<h2 align="center" style="color: red" id="newteaminfo"></h2>-->
     </p>
 </div> 
+
+<div id="test" style="position: fixed; right: 0px; bottom: 0px; color: white; z-index: 1000;">Test Line</div>
 </body>
 <script>
 //Put jQuery button listeners here, don't put too many functions here due to scope issues.
@@ -393,7 +403,10 @@ $(function(){
 	});
 	//Start a new search
 	$("#newsearch").click(function(){
-		$(".newsearchclass").val("");
+		$("#newsearchname").val("");
+		theTime = new Date();
+		$("#newsearchdate").datepicker("setDate", theTime);
+		$("#newsearchtime").val(leadingZero(theTime.getHours()) + ":" + leadingZero(theTime.getMinutes()));
 		$("#newsearchinfo").html("");
 	});
 	$("#savenewsearch").click(function(){

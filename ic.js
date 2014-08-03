@@ -62,6 +62,7 @@ if(readCookie("sar.currentTeamIC")){
 var updateCurrentSearch = function(){
 	currentSearch = $("#currentSearchNumber").val();
 	writeCookie("sar.currentSearchIC", currentSearch, cookieDuration);
+	getSearchInfo(currentSearch);
 	getNewPoints();
 }
 var updateCurrentTeam = function(){
@@ -75,15 +76,18 @@ var trackHistoryStart = new Date();
 
 if(readCookie("sar.trackStart")){
  	var temp = readCookie("sar.trackStart");
-	trackHistoryStart.setTime(temp);
+	if(temp !== "NaN"){
+		trackHistoryStart.setTime(temp);
+	}else{
+		trackHistoryStart.setTime(nowTime.getTime() - (3600 * 24 * 1000));  //Default one day ago
+	}
 }else{
 	trackHistoryStart.setTime(nowTime.getTime() - (3600 * 24 * 1000));  //Default one day ago
-	
 };
 
 var updateTrackLength = function(){
 	
-	trackHistoryStart = getUITime();
+	trackHistoryStart = getUITime($("#trackDate").datepicker("getDate"), $("#trackTime").val());
 	//$("#testTime").html(trackHistoryStart.toString());
 	
 	//Write the cookie
@@ -143,7 +147,7 @@ var initialize = function(){
 	connectionStart = new Date();
 	
 	//Update trackLength value
-	setUITime(trackHistoryStart);
+	setUITime(trackHistoryStart, "trackDate", "trackTime");
 	
 	$("#testTime").html(trackHistoryStart.toString())
 	
@@ -154,9 +158,10 @@ var initialize = function(){
 	updateSearches();
 	
 	//Pulls all teams
-        updateTeams();
+    updateTeams();
         
 	//Start the timer to get new points
+	getSearchInfo(currentSearch);
 	getNewPoints();
 	
     //this event listener will be used for area creation 
@@ -437,6 +442,7 @@ function updateUserTrack(userNumber)
 }
 
 
+
 //This is the function that runs every 5s from the timer
 var getNewPoints = function(){
 	
@@ -500,6 +506,9 @@ var getNewPoints = function(){
 					 "userData":
 						{"username":"ryan","fname":"Ryan","lname":"lname"}]},
 				*/
+			},
+			error: function(msg){
+				errorHandler(msg);	
 			}
 		});
 	}
@@ -580,6 +589,18 @@ Users.prototype.checkUsers = function(inputUsers){
 		}
 		
 	});
+	
+	this.sortUsers();
+	
+}
+
+//Organize the array alphabetically by user name
+Users.prototype.sortUsers = function(){
+	this.userArray.sort(function(a, b){
+		if(a.username < b.username) return -1;
+		if(a.username > b.username) return 1;
+		return 0;
+	});	
 }
 
 //Draws the buttons for active users
@@ -944,12 +965,12 @@ var saveNewSearch = function(){
 	
 	var newSearchNumber = 0;
 	
-	var searchStart = 1;
+	var searchStart = getUITime($("#newsearchdate").datepicker("getDate").getTime(), $("#newsearchtime").val());
 	
 	var newSearchData = {
 		userID: userID,
 		searchName: $("#newsearchname").val(),
-		searchStart: searchStart,
+		searchStart: searchStart.getTime() / 1000,
 		searchNotes: $("#newsearchnotes").val()
 	}
 	
@@ -968,6 +989,16 @@ var saveNewSearch = function(){
 	$("#currentSearchNumber").val(newSearchNumber);
 	getNewPoints();
 }
+
+//When a new search is entered, or a new search is selected, pull the search information from the database
+var getSearchInfoHandler = function(msg){
+	if(msg !== "none"){
+		theTime = new Date(msg[0].searchStart * 1000);
+		setUITime(theTime, "trackDate", "trackTime");
+		$("#currentSearchInfo").html(msg[0].searchInfo);
+	}
+}
+
 var saveNewTeam = function(){
 	
 	var t = $("#newteamcolor").val()
@@ -1177,25 +1208,31 @@ function searchNow(){
 	});
 };
 
+//This function handles error messages from AJAX calls
+var errorHandler= function(msg){
+	$("#test").html(JSON.stringify(msg));	
+}
+
 var randomColor = function(){
 	return '#' + (function co(lor){   return (lor += [0,1,2,3,4,5,6,7,8,9,'a','b','c','d','e','f'][Math.floor(Math.random()*16)]) && (lor.length == 6) ?  lor : co(lor); })('');	}
 
 //Sets the UI date, takes a Date object
-function setUITime(input){
-	input.setTime(input.getTime() + input.getTimezoneOffset());
+function setUITime(input, dateElement, timeElement){
+	input.setTime(input.getTime() - input.getTimezoneOffset() * 60000);
 	var dateString = (input.getMonth() + 1) + "-" + input.getDate() + "-" + input.getFullYear();
-	$("#trackDate").datepicker('setDate', dateString);
+	$("#" + dateElement).datepicker('setDate', dateString);
 	var timeString = leadingZero(input.getHours()) + ":" + leadingZero(input.getMinutes());
-	$("#trackTime").val(timeString);
+	$("#" + timeElement).val(timeString);
 }
 
 //Returns a Date Object of the time in the UI
-function getUITime(){
-	var tempTime = $("#trackTime").val().split(":");
-	var tempDate = $("#trackDate").datepicker("getDate").getTime();
+function getUITime(theDate, theTime){
+	var tempTime = theTime.split(":");
+	var tempDate = theDate;
 
 	var returnTime = new Date();
-	returnTime.setTime(tempDate + (tempTime[0] * 3600 * 1000) + (tempTime[1] * 60 * 1000));
+	var offset = returnTime.getTimezoneOffset() * 60000;
+	returnTime.setTime(tempDate + (tempTime[0] * 3600 * 1000) + (tempTime[1] * 60 * 1000) + offset);
 	return returnTime;
 }
 

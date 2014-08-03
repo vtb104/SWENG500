@@ -1,10 +1,16 @@
 <?php
+date_default_timezone_set("UTC"); 
 //Database test page
 require_once("phpcommon.php");
 
 /*if(!$auth->authenticate()){
 	header("Good Auth");	
 }*/
+echo time() . "<br/>";
+echo date("Y-m-d H:i", time()) . "<br/>";
+echo date("Y-m-d H:i", 1407040200);
+
+die();
 
 $var = $db->get_points(2, $limit = 10200);
 echo count($var);
