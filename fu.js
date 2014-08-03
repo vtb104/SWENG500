@@ -15,7 +15,8 @@ var newMessages = '';
 // The FU is part of a search if it is a value > 0.
 // For DEBUG purposes only, set it to a value > 0, otherwise set it to 0.
 var currentSearch = 1;
-
+var nearByUsersIconArray = new Array();
+var baseIcon;
 if(readCookie("sar.currentSearchFU")){
 	currentSearch = readCookie("sar.currentSearchFU");
 }
@@ -271,6 +272,7 @@ function sendGeoLocations()
 		
 	});
 	showNearbyUsers();
+        shopBaseOnMap();
 }
 
 //Either adds the user to a search or removes them
@@ -362,7 +364,7 @@ var deleteMessageHandler = function(result){
 	getMessage(userID);
 }
 
-var nearByUsersIconArray = new Array();
+
 function showNearbyUsers()
 {
     var userList = new Array();
@@ -385,6 +387,40 @@ function showNearbyUsers()
             }
             //get each users current location
                        
+        }});
+    
+    
+}
+
+function shopBaseOnMap()
+{
+    //get users
+     $.ajax({
+        type: "POST",
+        url: "AreaHandler.php",
+        data: {getBaseLocation:currentSearch},//change search ID for multiple searches
+        dataType: "json",
+        success: function(searchDataReturn){
+           //alert(JSON.stringify(searchDataReturn));   
+           //add base to map
+           var baseLoc = new google.maps.LatLng(42.0137122,-80.2995007);
+           
+             var image = {
+                url: 'images/baseIcon.png',
+                // This marker is 20 pixels wide by 32 pixels tall.
+                size: new google.maps.Size(32, 32),
+                // The origin for this image is 0,0.
+                origin: new google.maps.Point(0,0),
+                // The anchor for this image is the base of the flagpole at 0,32.
+                anchor: new google.maps.Point(0, 32)
+            };
+           
+           baseIcon = new google.maps.Marker({
+            position: baseLoc,
+            map: map,
+            icon: image,
+    });
+           
         }});
     
     

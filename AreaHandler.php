@@ -87,5 +87,12 @@ if(isset($_POST['getNearbyUsers']))
     echo json_encode($returnArray);
    // echo $userList;
 }
-
+//get baselocation for FU
+if(isset($_POST['getBaseLocation']))
+{
+    $searchData = $db->get_search_info($_POST['getBaseLocation'],false);
+    //$owner = $searchData['owner'];
+    //$searchOwnerLocation = $db->latest_user_location_simplified($owner);
+    echo json_encode($searchData);
+}
 ?>

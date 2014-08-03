@@ -266,11 +266,15 @@ class Database
 	 public function get_search_info($searchID, $json = true){
 		$query = "SELECT * FROM Searches WHERE searchID = '$searchID'";
 		$result = $this->db_obj->query($query);
-		if($result){
+		if($result && $json){
 			return $this->return_array($result, $json);
-		}else{
-			return false;
+		}else if($result && !$json){
+			return $result;
 		}
+                else
+                {
+                    return false;
+                }
 	 }
 	 
 	 //Delete a search
