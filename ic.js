@@ -257,7 +257,7 @@ function updatePointList()
 //this function is called when "start new area button is clicked
 function startNewArea()
 { 
-    document.getElementById("areaBoxContent").innerHTML = '<h5>Enter An Area Name: </h5><input type="text" name="AreaName" id="AreaName" value="Enter an Area Name"><h5>Select Color for Area:</h5><input type="color" id="area_color" value="#00ff00"><div id="tempMsg"></div><div id="PointsOfArea"></div>';
+    document.getElementById("areaBoxContent").innerHTML = '<h5>Enter An Area Name: </h5><input type="text" name="AreaName" id="AreaName" placeholder="Enter an Area Name"><h5>Select Color for Area:</h5><input type="color" id="area_color" value="#00ff00"><div id="tempMsg"></div><div id="PointsOfArea"></div>';
     //TODO check if listener exists already
     google.maps.event.addListener(map, 'click', addLatLng);
     currentAreaPoly = [];

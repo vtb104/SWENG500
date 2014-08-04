@@ -116,6 +116,7 @@
             <div id = "msgContainer">
 				Loading Messages...
 			</div>
+            </div>
 		</div>
 		
         <div data-role="footer" data-position="fixed">
@@ -131,7 +132,8 @@
 
 <div data-role="page" id="configure">
         <div data-role="header">
-            <a href="#confHelp" class="ui-btn ui-btn-inline ui-corner-all ui-shadow">Help</a><a href="logout.php">Logout</a>
+            <a href="#confHelp" class="ui-btn ui-btn-inline ui-corner-all ui-shadow">Help</a>
+            <a href="logout.php">Logout</a>
             <h1>Configure</h1>
             
 		</div>
