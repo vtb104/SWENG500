@@ -459,16 +459,14 @@ $(function(){
 		$(this).hide();
 		$("#hideareabox").show();
 		$("#searchAreaBox").animate({bottom: "0px"}, 400, function(){});
-                startNewArea();
+        startNewArea();
 	});
 	
 	$("#hideareabox").click(function(){
-		$(this).hide();
-		$("#showareabox").show();
-		$("#searchAreaBox").animate({bottom: "-375px"}, 400, function(){});
+		hideAreaBox();
 	});
 	
-        $("#newarea").click(function(){
+    $("#newarea").click(function(){
 		$("#showareabox").hide();
                 $("#hideareabox").show();
 		$("#searchAreaBox").animate({bottom: "0px"}, 400, function(){});
@@ -490,9 +488,9 @@ $(function(){
     $("#currentTeamNumber").change(function(){
 		updateCurrentTeam();
 	});
-        $("#currentAreas").change(function(){
-            updatePointList();
-            addAreaOptions();
+    $("#currentAreas").change(function(){
+    	updatePointList();
+        addAreaOptions();
 	});
 	$("#optionbuttonshow").click(function(){
 		$(this).hide();

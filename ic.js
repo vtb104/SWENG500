@@ -362,12 +362,23 @@ function checkArrayForName(inArray, inName)
 //this function is called when "save" is clicked after adding an area
 function saveAreaButton()
 {
+	areaData = new Object();
+	areaData.name = document.getElementById("AreaName").value;
+	
+	//Data checking
+	if(!areaData.name){
+		document.getElementById("alertMessageText").style.color = "#FFFFFF";
+        document.getElementById("alertMessageText").style.fontWeight = "bold";
+        document.getElementById("alertMessageText").innerHTML = "You must enter a name for the area you wish to create.";
+		return false;
+	}
+	
     if(currentAreaPoly.length >= 3)
     {
         google.maps.event.clearListeners(map, 'click');
         //send area to database
-        areaData = new Object();
-        areaData.name = document.getElementById("AreaName").value;
+        
+        
         areaData.userID = userID;
         areaData.points = currentAreaPoly;
         areaData.color = document.getElementById("area_color").value;
@@ -408,6 +419,7 @@ function saveAreaButton()
         document.getElementById("alertMessageText").style.color = "#FFFFFF";
         document.getElementById("alertMessageText").style.fontWeight = "bold";
         document.getElementById("alertMessageText").innerHTML = "Area created!";
+		hideAreaBox();
     }
     else
     {
@@ -420,6 +432,14 @@ function saveAreaButton()
 
     
 }
+
+var hideAreaBox = function(){
+	$("#hideareabox").hide();
+	$("#showareabox").show();
+	$("#searchAreaBox").animate({bottom: "-375px"}, 400, function(){});	
+}
+
+
 var polylineStorage = [];
 var markerStorage = [];
 //create user tracks
