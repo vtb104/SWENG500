@@ -338,6 +338,7 @@ var messageGetHandler = function(msg){
 		});
 		
 		$(".msgReply").on("click", function(){
+			newMessageShow();
 			var replyTo = $(this).attr("replyUser");
 			var msgID = $(this).attr("msgID");
 			$("#sendTo").val(replyTo).selectmenu("refresh", true);
@@ -363,6 +364,10 @@ var checkMessageHandler = function(result){
 var deleteMessageHandler = function(result){
 	//$("#msgStatus").html("Message deleted");	
 	getMessage(userID);
+}
+
+var newMessageShow = function(){
+	$(".newMessageShow").toggle("fast");	
 }
 
 var messageClear = function(){

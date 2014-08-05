@@ -197,7 +197,7 @@ $(function(){
 	});
 	
 	$("#newMessageButton").click(function(){
-		$(".newMessageShow").toggle("fast");
+		newMessageShow();
 	})
 	
 	$("#messageCancel").click(function(){
