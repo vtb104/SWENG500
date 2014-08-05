@@ -293,6 +293,7 @@ var joinOrLeave = function(){
 
 //Handles the messages when the AJAX calls finish
 var messageSendHandler = function(msg, messageData){
+	messageClear();
 	$("#msgStatus").html("Message sent");
 	var timer = setTimeout(function(){$("#msgStatus").html("");}, 2000);
 }
@@ -364,6 +365,11 @@ var deleteMessageHandler = function(result){
 	getMessage(userID);
 }
 
+var messageClear = function(){
+	$("#messageBody").val("");
+	$(".newMessageShow").toggle("fast");
+}
+
 
 function showNearbyUsers()
 {
@@ -422,6 +428,4 @@ function shopBaseOnMap()
     });
            
         }});
-    
-    
 }

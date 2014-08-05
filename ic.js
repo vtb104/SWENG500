@@ -1105,7 +1105,8 @@ var deleteTeam = function(){
 }
 var messageSendHandler = function(msg){
 	if(msg){
-		$("#floatNote").html("Message Sent");	
+		$("#floatNote").html("Message Sent");
+		messageClear();	
 	}else{
 		$("#floatNote").html("Message not sent: " + JSON.stringify(msg));	
 	}
@@ -1143,7 +1144,7 @@ var messageGetHandler = function(msg){
 	
 	$(".msgdel").on("click", function(){
 		var msgID = $(this).attr("delMsg");
-		$("#" + msgID).hide();
+		$("#" + msgID).hide("fast");
 		deleteMessage(msgID);
 	});
 	
@@ -1190,6 +1191,13 @@ var checkMessageHandler = function(result){
 		$("#info").html("");
 	}
 	newMessages = result;
+}
+
+//Clears the messaging functions
+var messageClear = function(){
+	$("#widgetu268_input").val("");
+	$("#widgetu258_input").val("");
+	$("#widgetu278_input").val("");
 }
 
 var deleteMessageHandler = function(result){

@@ -93,25 +93,28 @@
 			<div role="main" class="ui-content" id="container">
 			<h3 id = "msgStatus" align="center" style="color: red"></h3>
 			
-            <h3 align="center">Create New Message</h3>
-            Send Message To:
-            <select id="sendTo">
-            	<!--<option value="currentSearch">Current Search Owner</option>-->
-				 <?php
-                //List all current users for a to field
-                    $users = $db->list_users(false);
-                    foreach($users as $one){
-                        echo "<option value='" . $one['userID'] . "'>" . $one['username'] . "</option>";
-                    }
-                    
-                ?>
-            
-            </select>
-			<div id = "sendMsg" style="border-bottom: 1px solid #ccc;">
-				<textarea rows = "2" id="messageBody" placeholder="Enter message here..."></textarea>
-				<button id="messageSend">Send</button>
-                <br/>
-			</div>
+            <button id="newMessageButton" class="newMessageShow">Create New Message</button>
+            <div id="newMessageDiv" style="display: none" class="newMessageShow">
+                Send Message To:
+                <select id="sendTo">
+                    <!--<option value="currentSearch">Current Search Owner</option>-->
+                     <?php
+                    //List all current users for a to field
+                        $users = $db->list_users(false);
+                        foreach($users as $one){
+                            echo "<option value='" . $one['userID'] . "'>" . $one['username'] . "</option>";
+                        }
+                        
+                    ?>
+                
+                </select>
+                <div id = "sendMsg" style="border-bottom: 1px solid #ccc;">
+                    <textarea rows = "2" id="messageBody" placeholder="Enter message here..."></textarea>
+                    <button id="messageSend" class="messageEnd">Send</button>
+                    <button id="messageCancel" class="messageEnd">Cancel</button>
+                    <br/>
+                </div>
+            </div>
             <h3 align="center">Messages</h3>
             <div id = "msgContainer">
 				Loading Messages...
@@ -192,6 +195,15 @@ $(function(){
 		$("#joinOrLeaveStatus").html("");
 		$("#currentSearchNumber").selectmenu('refresh');
 	});
+	
+	$("#newMessageButton").click(function(){
+		$(".newMessageShow").toggle("fast");
+	})
+	
+	$("#messageCancel").click(function(){
+		messageClear();
+	})
+	
     $("#messageSend").click(function(){
 		var sendTo = $("#sendTo").val();
 		if($("#messageBody").val()){
