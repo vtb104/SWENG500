@@ -27,7 +27,9 @@ if(isset($_POST['getAreaPoints'])){
         echo $db->list_points_in_area($_POST['getAreaPoints']);
 };
 if(isset($_POST['deleteArea'])){
-        echo $db->delete_area($_POST['deleteArea']);
+    //un assign area
+        
+    echo $db->delete_area($_POST['deleteArea']);
 };
 if(isset($_POST['assignArea'])){
         //TODO

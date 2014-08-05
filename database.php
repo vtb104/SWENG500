@@ -696,6 +696,8 @@ class Database
           */
          public function delete_area($areaID)
          {
+             $query = 'DELETE FROM areaassignment WHERE areaID="'.$areaID.'"';
+             $this->db_obj->query($query);
              $query = 'DELETE FROM areas WHERE areaID="'.$areaID.'"';
 		$result = $this->db_obj->query($query);
 		if($result){
