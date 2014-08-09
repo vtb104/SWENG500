@@ -6,14 +6,10 @@ require_once("phpcommon.php");
 /*if(!$auth->authenticate()){
 	header("Good Auth");	
 }*/
-echo time() . "<br/>";
-echo date("Y-m-d H:i", time()) . "<br/>";
-echo date("Y-m-d H:i", 1407040200);
 
+$info = ($db->get_search_info(1, false));
+var_dump($info);
 die();
-
-$var = $db->get_points(2, $limit = 10200);
-echo count($var);
 
 //$db_obj = new MySQLi('localhost', _DB_USERNAME, _DB_PASSWORD, _DB_NAME) or die (mysqli_error() . "Database Error 1");
 /*$query = 'INSERT INTO Users (username, fname, lname, email, role, password, userKey) VALUES ("ryan", "Ryan", "Young", "ryanessonyoung@gmail.com", "admin", "hello", "thisisakey")';

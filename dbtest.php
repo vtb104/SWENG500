@@ -28,7 +28,7 @@ if(!$auth->authenticate()){
 </head>
 <body>
 <h1>Database Demo and Test Page Current as of <?php echo date("r", time());?></h1> 
-<a href="logout.php">Logout</a>
+<a data-ajax="false" href="logout.php">Logout</a>
 <p class="intro">
 	In order to use these database calls, include "require_once("database.php");" at the top of the page.  This will create the "$db" object for the following methods.  All output are JSON arrays.
 </p>

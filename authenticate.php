@@ -37,7 +37,7 @@ class Authenticate
 			
 		}else{
 			
-			//User is not logged in	
+			//User is not previously logged in
 			return false;
 		}
 		

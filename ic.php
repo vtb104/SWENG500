@@ -69,8 +69,8 @@ var testFunction = function (){
           <h1>Search and Rescue</h1>
           <h2>Incident Command</h2>
           <br/>
-          <button class="button1 sbutton" id="optionbuttonshow"><-Show Search Option Panel</button>
-          <button class="button1 sbutton" id="optionbuttonhide" style="display: none" >-> Hide Search Option Panel</button>
+          <button class="button1 sbutton" id="optionbuttonshow">← Show Search Option Panel</button>
+          <button class="button1 sbutton" id="optionbuttonhide" style="display: none" >→ Hide Search Option Panel</button>
     
         </div>
         <!--Where all the users are displayed-->

@@ -85,11 +85,13 @@ function submitForm()
             data: "login=" + $("#username").val() + "&" + "password=" + $("#password").val() + "&" + "saveit=" + $("#saveit").val(),
             async: true,
             success: function(result){
+				result = $.trim(result);
                     if(result){
-                            window.location.href = "<?php echo $return;?>";
-                            //$("#info").html(result);
+                        window.location.href = "<?php echo $return;?>";
                     }else{
-                            $("#info").html("Login information was incorrect");
+						$("#info").html("Login information was incorrect");
+						setTimeout(function(){$("#info").html("")}, 5000);
+                    	
                     }
             }
     });

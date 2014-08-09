@@ -17,6 +17,9 @@ var newMessages = '';
 var currentSearch = 1;
 var nearByUsersIconArray = new Array();
 var baseIcon;
+
+var searchInfo;
+
 if(readCookie("sar.currentSearchFU")){
 	currentSearch = readCookie("sar.currentSearchFU");
 }
@@ -103,6 +106,9 @@ function initialize()
 	
 	//Fills the searches selector
 	updateSearches();
+	
+	//Get the info for the current search
+	getSearchInfo(currentSearch);
 	
     return true;
 }
@@ -433,4 +439,27 @@ function shopBaseOnMap()
     });
            
         }});
+}
+
+var errorHandler = function(msg){
+	alert(JSON.stringify(msg));
+}	
+
+var getSearchInfoHandler = function(msg){
+	if(msg){
+		searchInfo = msg;
+		$("#goToLeaderButton").show();
+	}else{
+		$("#goToLeaderButton").hide();	
+	}
+		
+};
+
+var goToSearchLeader = function(){
+	
+	//Check to make sure search info has been loaded
+	if(searchInfo){
+		temp = new google.maps.LatLng(searchInfo.ownerInfo[0].lat, searchInfo.ownerInfo[0].lng);
+		map.panTo(temp);
+	}
 }

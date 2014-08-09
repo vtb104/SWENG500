@@ -39,7 +39,7 @@
 <body onLoad="initialize()">
 <div data-role=page id=geoMap>
         <div data-role=header>
-            <a href="#geoMapHelp" class="ui-btn ui-btn-inline ui-corner-all ui-shadow">Help</a><a href="logout.php">Logout</a>
+            <a href="#geoMapHelp" class="ui-btn ui-btn-inline ui-corner-all ui-shadow">Help</a><a data-ajax="false" href="logout.php">Logout</a>
             <h1>Geo Location Map</h1>
             
         </div>
@@ -59,6 +59,7 @@
 
         <div data-role="content">
 			<button onclick="panToCurrentLocation()">Pan to Current Location</button>
+            <button id="goToLeaderButton" onclick="goToSearchLeader()" style="display: none">Go to Search leader</button>
         </div>
     
         <div role="main" class="ui-content" id="map_canvas">
@@ -78,7 +79,7 @@
     
 <div data-role="page" id="message">
         <div data-role="header">
-            <a href="#msgHelp" class="ui-btn ui-btn-inline ui-corner-all ui-shadow">Help</a><a href="logout.php">Logout</a>
+            <a href="#msgHelp" class="ui-btn ui-btn-inline ui-corner-all ui-shadow">Help</a><a data-ajax="false" href="logout.php">Logout</a>
             <h1>Messages</h1>
         </div>
 
@@ -136,7 +137,7 @@
 <div data-role="page" id="configure">
         <div data-role="header">
             <a href="#confHelp" class="ui-btn ui-btn-inline ui-corner-all ui-shadow">Help</a>
-            <a href="logout.php">Logout</a>
+            <a data-ajax="false" href="logout.php">Logout</a>
             <h1>Configure</h1>
             
 		</div>

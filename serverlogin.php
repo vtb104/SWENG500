@@ -14,7 +14,6 @@ $auth = new Authenticate();
  
 if(isset($_POST['login'])){
 	echo $auth->login($_POST['login'], $_POST['saveit'], $_POST['password'], $db);
-
 }
 
 
@@ -47,11 +46,13 @@ if(isset($_POST['register'])){
 		if($result){
 			echo "complete";
 		}else{
-			echo "There was an error with the verification e-mail, contact support." . __FILE__ . " " . __LINE__;
+			echo "There was an error with the verification e-mail, it was most likely a bad e-mail address.";
+			$db->delete_user($userId);
 		}
 	}else{
 		//Return failure message
 		echo 'There was an error with the user creation, contact support';	
+		$db->delete_user($userId);
 	};
 }
 

@@ -22,7 +22,7 @@ if(!$auth->authenticate()){
 <!-- Register Page-->
 <div data-role="page" id="directorpage">
 	<div data-role="header">
-    	<a href="#" data-role="button" data-rel="back" data-icon="arrow-l">Back</a><a href="logout.php">Logout</a>
+    	<a href="#" data-role="button" data-rel="back" data-icon="arrow-l">Back</a><a data-ajax="false" href="logout.php">Logout</a>
     	<h1>Choose Your Own Adventure</h1>
     </div>
     

@@ -383,3 +383,10 @@ button{
         margin-left: 49%;
 	cursor: pointer;	
 }
+
+.infoMsg{
+	color: blue;	
+}
+.infoMsg:hover{
+	text-decoration: underline;
+}

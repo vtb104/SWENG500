@@ -738,26 +738,41 @@ function Person(input){
 	this.pointArray = [];
 	this.showTrail = true;
 	this.trailArray = [];
-	this.trailLength = 0;
+	this.trailLength = 0;0
+	this.teamID = input.teamID;
+	this.username = input.userData.username;
+	this.fname = input.userData.fname;
+	this.lname = input.userData.lname;
 	
 	//Set up the colors, default is yellow background and black font
 	this.userColor = "#FFF";
-	this.fontColor = "#000";
-	this.teamID = input.teamID;
+	this.fontColor = "#000";	
 	
 	if(this.teamID){
 		var colors = getTeamColors(this.teamID);
 		this.userColor = colors.backgroundColor;
 		this.fontColor = colors.fontColor;	
 	}
+	
 	if(input.userID == null)
         {
             input.userID = "00";
         }
+		
 	this.styleOptions = new StyledIcon(StyledIconTypes.MARKER,{color:this.userColor,text:input.userID});
 	this.currentMarker = new StyledMarker({styleIcon:this.styleOptions,map:map});
 	
+	this.infoWindowContent = this.username;
 	
+	//Info window for the person's marker
+	this.infoWindow = new google.maps.InfoWindow({
+		content: this.infoWindowContent
+	})
+	
+	var tempWindow = this.infoWindow;
+	google.maps.event.addListener(this.currentMarker, 'click', function(){
+		tempWindow.open(map, this);
+	});
 	
 	
 	this.trail = new google.maps.Polyline({
@@ -775,9 +790,6 @@ function Person(input){
 	$.each(input.points, function(index, value){
 		thisPointer.addPoint(value);
 	});
-	this.username = input.userData.username;
-	this.fname = input.userData.fname;
-	this.lname = input.userData.lname;
 };
 
 //Plots the points on the map depending on the showTrail value
@@ -785,15 +797,23 @@ Person.prototype.plotPoints = function(){
 	
 	var userCaption = "";
 	
-	//Move the marker for the most recent position
-	if(this.pointArray.length > 1){
-		var rightNow = new Date();
-		var newerThan = Math.round(trackHistoryStart.getTime()/ 1000);
-
+	//Do this for arrays with at least one (common to both the below statements)
+	if(this.pointArray.length >= 1){
 		//Draw/Move the first point regardless of how old it is
 		var tempPos = new google.maps.LatLng(this.pointArray[0].lat, this.pointArray[0].lng);
 		this.currentMarker.setPosition(tempPos);
 		this.currentMarker.setMap(map);
+	
+		var tempDate = new Date(this.pointArray[0].dateCreated * 1000);
+		userCaption = "Updated: " + monthName(tempDate.getMonth()) + "-" + tempDate.getDate() + " " + leadingZero(tempDate.getHours()) + ":" + leadingZero(tempDate.getMinutes());
+		
+		this.infoWindow.setContent("<span style='color: black'>" + this.username + "</br/>" + userCaption + "<br/><a href='send.php?sendto=" + this.userID + "'><span class='infoMsg'>Send Message</span></a></span>");
+	}
+	
+	//If there is more than one point, draw the trail
+	if(this.pointArray.length > 1){
+		var rightNow = new Date();
+		var newerThan = Math.round(trackHistoryStart.getTime()/ 1000);
 		
 		//Show the trail 
 		if(this.showTrail){
@@ -806,24 +826,8 @@ Person.prototype.plotPoints = function(){
 			var tempDate = new Date(this.pointArray[0].dateCreated * 1000);
 			userCaption = "Updated: " + monthName(tempDate.getMonth()) + "-" + tempDate.getDate() + " " + leadingZero(tempDate.getHours()) + ":" + leadingZero(tempDate.getMinutes());	
 		}
-		
-		
-	}else if(this.pointArray.length === 1){
-		var tempPos = new google.maps.LatLng(this.pointArray[0].lat, this.pointArray[0].lng);
-		this.currentMarker.setPosition(tempPos);
-		this.currentMarker.setMap(map);
-		var tempDate = new Date(this.pointArray[0].dateCreated * 1000);
-		userCaption = "Updated: " + monthName(tempDate.getMonth()) + "-" + tempDate.getDate() + " " + leadingZero(tempDate.getHours()) + ":" + leadingZero(tempDate.getMinutes());
-		
-		//Now color the point base on if it is active or not (within the time given)
-		/*if(this.pointArray[0].dateCreated >= newerThan){	
-			this.currentMarker.setProperty({name: "color", value: "#99FF66"});
-		}else{
-			//Needs to draw point a different color if stale.	
-			this.currentMarker.setProperty({name: "color", value: "#99FF55"});
-		}*/
-		
-	};
+	}
+	
 	$("#userTrail" + this.userID).html(userCaption);
 	return true;
 };

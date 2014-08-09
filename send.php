@@ -114,6 +114,9 @@ var messageFiller = function(){
 		
 		";
 		
+	}elseif(isset($_GET['sendto'])){
+		$to = $_GET['sendto'];
+		echo "$('#widgetu264_input').val('$to');"; 
 	}
 	?>	
 }

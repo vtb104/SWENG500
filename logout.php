@@ -5,14 +5,6 @@ require_once('phpcommon.php');
 
 $auth->log_out();
 
+header("location: index.php");
+
 ?>
-
-<html>
-<head>
-<title>Logout</title>
-<link rel="icon" type="image/png" href="favicon.ico"/>
-</head>
-You are now logged out.<br/><br/>
-
-Return to <a href="index.php">Index.php</a>
-</html>

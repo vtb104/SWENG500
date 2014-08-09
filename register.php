@@ -63,7 +63,8 @@ $(function() {
 					  "username=" + $("#username").val(),
 				async: false,
 				success: function(result){
-					if(result === "complete"){
+					result = $.trim(result);
+					if(result == "complete"){
 						window.location.href = "confirm.php";
 					}else{
 						$("#info").html(result);
