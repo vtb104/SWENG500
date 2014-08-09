@@ -83,7 +83,8 @@ function initialize()
         zoom: 15, 
         center: latlng,
         mapTypeControl: true,
-		mapTypeId : google.maps.MapTypeId.TERRAIN
+		mapTypeId : google.maps.MapTypeId.TERRAIN,
+		scaleControl: true
     };
 	
     //Creates the map

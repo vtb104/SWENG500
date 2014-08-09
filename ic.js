@@ -110,7 +110,8 @@ var initialize = function(){
 					 center: mapHome,
 					 panControlOptions: panControlOptions,
 					 zoomControlOptions: zoomControlOptions,
-					 overviewOptions: overviewOptions
+					 overviewOptions: overviewOptions,
+					 scaleControl: true
 					 };
 	
 	//Creates the map
