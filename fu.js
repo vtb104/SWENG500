@@ -26,6 +26,7 @@ if(readCookie("sar.currentSearchFU")){
 
 var updateCurrentSearch = function(){
 	currentSearch = $("#currentSearchNumber").val();
+	getSearchInfo(currentSearch);
 	writeCookie("sar.currentSearchFU", currentSearch, cookieDuration);
 }
 
