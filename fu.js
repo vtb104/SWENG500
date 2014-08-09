@@ -99,11 +99,11 @@ function initialize()
 	
     locTimer = setTimeout(function(){sendPosition()}, updateLocationInterval);
 	
-	marker = new google.maps.Marker({
-		position: latlng,
-		map: map,
-		title: "SAR Map"
-	});
+	//marker = new google.maps.Marker({
+	//	position: latlng,
+	//	map: map,
+	//	title: "SAR Map"
+	//});
 	
 	//Fills the searches selector
 	updateSearches();
