@@ -14,11 +14,7 @@ require_once('phpcommon.php');
 if(isset($_POST['createArea'])){
         $handler = new message();
 	$decodedMessage = $handler->decode_json_message($_POST['createArea']);
-        //$pointsArray = $decodedMessage->points;
-        //for($cnt =0; $cnt < count($pointsArray); $cnt++)
-        //{
-            $db->create_area($decodedMessage->name, $decodedMessage->points, $decodedMessage->color);
-        //}
+        $db->create_area($decodedMessage->name, json_encode($decodedMessage->points), $decodedMessage->color);
 };
 if(isset($_POST['searchID'])){
         echo $db->list_areas($_POST['searchID']);

@@ -649,8 +649,9 @@ class Database
           */
          public function create_area($areaName, $areaPoints, $areaColor)
          {
-             $areaPoints = json_encode($areaPoints);
-             $query = 'INSERT INTO areas (areaName, areaPoints, areaColor) VALUES ("' . $areaName . '","'.mysql_real_escape_string($areaPoints).'","'.$areaColor.'")';
+             //$areaPoints = json_encode($areaPoints);
+             echo "".$areaPoints;
+             $query = "INSERT INTO areas (areaName, areaPoints, areaColor) VALUES ('" . $areaName . "','".$areaPoints."','".$areaColor."')";
 		$result = $this->db_obj->query($query);
 		if($result){
 			echo $this->get_last_id();
