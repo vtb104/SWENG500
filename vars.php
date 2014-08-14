@@ -2,7 +2,7 @@
 //Site constant variables
 
 //Debug variable
-define("_DEBUG", true);
+define("_DEBUG", 0);
 
 //Site URL
 define("_URL", "mapwich.com");

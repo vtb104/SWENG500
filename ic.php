@@ -48,10 +48,13 @@
 		echo "var userID = 0";
 	}	
 ?>
+var deBug = <?php echo _DEBUG;?>;
 
 var testFunction = function (){
-	$("#test").html("Running...");
-	getSearchInfo(currentSearch);
+	if(deBug){
+		$("#test").html("Running...");
+		getSearchInfo(currentSearch);
+	}
 };
 </script>
 </head>
@@ -78,9 +81,11 @@ var testFunction = function (){
         	<h4 align="center">List of searchers</h4>
         	<div id="searcherlist"></div>
 		</div>
-        <div style="position: fixed; bottom: 0px; right: 200px; height: 32px;">    
-            <button id="testbutton">Test Button</button>
-        </div>
+        <?php 
+		if(_DEBUG){echo '<div style="position: fixed; bottom: 0px; right: 200px; height: 32px;">    
+            <button id="testbutton">Test Button</button></div>';
+		}
+		?>
 	</div>  <!-- Main Div-->    
         
     <!-- Pop out menu for search options-->
@@ -376,7 +381,11 @@ var testFunction = function (){
     </p>
 </div> 
 
-<div id="test" style="position: fixed; right: 0px; bottom: 0px; color: white; z-index: 1000;">Test Line</div>
+<?php 
+if(_DEBUG){
+	echo '<div id="test" style="position: fixed; right: 0px; bottom: 0px; color: white; z-index: 1000;">Test Line</div>';
+};
+?>
 </body>
 <script>
 //Put jQuery button listeners here, don't put too many functions here due to scope issues.

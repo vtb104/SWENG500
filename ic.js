@@ -1,4 +1,4 @@
-	var map;
+var map;
 
 //Used to halt timers and fetchers for other actions.
 var goVar = true;
@@ -1243,7 +1243,9 @@ function searchNow(){
 
 //This function handles error messages from AJAX calls
 var errorHandler= function(msg){
-	$("#test").html(JSON.stringify(msg));	
+	if(deBug){
+		$("#test").html(JSON.stringify(msg));	
+	}
 }
 
 var randomColor = function(){

@@ -444,7 +444,9 @@ function shopBaseOnMap()
 }
 
 var errorHandler = function(msg){
-	alert(JSON.stringify(msg));
+	if(deBug){
+		alert(JSON.stringify(msg));
+	}
 }	
 
 var getSearchInfoHandler = function(msg){
