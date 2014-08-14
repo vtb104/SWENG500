@@ -342,7 +342,7 @@ function fillPoly(areaID, arrayOfPoints)
             fillColor: tempColor,
             fillOpacity: 0.35
         });
-        map.panTo(new google.maps.LatLng(arrayOfPoints[0].k,arrayOfPoints[0].A));
+        //map.panTo(new google.maps.LatLng(arrayOfPoints[0].k,arrayOfPoints[0].A));
         areaFill.setMap(map);
         polyObj.name = areaID;
         polyObj.area = areaFill;
@@ -739,7 +739,7 @@ function Person(input){
 	this.pointArray = [];
 	this.showTrail = true;
 	this.trailArray = [];
-	this.trailLength = 0;0
+	this.trailLength = 0;
 	this.teamID = input.teamID;
 	this.username = input.userData.username;
 	this.fname = input.userData.fname;
@@ -1267,7 +1267,7 @@ function getUITime(theDate, theTime){
 
 	var returnTime = new Date();
 	var offset = returnTime.getTimezoneOffset() * 60000;
-	returnTime.setTime(tempDate + (tempTime[0] * 3600 * 1000) + (tempTime[1] * 60 * 1000) + offset);
+	returnTime.setTime(tempDate.getTime() + (tempTime[0] * 3600 * 1000) + (tempTime[1] * 60 * 1000) + offset);
 	return returnTime;
 }
 

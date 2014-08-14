@@ -205,7 +205,7 @@ function getAreaPoints(areaID)
             var tempPointsArray = JSON.parse(areaData[0].areaPoints);
             for(var cnt=0; cnt < tempPointsArray.length; cnt++)
             {
-                pointArray.push(new google.maps.LatLng(tempPointsArray[cnt].k,tempPointsArray[cnt].B));
+                pointArray.push(new google.maps.LatLng(tempPointsArray[cnt].k,tempPointsArray[cnt].A));
             }
             fillPoly(areaID, pointArray);
         }});

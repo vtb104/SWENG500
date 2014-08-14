@@ -21,7 +21,7 @@ if(isset($_POST['update_ic_req']))
 		if(count($return_array)){
 		
 			//Divide the number of people returned by the limit and get that many points
-			$limit = round(($data["updateInterval"] / count($return_array))); //* 2;
+			$limit = round(($data["updateInterval"] * 2 / count($return_array))); //* 2;
 			
 			//Build the array
 			foreach($return_array as $one){
