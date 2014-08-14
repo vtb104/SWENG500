@@ -27,6 +27,7 @@
 	}
 </style>
 <script>
+var deBug = <?php echo _DEBUG;?>;
 <?php
 	if(isset($_SESSION['userid']))
 	{
