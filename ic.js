@@ -990,7 +990,7 @@ var saveNewSearch = function(){
 	
 	var newSearchNumber = 0;
 	
-	var searchStart = getUITime($("#newsearchdate").datepicker("getDate").getTime(), $("#newsearchtime").val());
+	var searchStart = getUITime($("#newsearchdate").datepicker("getDate"), $("#newsearchtime").val());
 	
 	var newSearchData = {
 		userID: userID,
