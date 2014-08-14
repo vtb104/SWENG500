@@ -120,6 +120,8 @@ if(isset($_POST['currentSearchInfo'])){
 	$searchID = $data['currentSearch'];
 	if($searchID == "all"){
 		echo json_encode("none");
+	}else if(!$searchID){
+		echo json_encode("none");
 	}else{
 		$info = $db->get_search_info($searchID, false);
 		$info["ownerInfo"] = $db->latest_user_location($info[0]["owner"], false);

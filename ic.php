@@ -62,7 +62,8 @@ var testFunction = function (){
 <div id="pagewrapper">
     <div id="main">
         <div id="menubar">
-            <a class="button1" href="searchertest.php" target="_blank">Searcher Test</a>
+            <?php if(_DEBUG){echo '<a class="button1" href="searchertest.php" target="_blank">Searcher Test</a>';}?>
+			
             <a class="button1"href="Messages.php">Messages</a>
             <a class="button1"href="fu.php" target="_blank">Field Unit</a>
             <a class="button1" id="logoutbutton" href="logout.php">Log Out</a>

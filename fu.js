@@ -445,7 +445,7 @@ function shopBaseOnMap()
 
 var errorHandler = function(msg){
 	if(deBug){
-		alert(JSON.stringify(msg));
+		//alert(JSON.stringify(msg));
 	}
 }	
 
